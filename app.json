@@ -1,29 +1,33 @@
 {
   "expo": {
-    "name": "notes-app",
-    "slug": "notes-app",
+    "name": "Notitas",
+    "slug": "Tus notitas",
     "version": "1.0.0",
+    "scheme": "notitas-app-scheme",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/notitas-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./src/assets/notitas-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFE4B5"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./src/assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
