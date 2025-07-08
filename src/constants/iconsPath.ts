@@ -19,6 +19,7 @@ export const Icons = {
     // LIGHT ICONS
     light: {
         settingsIcon: require('../assets/light/settings.png'),
+        settingsIcon2: require('../assets/light/settings2.png'),
         trashIcon: require('../assets/light/trash.png'),
         editIcon: require('../assets/light/edit.png'),
     },

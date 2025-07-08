@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 
 const dbTableName = "notes";
 
-let db = SQLite.openDatabaseAsync('notesDB');
+const db = SQLite.openDatabaseAsync('notesDB');
 
 export interface Nota {
     id: number;
@@ -11,10 +11,6 @@ export interface Nota {
     created_at: string;
     updated_at: string;
 }
-
-// export const initDB = async () => {
-
-// }
 
 export const initDB = async () => {
     try{

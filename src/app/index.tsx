@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { Colors } from "../constants/colors"
-import { SQLiteProvider } from "expo-sqlite"
-import { useEffect, useState } from "react"
-import { getAllNotes, initDB, insertNote, Nota } from "../hooks/sqliteHooks"
+import { useEffect } from "react"
+import { initDB} from "../hooks/sqliteHooks";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ButtonSettings from "../components/ButtonSettings";
+import { useTema } from "../hooks/ThemeContext";
 
 export default function Index(){
-    const [notas, setNotas] = useState<Nota[]>([]);
+    const insets = useSafeAreaInsets();
+    const { tema } = useTema();   // hook para obtener el tema guardado (claro/oscuro)
+    const bgColorTheme = tema === "dark" ? "#FFE4B5" : "#140A00";
+    // const [notas, setNotas] = useState<Nota[]>([]);
 
     useEffect(() => {
         initDB();
@@ -20,33 +25,45 @@ export default function Index(){
 
         // https://docs.expo.dev/versions/latest/sdk/sqlite/
         
-        const cargarNotas = async () => {
-            const respNotas = await getAllNotes();
-            setNotas(respNotas);
-        }
+        // const cargarNotas = async () => {
+        //     const respNotas = await getAllNotes();
+        //     setNotas(respNotas);
+        // }
 
-        cargarNotas();
+        // cargarNotas();
     }, []);
 
     return(
-        <SQLiteProvider databaseName="notes">
-            <View style={styles.container}>
-                <Text style={styles.text}>id: {notas[0]?.id}</Text>
-                <Text style={styles.text}>titulo: {notas[0]?.title}</Text>
-                <Text style={styles.text}>contenido: {notas[0]?.value}</Text>
-                <Text style={styles.text}>{notas[0]?.created_at}</Text>
-                <Text style={styles.text}>{notas[0]?.updated_at}</Text>
+        <View style={[
+                styles.container, 
+                { paddingTop: insets.top, 
+                backgroundColor: bgColorTheme }
+            ]}>
+            <View style={styles.header}>
+                <ButtonSettings></ButtonSettings>
             </View>
-        </SQLiteProvider>
+        </View>
+            
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        
+        // backgroundColor: "#140A00", //FFE4B5
+        paddingHorizontal: 10,
     },
+    header:{
+        flexDirection: "row",
+        paddingTop: 8,
+
+        // backgroundColor: "tomato",
+        alignItems:"center",
+        justifyContent: "flex-end"
+    },
+    body:{},
+    footer:{},
+
     text: {
         textAlign: "center",
         color: Colors.light.text,
