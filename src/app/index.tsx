@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect } from "react"
-import { initDB} from "../hooks/SQLiteHooks";
+import { getAllNotes, initDB} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonSettings from "../components/ButtonSettings";
 import { router } from "expo-router";
@@ -11,8 +11,19 @@ import { router } from "expo-router";
 export default function Index(){
     const insets = useSafeAreaInsets();
 
-    useEffect(() => {
-        initDB();
+    useEffect( () => {
+        const welcome = async () => {
+            await initDB();
+            // ejemplosNotas.forEach(nota => {insertNote(nota)});
+            // console.log((await getAllNotes()).length);
+            // (await getAllNotes())
+            //     .forEach( (nota) => {
+            //         console.log(nota.title, nota.value);
+                    
+            //     })
+        }
+
+        welcome();
     }, []);
 
     return(

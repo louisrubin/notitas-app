@@ -68,7 +68,6 @@ export const getAllNotes = async (): Promise<Nota[]> => {
         const allRows = await (await db).getAllAsync(`
             SELECT * FROM ${dbTableName}
         `);
-        console.log(allRows);
         return allRows as Nota[];
     } catch (e) {
         console.log("Error getting all notes:", e);
