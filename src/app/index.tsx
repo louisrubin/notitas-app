@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect } from "react"
 import { getAllNotes, initDB} from "../hooks/SQLiteHooks";
@@ -27,22 +27,31 @@ export default function Index(){
     }, []);
 
     return(
-        <View style={[
-            styles.container, 
-            { paddingTop: insets.top, 
-            backgroundColor: Colors.light.background }
-        ]}>
+        <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: Colors.light.background }}>
+            
             {/* HEADER */}
             <View style={styles.header}>
                 <ButtonSettings onPress={()=>{router.push("/settings")}}></ButtonSettings>
             </View>
 
-            {/* BODY */}
-            <View style={styles.body}>
-                <Text style={styles.text} >
-                    Inicio
-                </Text>
-            </View>
+            <ScrollView>    
+
+                {/* BODY */}            
+                <View style={styles.body}>
+                    <Text style={styles.text} >
+                        Inicio
+                    </Text>
+                </View>
+
+
+
+
+                {/* FOOTER */}
+                <View style={styles.footer}>
+                    <Text style={{ fontSize:18, textAlign: "center", marginBottom: 20 }}>Footer</Text>
+                </View>
+            </ScrollView>
+            
             
         </View>            
     )
@@ -52,9 +61,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // backgroundColor: "#140A00", //FFE4B5
-        paddingHorizontal: 15,
     },
     header:{
+        paddingHorizontal: 10,
         flexDirection: "row",
         paddingTop: 10,
 
@@ -73,6 +82,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: Colors.light.text,
         fontSize: 30,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        height: 400
     }
 })
