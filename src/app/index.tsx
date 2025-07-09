@@ -1,46 +1,32 @@
 import { StyleSheet, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect } from "react"
-import { initDB} from "../hooks/sqliteHooks";
+import { initDB} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonSettings from "../components/ButtonSettings";
-import { useTema } from "../hooks/ThemeContext";
+// import { useTema } from "../hooks/ThemeContext";
+import { router } from "expo-router";
+
+// https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 export default function Index(){
     const insets = useSafeAreaInsets();
-    const { tema } = useTema();   // hook para obtener el tema guardado (claro/oscuro)
-    const bgColorTheme = tema === "dark" ? "#FFE4B5" : "#140A00";
+    // const { tema } = useTema();   // hook para obtener el tema guardado (claro/oscuro)
+    // const bgColorTheme = tema === "dark" ? "#FFE4B5" : "#140A00";
     // const [notas, setNotas] = useState<Nota[]>([]);
 
     useEffect(() => {
         initDB();
-        // deleteNote(2);
-        // insertNote({
-        //     id: 0, 
-        //     title: "nota 1", 
-        //     value: "esta es una nota cualquiera", 
-        //     created_at: new Date().toISOString(), 
-        //     updated_at: new Date().toISOString(),
-        // })
-
-        // https://docs.expo.dev/versions/latest/sdk/sqlite/
-        
-        // const cargarNotas = async () => {
-        //     const respNotas = await getAllNotes();
-        //     setNotas(respNotas);
-        // }
-
-        // cargarNotas();
     }, []);
 
     return(
         <View style={[
                 styles.container, 
                 { paddingTop: insets.top, 
-                backgroundColor: bgColorTheme }
+                backgroundColor: Colors.light.background }
             ]}>
             <View style={styles.header}>
-                <ButtonSettings></ButtonSettings>
+                <ButtonSettings onPress={()=>{router.push("/settings")}}></ButtonSettings>
             </View>
         </View>
             
