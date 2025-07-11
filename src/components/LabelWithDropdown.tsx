@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DropDownItem } from '../constants/DropDownLists';
 import TitleX from './TitleX';
+import { useDropDown } from '../hooks/DropDownContext';
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
@@ -21,6 +22,21 @@ export default function LabelWithDropdown( {id, title, valueDefault = null, item
     const [value, setValue] = useState<string | null>(valueDefault?.value ?? null);
     const [items, setItems] = useState<DropDownItem[]>(itemsList);
     
+    const { openKey, setOpenKey } = useDropDown();
+
+    // identificador único para este picker
+    const pickerId = title; // O usa un ID único
+
+    const handleOpen = () => {
+        setOpenKey(pickerId);
+    };
+
+    useEffect(() => {
+        if (openKey !== pickerId) {
+            setOpen(false);
+        }
+    }, [openKey]);
+
     return(
         <View style={styles.container}>
             <TitleX text={title} style={{ width: "59%" }} />
@@ -47,6 +63,7 @@ export default function LabelWithDropdown( {id, title, valueDefault = null, item
                 dropDownContainerStyle={{ borderStartStartRadius: 6 }}
                 closeOnBackPressed={true}
 
+                onOpen={handleOpen}
             />
 
         </View>
@@ -58,7 +75,5 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        // backgroundColor: "tomato"
     },
-
 });
