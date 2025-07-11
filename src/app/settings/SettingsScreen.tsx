@@ -2,9 +2,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/colors";
 import AnimatedScrollViewX from "../../components/AnimatedScrollViewX";
 import HorizontalLine from "../../components/HorizontalLine";
+import TitleX from "../../components/TitleX";
+import SubtitleX from "../../components/SubtitleX";
+import LabelWithDropdown from "../../components/LabelWithDropdown";
+import { itemDesing, itemOrder, itemSizes } from "../../constants/DropDownLists";
 
-export default function SettingsScreen() {    
-
+export default function SettingsScreen() {
     return(
         <View style={{ flex: 1, backgroundColor: Colors.light.background}}>
             <AnimatedScrollViewX title="Notitas">
@@ -29,45 +32,23 @@ export default function SettingsScreen() {
                             Settings
                         </Text> */}
 
-                        <Text style={styles.subtitulos}>
-                            Estilo
-                        </Text>
-
-                        <Text style={styles.titulos}>
-                            Tamaño de fuente
-                        </Text>
-
-                        <Text style={styles.titulos}>
-                            Ordenar por
-                        </Text>
-
-                        <Text style={styles.titulos}>
-                            Diseño
-                        </Text>
-
-                        <Text style={styles.titulos}>
-                            Color
-                        </Text>
+                        <SubtitleX text="Estilo" />
+                        {/* <TitleX text="Tamaño de fuente" /> */}
+                        <LabelWithDropdown title="Tamaño de fuente" itemsList={itemSizes} zIndex={10} />
+                        {/* <TitleX text="Ordenar por" /> */}
+                        <LabelWithDropdown title="Ordenar" itemsList={itemOrder} zIndex={9} />
+                        {/* <TitleX text="Diseño" /> */}
+                        <LabelWithDropdown title="Diseño" itemsList={itemDesing} zIndex={8} />
                         
                         <HorizontalLine />
 
-                        <Text style={styles.subtitulos}>
-                            Eliminados
-                        </Text>
+                        <SubtitleX text="Eliminados" />
+                        <TitleX text="Papelera" />
 
-                        <Text style={styles.titulos}>
-                            Papelera
-                        </Text>
-                        
                         <HorizontalLine />
 
-                        <Text style={styles.subtitulos}>
-                            OTROS
-                        </Text>
-
-                        <Text style={styles.titulos}>
-                            Política de Privacidad
-                        </Text>
+                        <SubtitleX text="OTROS" />
+                        <TitleX text="Política de Privacidad" />
 
                     </View>
 
@@ -89,17 +70,6 @@ const styles = StyleSheet.create({
     },
     header:{
 
-    },
-    subtitulos:{ 
-        fontSize: 16,
-        color: "#666",
-        marginTop: 10,
-        marginBottom: 6,
-    },
-    titulos: {        
-        fontSize: 18,
-        fontWeight: "700",
-        marginVertical: 18,
     },
     body:{},
     footer:{},
