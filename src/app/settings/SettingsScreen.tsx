@@ -21,24 +21,18 @@ export default function SettingsScreen() {
 
                     {/* BODY */}
                     <View style={{  }}>
-                        {/* <Text style={{ height: 400 }}>
-                            Settings
-                        </Text>
-                        
-                        <Text style={{ height: 400 }}>
-                            Settings
-                        </Text>
-                        <Text style={{ height: 400 }}>
-                            Settings
-                        </Text> */}
 
                         <SubtitleX text="Estilo" />
-                        {/* <TitleX text="Tamaño de fuente" /> */}
-                        <LabelWithDropdown title="Tamaño de fuente" itemsList={itemSizes} zIndex={10} />
-                        {/* <TitleX text="Ordenar por" /> */}
-                        <LabelWithDropdown title="Ordenar" itemsList={itemOrder} zIndex={9} />
-                        {/* <TitleX text="Diseño" /> */}
-                        <LabelWithDropdown title="Diseño" itemsList={itemDesing} zIndex={8} />
+                        <LabelWithDropdown title="Tamaño de fuente" 
+                            valueDefault={itemSizes[1]}
+                            itemsList={itemSizes} zIndex={10} 
+                        />
+                        <LabelWithDropdown title="Ordenar" valueDefault={itemOrder[0]} 
+                            itemsList={itemOrder} zIndex={9} 
+                        />
+                        <LabelWithDropdown title="Diseño" valueDefault={itemDesing[1]} 
+                            itemsList={itemDesing} zIndex={8} 
+                        />
                         
                         <HorizontalLine />
 

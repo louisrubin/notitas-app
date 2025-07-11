@@ -7,22 +7,25 @@ import TitleX from './TitleX';
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
 interface Prop {
+    id?: string;
     title: string;
+    valueDefault?: DropDownItem | null;
     itemsList: DropDownItem[];
     zIndex?: number;
     zIndexInverse?: number;
 
 }
 
-export default function LabelWithDropdown( {title, itemsList, zIndex, zIndexInverse}: Prop ) {
+export default function LabelWithDropdown( {id, title, valueDefault = null, itemsList, zIndex, zIndexInverse}: Prop ) {
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState<string | null>(valueDefault?.value ?? null);
     const [items, setItems] = useState<DropDownItem[]>(itemsList);
     
     return(
         <View style={styles.container}>
-            <TitleX text={title} style={{ width: "60%" }} />
+            <TitleX text={title} style={{ width: "59%" }} />
             <DropDownPicker 
+                key={id}                
                 open={open}     
                 value={value}   // State variable that specifies the value of the selected item
                 items={items}    // State variable that holds the items.
@@ -35,14 +38,14 @@ export default function LabelWithDropdown( {title, itemsList, zIndex, zIndexInve
                 zIndexInverse={zIndexInverse}
 
                 style={{ borderWidth: 0,  backgroundColor: "transparent" }}
-                containerStyle={{ width: "40%",  }}
+                containerStyle={{ width: "41%",  }}
                 
                 textStyle={{fontWeight: "600"}}
                 labelStyle={{ fontWeight: "600", textAlign: "right" }}
 
                 selectedItemContainerStyle={{ backgroundColor: "#b3e5fc"}}
-                listChildContainerStyle={{  }}
                 dropDownContainerStyle={{ borderStartStartRadius: 6 }}
+                closeOnBackPressed={true}
 
             />
 
