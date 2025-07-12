@@ -4,6 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { DropDownItem } from '../constants/DropDownLists';
 import TitleX from './TitleX';
 import { useDropDown } from '../hooks/DropDownContext';
+import { Colors } from '../constants/colors';
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
@@ -60,7 +61,7 @@ export default function LabelWithDropdown( {id, title, valueDefault = null, item
                 labelStyle={{ fontWeight: "600", textAlign: "right" }}
 
                 selectedItemContainerStyle={{ backgroundColor: "#b3e5fc"}}
-                dropDownContainerStyle={{ borderStartStartRadius: 6 }}
+                dropDownContainerStyle={{ backgroundColor: Colors.light.background, borderStartStartRadius: 6 }}
                 closeOnBackPressed={true}
 
                 onOpen={handleOpen}

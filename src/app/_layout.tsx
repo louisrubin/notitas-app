@@ -1,11 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { SQLiteProvider } from "expo-sqlite";
-import { TemaProvider } from "../hooks/ThemeContext";
+// import { TemaProvider } from "../hooks/ThemeContext";
 import { Stack } from "expo-router";
+import { SettingsProvider } from "../hooks/SettingsContext";
 
 const RootApp = () => {
    return (
-      <TemaProvider>
+      // <TemaProvider>
+      <SettingsProvider>
          <SQLiteProvider databaseName="notesDB">
                <Stack 
                   screenOptions={{
@@ -13,7 +15,8 @@ const RootApp = () => {
                   }} />
                <StatusBar style="dark"/>
          </SQLiteProvider>
-      </TemaProvider>
+      </SettingsProvider>
+      // </TemaProvider> 
       )
 }
 

@@ -6,8 +6,12 @@ import TitleX from "../../components/TitleX";
 import SubtitleX from "../../components/SubtitleX";
 import LabelWithDropdown from "../../components/LabelWithDropdown";
 import { itemDesing, itemOrder, itemSizes } from "../../constants/DropDownLists";
+import { useSettings } from "../../hooks/SettingsContext";
 
 export default function SettingsScreen() {
+    const { fontSize, orderBy, designBy } = useSettings();
+    console.log(fontSize, orderBy, designBy);
+    
     return(
         <View style={{ flex: 1, backgroundColor: Colors.light.background}}>
             <AnimatedScrollViewX title="Notitas">
@@ -24,13 +28,13 @@ export default function SettingsScreen() {
 
                         <SubtitleX text="Estilo" />
                         <LabelWithDropdown title="Tamaño de fuente" 
-                            valueDefault={itemSizes[1]}
+                            valueDefault={fontSize}
                             itemsList={itemSizes} zIndex={10} 
                         />
-                        <LabelWithDropdown title="Ordenar" valueDefault={itemOrder[0]} 
+                        <LabelWithDropdown title="Ordenar" valueDefault={orderBy} 
                             itemsList={itemOrder} zIndex={9} 
                         />
-                        <LabelWithDropdown title="Diseño" valueDefault={itemDesing[1]} 
+                        <LabelWithDropdown title="Diseño" valueDefault={designBy} 
                             itemsList={itemDesing} zIndex={8} 
                         />
                         

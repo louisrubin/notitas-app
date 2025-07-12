@@ -4,6 +4,7 @@ const DropDownContext = createContext<{
     openKey: string | null;
     setOpenKey: (key: string | null) => void;
 }>({
+    // valores default 
     openKey: null,
     setOpenKey: () => {},
 });
