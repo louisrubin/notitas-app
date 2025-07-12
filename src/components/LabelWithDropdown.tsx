@@ -5,6 +5,8 @@ import { DropDownItem } from '../constants/DropDownLists';
 import TitleX from './TitleX';
 import { useDropDown } from '../hooks/DropDownContext';
 import { Colors } from '../constants/colors';
+import { useSettings } from '../hooks/SettingsContext';
+import { KeyType } from '../Storage/storage';
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
@@ -15,10 +17,15 @@ interface Prop {
     itemsList: DropDownItem[];
     zIndex?: number;
     zIndexInverse?: number;
-
+    settingKey: KeyType; // indica qué setting es
 }
 
-export default function LabelWithDropdown( {id, title, valueDefault = null, itemsList, zIndex, zIndexInverse}: Prop ) {
+export default function LabelWithDropdown( { id, title, valueDefault, 
+itemsList, zIndex, zIndexInverse, settingKey }: Prop ) {
+
+    // const itemList = 
+    const { cambiarSetting } = useSettings();   // al cambiar la opcion elegida
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState<string | null>(valueDefault?.value ?? null);
     const [items, setItems] = useState<DropDownItem[]>(itemsList);
@@ -37,6 +44,15 @@ export default function LabelWithDropdown( {id, title, valueDefault = null, item
             setOpen(false);
         }
     }, [openKey]);
+    
+    // Cuando seleccionas una opción en el DropDownPicker 'selectedValue'
+    const handleOnChangeValue = (selectedValue: string | null) => {
+        // busca el item acorde al valor string
+        const selectedItem = items.find(item => item.value === selectedValue);
+        if (selectedItem) { // si hubo coincidencias
+            cambiarSetting(settingKey, selectedItem);
+        }
+    }
 
     return(
         <View style={styles.container}>
@@ -50,9 +66,14 @@ export default function LabelWithDropdown( {id, title, valueDefault = null, item
                 setValue={setValue}
                 setItems={setItems}
                 listMode="SCROLLVIEW"   // indica que use internamente un ScrollView en lugar de FlatList
-                
+                closeOnBackPressed={true}
+
+                onOpen={handleOpen}
+                onChangeValue={handleOnChangeValue}
                 zIndex={zIndex}
                 zIndexInverse={zIndexInverse}
+
+                // ESTILOS
 
                 style={{ borderWidth: 0,  backgroundColor: "transparent" }}
                 containerStyle={{ width: "41%",  }}
@@ -62,9 +83,7 @@ export default function LabelWithDropdown( {id, title, valueDefault = null, item
 
                 selectedItemContainerStyle={{ backgroundColor: "#b3e5fc"}}
                 dropDownContainerStyle={{ backgroundColor: Colors.light.background, borderStartStartRadius: 6 }}
-                closeOnBackPressed={true}
-
-                onOpen={handleOpen}
+                
             />
 
         </View>

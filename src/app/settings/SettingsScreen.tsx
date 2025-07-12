@@ -10,7 +10,6 @@ import { useSettings } from "../../hooks/SettingsContext";
 
 export default function SettingsScreen() {
     const { fontSize, orderBy, designBy } = useSettings();
-    console.log(fontSize, orderBy, designBy);
     
     return(
         <View style={{ flex: 1, backgroundColor: Colors.light.background}}>
@@ -28,13 +27,18 @@ export default function SettingsScreen() {
 
                         <SubtitleX text="Estilo" />
                         <LabelWithDropdown title="Tamaño de fuente" 
+                            settingKey="fontSize"
                             valueDefault={fontSize}
                             itemsList={itemSizes} zIndex={10} 
                         />
-                        <LabelWithDropdown title="Ordenar" valueDefault={orderBy} 
+                        <LabelWithDropdown title="Ordenar" 
+                            settingKey="orderBy"
+                            valueDefault={orderBy} 
                             itemsList={itemOrder} zIndex={9} 
                         />
-                        <LabelWithDropdown title="Diseño" valueDefault={designBy} 
+                        <LabelWithDropdown title="Diseño" 
+                            settingKey="designBy"
+                            valueDefault={designBy} 
                             itemsList={itemDesing} zIndex={8} 
                         />
                         
