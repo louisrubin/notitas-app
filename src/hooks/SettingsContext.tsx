@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { DropDownItem, itemDesing, itemOrder, itemSizes } from "../constants/DropDownLists";
-import { KeyType, storage } from "../Storage/storage";
+import { designByList, DropDownItem, fontSizeList, KeyType, orderByList } from "../constants/DropDownLists";
+import { storage } from "../Storage/storage";
 
 interface Props {
     children: React.ReactNode;
@@ -16,9 +16,9 @@ interface SettingsContextProp {
 // creando el contexto
 const SettingsContext = createContext<SettingsContextProp>({
     // valores default del contexto
-    fontSize: itemSizes[1],   // Mediana --> [1]
-    orderBy: itemOrder[0],      // Por fecha de creación --> [0]
-    designBy: itemDesing[1],     // Ver en cuadrícula --> [1]
+    fontSize: fontSizeList[1],   // Mediana --> [1]
+    orderBy: orderByList[0],      // Por fecha de creación --> [0]
+    designBy: designByList[1],     // Ver en cuadrícula --> [1]
     cambiarSetting: null,
 })
 
@@ -26,9 +26,9 @@ const SettingsContext = createContext<SettingsContextProp>({
 export const useSettings = () => useContext(SettingsContext);
 
 export function SettingsProvider( {children}: Props ) {
-    const [fontSize, setFontSize] = useState<DropDownItem>(itemSizes[1]); // valores default
-    const [orderBy, setOrder] = useState<DropDownItem>(itemOrder[0]);
-    const [designBy, setDesign] = useState<DropDownItem>(itemDesing[1]);
+    const [fontSize, setFontSize] = useState<DropDownItem>(fontSizeList[1]); // valores default
+    const [orderBy, setOrder] = useState<DropDownItem>(orderByList[0]);
+    const [designBy, setDesign] = useState<DropDownItem>(designByList[1]);
 
     useEffect( () => {
         const cargarSettingsLocal = async () =>{

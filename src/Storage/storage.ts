@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-export type KeyType = "fontSize" | "orderBy" | "designBy";
+import { KeyType } from "../constants/DropDownLists";
 
 export const storage = {
     // LEER DATOS STORAGE

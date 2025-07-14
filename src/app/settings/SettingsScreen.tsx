@@ -5,7 +5,6 @@ import HorizontalLine from "../../components/HorizontalLine";
 import TitleX from "../../components/TitleX";
 import SubtitleX from "../../components/SubtitleX";
 import LabelWithDropdown from "../../components/LabelWithDropdown";
-import { itemDesing, itemOrder, itemSizes } from "../../constants/DropDownLists";
 import { useSettings } from "../../hooks/SettingsContext";
 
 export default function SettingsScreen() {
@@ -26,20 +25,23 @@ export default function SettingsScreen() {
                     <View style={{  }}>
 
                         <SubtitleX text="Estilo" />
-                        <LabelWithDropdown title="Tamaño de fuente" 
+                        <LabelWithDropdown 
+                            title="Tamaño de fuente" 
                             settingKey="fontSize"
                             valueDefault={fontSize}
-                            itemsList={itemSizes} zIndex={10} 
+                            zIndex={10} 
                         />
-                        <LabelWithDropdown title="Ordenar" 
+                        <LabelWithDropdown 
+                            title="Ordenar" 
                             settingKey="orderBy"
                             valueDefault={orderBy} 
-                            itemsList={itemOrder} zIndex={9} 
+                            zIndex={9} 
                         />
-                        <LabelWithDropdown title="Diseño" 
+                        <LabelWithDropdown 
+                            title="Diseño" 
                             settingKey="designBy"
                             valueDefault={designBy} 
-                            itemsList={itemDesing} zIndex={8} 
+                            zIndex={8} 
                         />
                         
                         <HorizontalLine />

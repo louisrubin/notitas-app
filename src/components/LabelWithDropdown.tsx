@@ -1,36 +1,36 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { DropDownItem } from '../constants/DropDownLists';
+import { DropDownItem, getListItem, KeyType } from '../constants/DropDownLists';
 import TitleX from './TitleX';
 import { useDropDown } from '../hooks/DropDownContext';
 import { Colors } from '../constants/colors';
 import { useSettings } from '../hooks/SettingsContext';
-import { KeyType } from '../Storage/storage';
+
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
 interface Prop {
     id?: string;
+    settingKey: KeyType; // indica qué setting es
     title: string;
     valueDefault?: DropDownItem | null;
-    itemsList: DropDownItem[];
+    // itemsList: DropDownItem[];
     zIndex?: number;
     zIndexInverse?: number;
-    settingKey: KeyType; // indica qué setting es
 }
 
 export default function LabelWithDropdown( { id, title, valueDefault, 
-itemsList, zIndex, zIndexInverse, settingKey }: Prop ) {
+ zIndex, zIndexInverse, settingKey }: Prop ) {
 
-    // const itemList = 
+    // const itemList = OPTENER LISTA DE DROPDOWN LIST A PARTIR DEL settingKey
     const { cambiarSetting } = useSettings();   // al cambiar la opcion elegida
+    const { openKey, setOpenKey } = useDropDown();
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState<string | null>(valueDefault?.value ?? null);
-    const [items, setItems] = useState<DropDownItem[]>(itemsList);
+    const [items, setItems] = useState<DropDownItem[]>(getListItem(settingKey));
     
-    const { openKey, setOpenKey } = useDropDown();
 
     // identificador único para este picker
     const pickerId = title; // O usa un ID único

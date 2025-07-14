@@ -1,24 +1,33 @@
 
 // CONSTANTES DE LISTAS DE LAS OPCIONES DE LOS DROPDOWN
 
+export type KeyType = "fontSize" | "orderBy" | "designBy";
+
 export type DropDownItem = {
     label: string; 
     value: string;
 }
 
-export const itemSizes = [
+export const fontSizeList = [
     { label: "Pequeña", value: "small"},
     { label: "Mediana", value: "medium"},
     { label: "Grande", value: "big"},
     { label: "Muy grande", value: "bigger"},
 ]
 
-export const itemOrder = [
+export const orderByList = [
     { label: "Por fecha de creación", value: "created_date"},
     { label: "Por fecha de modificación", value: "modification_date"},
 ]
 
-export const itemDesing = [
+export const designByList = [
     { label: "Ver en lista", value: "list_view"},
     { label: "Ver en cuadrícula", value: "quad_view"},
 ]
+
+export const getListItem = (key : KeyType) : DropDownItem[] => {
+    // retornar la lista de objetos segun la Key Type
+    if (key === "fontSize") return fontSizeList;
+    if (key === "orderBy") return orderByList;
+    if (key === "designBy") return designByList;
+}
