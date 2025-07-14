@@ -75,7 +75,7 @@ zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
                 zIndexInverse={zIndexInverse}
 
                 // ESTILOS
-                style={{ borderWidth: 0,  backgroundColor: "transparent" }}
+                style={{ borderWidth: 0, paddingRight: 0,  backgroundColor: "transparent" }}
                 containerStyle={styles.containerStyle}
                 
                 textStyle={{fontWeight: "600"}}
@@ -88,7 +88,6 @@ zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
                     borderStartStartRadius: 6 
                 }}                
             />
-
         </View>
     )
 }
@@ -98,6 +97,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
     },
     title: { 
         width: "50%",

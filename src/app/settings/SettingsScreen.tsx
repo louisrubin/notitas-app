@@ -18,55 +18,52 @@ export default function SettingsScreen() {
                 <View style={styles.container}>
                     
                     {/* HEADER */}
-                    <View style={null}>
+                    <View>
                         <Text style={styles.headerTitle}>Notitas</Text>
                     </View>
 
                     {/* BODY */}
-                    <View style={{  }}>
-
-                        <SubtitleX text="Estilo" style={styles.subtitle} />
+                    <View style={{paddingHorizontal: 26}}>
+                        {/* label's sin navigation */}
+                        <SubtitleX text="Estilo" />
                         <LabelWithDropdown 
-                            title="Tamaño de fuente" 
-                            containerStyle={styles.subtitle}
+                            title="Tamaño de fuente"
                             settingKey="fontSize"
                             valueDefault={fontSize}
                             zIndex={10} 
                         />
                         <LabelWithDropdown 
                             title="Ordenar por" 
-                            containerStyle={styles.subtitle}
                             settingKey="orderBy"
                             valueDefault={orderBy} 
                             zIndex={9} 
                         />
                         <LabelWithDropdown 
-                            title="Diseño" 
-                            containerStyle={styles.subtitle}
+                            title="Diseño"
                             settingKey="designBy"
                             valueDefault={designBy} 
                             zIndex={8} 
-                        />
-                        
-                        <HorizontalLine />
+                        />                        
+                    </View>        
 
-                        <SubtitleX text="Eliminados" style={styles.subtitle} />
-                        <LabelWithNavigation 
-                            title="Papelera" 
-                            onPress={() => { router.back();
-                            }}
-                        />
+                    <HorizontalLine />
 
-                        <HorizontalLine />
+                    <SubtitleX text="Eliminados" style={{paddingHorizontal: 26}} />
+                    <LabelWithNavigation 
+                        title="Papelera" 
+                        onPress={() => { router.back();
+                        }}
+                    />
 
-                        <SubtitleX text="OTROS" style={styles.subtitle} />
-                        <LabelWithNavigation 
-                            title="Política de Privacidad" 
-                            onPress={() => { router.back();
-                            }}
-                        />
+                    <HorizontalLine />
 
-                    </View>                    
+                    <SubtitleX text="OTROS" style={{paddingHorizontal: 26}} />
+                    <LabelWithNavigation 
+                        title="Política de Privacidad" 
+                        onPress={() => { router.back();
+                        }}
+                    />
+            
                 </View>
             </AnimatedScrollViewX>
         </View>        
@@ -85,9 +82,6 @@ const styles = StyleSheet.create({
         fontWeight: 400, 
         marginBottom: 14, 
         paddingHorizontal: 26, 
-    },
-    subtitle: {
-        paddingHorizontal: 26,
     },
     header:{},
     body:{},
