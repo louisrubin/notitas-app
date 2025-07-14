@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/colors";
 import AnimatedScrollViewX from "../../components/AnimatedScrollViewX";
 import HorizontalLine from "../../components/HorizontalLine";
-import TitleX from "../../components/TitleX";
 import SubtitleX from "../../components/SubtitleX";
 import LabelWithDropdown from "../../components/LabelWithDropdown";
 import { useSettings } from "../../hooks/SettingsContext";
@@ -19,28 +18,31 @@ export default function SettingsScreen() {
                 <View style={styles.container}>
                     
                     {/* HEADER */}
-                    <View style={styles.header}>
-                        <Text style={{fontSize: 30, fontWeight: 400, marginBottom: 14 }}>Notitas</Text>
+                    <View style={null}>
+                        <Text style={styles.headerTitle}>Notitas</Text>
                     </View>
 
                     {/* BODY */}
                     <View style={{  }}>
 
-                        <SubtitleX text="Estilo" />
+                        <SubtitleX text="Estilo" style={styles.subtitle} />
                         <LabelWithDropdown 
                             title="Tamaño de fuente" 
+                            containerStyle={styles.subtitle}
                             settingKey="fontSize"
                             valueDefault={fontSize}
                             zIndex={10} 
                         />
                         <LabelWithDropdown 
-                            title="Ordenar" 
+                            title="Ordenar por" 
+                            containerStyle={styles.subtitle}
                             settingKey="orderBy"
                             valueDefault={orderBy} 
                             zIndex={9} 
                         />
                         <LabelWithDropdown 
                             title="Diseño" 
+                            containerStyle={styles.subtitle}
                             settingKey="designBy"
                             valueDefault={designBy} 
                             zIndex={8} 
@@ -48,7 +50,7 @@ export default function SettingsScreen() {
                         
                         <HorizontalLine />
 
-                        <SubtitleX text="Eliminados" />
+                        <SubtitleX text="Eliminados" style={styles.subtitle} />
                         <LabelWithNavigation 
                             title="Papelera" 
                             onPress={() => { router.back();
@@ -57,16 +59,14 @@ export default function SettingsScreen() {
 
                         <HorizontalLine />
 
-                        <SubtitleX text="OTROS" />
+                        <SubtitleX text="OTROS" style={styles.subtitle} />
                         <LabelWithNavigation 
                             title="Política de Privacidad" 
                             onPress={() => { router.back();
                             }}
                         />
 
-                    </View>
-
-                    
+                    </View>                    
                 </View>
             </AnimatedScrollViewX>
         </View>        
@@ -76,15 +76,20 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 26,
         alignContent: "center",
-
         backgroundColor: Colors.light.background,
         // backgroundColor: "tomato",
     },
-    header:{
-
+    headerTitle:{
+        fontSize: 30, 
+        fontWeight: 400, 
+        marginBottom: 14, 
+        paddingHorizontal: 26, 
     },
+    subtitle: {
+        paddingHorizontal: 26,
+    },
+    header:{},
     body:{},
     footer:{},
 })

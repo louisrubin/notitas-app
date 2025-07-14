@@ -16,8 +16,8 @@ export const fontSizeList = [
 ]
 
 export const orderByList = [
-    { label: "Por fecha de creación", value: "created_date"},
-    { label: "Por fecha de modificación", value: "modification_date"},
+    { label: "Fecha de creación", value: "created_date"},
+    { label: "Fecha de modificación", value: "modification_date"},
 ]
 
 export const designByList = [

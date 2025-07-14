@@ -1,12 +1,13 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TextStyle } from "react-native";
 
 interface Prop {
     text: string;
+    style?: TextStyle;
 }
 
-export default function SubtitleX( {text}: Prop ) {
+export default function SubtitleX( {text, style}: Prop ) {
     return(
-        <Text style={styles.subtitulos}>
+        <Text style={[styles.subtitulos, style]}>
             { text }
         </Text>
     )

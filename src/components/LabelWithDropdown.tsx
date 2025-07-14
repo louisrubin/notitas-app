@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DropDownItem, getListItem, KeyType } from '../constants/DropDownLists';
 import TitleX from './TitleX';
@@ -17,10 +17,11 @@ interface Prop {
     valueDefault?: DropDownItem | null;
     zIndex?: number;
     zIndexInverse?: number;
+    containerStyle?: ViewStyle;
 }
 
 export default function LabelWithDropdown( { id, title, valueDefault, 
-zIndex, zIndexInverse, settingKey }: Prop ) {
+zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
 
     // const itemList = OPTENER LISTA DE DROPDOWN LIST A PARTIR DEL settingKey
     const { cambiarSetting } = useSettings();   // al cambiar la opcion elegida
@@ -54,7 +55,7 @@ zIndex, zIndexInverse, settingKey }: Prop ) {
     }
 
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <TitleX text={title} style={styles.title} />
 
             <DropDownPicker 
@@ -99,9 +100,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     title: { 
-        width: "48%",
+        width: "50%",
     },
     containerStyle: {
-        width: "52%",
+        width: "50%",
     }
 });
