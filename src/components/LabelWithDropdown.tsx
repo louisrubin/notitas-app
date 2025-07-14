@@ -15,13 +15,12 @@ interface Prop {
     settingKey: KeyType; // indica qué setting es
     title: string;
     valueDefault?: DropDownItem | null;
-    // itemsList: DropDownItem[];
     zIndex?: number;
     zIndexInverse?: number;
 }
 
 export default function LabelWithDropdown( { id, title, valueDefault, 
- zIndex, zIndexInverse, settingKey }: Prop ) {
+zIndex, zIndexInverse, settingKey }: Prop ) {
 
     // const itemList = OPTENER LISTA DE DROPDOWN LIST A PARTIR DEL settingKey
     const { cambiarSetting } = useSettings();   // al cambiar la opcion elegida
@@ -56,7 +55,8 @@ export default function LabelWithDropdown( { id, title, valueDefault,
 
     return(
         <View style={styles.container}>
-            <TitleX text={title} style={{ width: "59%" }} />
+            <TitleX text={title} style={styles.title} />
+
             <DropDownPicker 
                 key={id}                
                 open={open}     
@@ -65,7 +65,7 @@ export default function LabelWithDropdown( { id, title, valueDefault,
                 setOpen={setOpen}
                 setValue={setValue}
                 setItems={setItems}
-                listMode="SCROLLVIEW"   // indica que use internamente un ScrollView en lugar de FlatList
+                listMode="SCROLLVIEW"   // usar internamente un ScrollView en lugar de FlatList
                 closeOnBackPressed={true}
 
                 onOpen={handleOpen}
@@ -74,16 +74,18 @@ export default function LabelWithDropdown( { id, title, valueDefault,
                 zIndexInverse={zIndexInverse}
 
                 // ESTILOS
-
                 style={{ borderWidth: 0,  backgroundColor: "transparent" }}
-                containerStyle={{ width: "41%",  }}
+                containerStyle={styles.containerStyle}
                 
                 textStyle={{fontWeight: "600"}}
                 labelStyle={{ fontWeight: "600", textAlign: "right" }}
 
                 selectedItemContainerStyle={{ backgroundColor: "#b3e5fc"}}
-                dropDownContainerStyle={{ backgroundColor: Colors.light.background, borderStartStartRadius: 6 }}
-                
+
+                dropDownContainerStyle={{ 
+                    backgroundColor: Colors.light.background, 
+                    borderStartStartRadius: 6 
+                }}                
             />
 
         </View>
@@ -96,4 +98,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
     },
+    title: { 
+        width: "48%",
+    },
+    containerStyle: {
+        width: "52%",
+    }
 });
