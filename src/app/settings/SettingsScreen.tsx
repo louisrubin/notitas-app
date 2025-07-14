@@ -6,6 +6,8 @@ import TitleX from "../../components/TitleX";
 import SubtitleX from "../../components/SubtitleX";
 import LabelWithDropdown from "../../components/LabelWithDropdown";
 import { useSettings } from "../../hooks/SettingsContext";
+import LabelWithNavigation from "../../components/LabelWithNavigation";
+import { router } from "expo-router";
 
 export default function SettingsScreen() {
     const { fontSize, orderBy, designBy } = useSettings();
@@ -47,12 +49,20 @@ export default function SettingsScreen() {
                         <HorizontalLine />
 
                         <SubtitleX text="Eliminados" />
-                        <TitleX text="Papelera" />
+                        <LabelWithNavigation 
+                            title="Papelera" 
+                            onPress={() => { router.back();
+                            }}
+                        />
 
                         <HorizontalLine />
 
                         <SubtitleX text="OTROS" />
-                        <TitleX text="Política de Privacidad" />
+                        <LabelWithNavigation 
+                            title="Política de Privacidad" 
+                            onPress={() => { router.back();
+                            }}
+                        />
 
                     </View>
 
