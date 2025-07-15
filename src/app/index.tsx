@@ -1,26 +1,23 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
-import { useEffect } from "react"
-import { getAllNotes, initDB} from "../hooks/SQLiteHooks";
+import { useEffect, useState } from "react"
+import { getAllRows, initDB, Nota} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonSettings from "../components/ButtonSettings";
 import { router } from "expo-router";
+import FlatListX from "../components/FlatListX";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 export default function Index(){
     const insets = useSafeAreaInsets();
+    const [notes, setNotes] = useState<Nota[]>();
 
     useEffect( () => {
         const welcome = async () => {
             await initDB();
-            // ejemplosNotas.forEach(nota => {insertNote(nota)});
-            // console.log((await getAllNotes()).length);
-            // (await getAllNotes())
-            //     .forEach( (nota) => {
-            //         console.log(nota.title, nota.value);
-                    
-            //     })
+            const allNotas = await getAllRows();            
+            setNotes(allNotas);
         }
 
         welcome();
@@ -34,7 +31,7 @@ export default function Index(){
                 <ButtonSettings onPress={()=>{router.push("/settings")}}></ButtonSettings>
             </View>
 
-            <ScrollView>    
+            {/* <ScrollView>     */}
 
                 {/* BODY */}            
                 <View style={styles.body}>
@@ -43,14 +40,14 @@ export default function Index(){
                     </Text>
                 </View>
 
-
+                <FlatListX listaNotas={notes} />
 
 
                 {/* FOOTER */}
                 <View style={styles.footer}>
                     <Text style={{ fontSize:18, textAlign: "center", marginBottom: 20 }}>Footer</Text>
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
             
             
         </View>            

@@ -20,7 +20,8 @@ export const initDB = async () => {
                 title TEXT, 
                 value TEXT, 
                 created_at TEXT, 
-                updated_at TEXT
+                updated_at TEXT,
+                delete_date TEXT
             );
         `);
     } catch(e) {
@@ -63,7 +64,7 @@ export const deleteNote = async (id: number) => {
     }
 }
 
-export const getAllNotes = async (): Promise<Nota[]> => {
+export const getAllRows = async (): Promise<Nota[]> => {
     try {
         const allRows = await (await db).getAllAsync(`
             SELECT * FROM ${dbTableName}
@@ -71,7 +72,7 @@ export const getAllNotes = async (): Promise<Nota[]> => {
         return allRows as Nota[];
     } catch (e) {
         console.log("Error getting all notes:", e);
-        return [];
+        return null;
     }
 }
 
