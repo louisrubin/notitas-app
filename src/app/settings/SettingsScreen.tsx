@@ -27,18 +27,21 @@ export default function SettingsScreen() {
                         {/* label's sin navigation */}
                         <SubtitleX text="Estilo" />
                         <LabelWithDropdown 
+                            id="1"
                             title="Tamaño de fuente"
                             settingKey="fontSize"
                             valueDefault={fontSize}
                             zIndex={10} 
                         />
                         <LabelWithDropdown 
+                            id="2"
                             title="Ordenar por" 
                             settingKey="orderBy"
                             valueDefault={orderBy} 
                             zIndex={9} 
                         />
                         <LabelWithDropdown 
+                            id="3"
                             title="Diseño"
                             settingKey="designBy"
                             valueDefault={designBy} 

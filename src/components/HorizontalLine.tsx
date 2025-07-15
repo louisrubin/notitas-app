@@ -9,6 +9,7 @@ export default function HorizontalLine({ color = "#aaa", grosor = StyleSheet.hai
                 backgroundColor: color,
                 marginVertical,
                 width: "100%",
+                paddingHorizontal: 26,
             }}
         />
     );
