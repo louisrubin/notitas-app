@@ -1,16 +1,16 @@
 import { Pressable, StyleSheet } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-type Prop = {
+interface Prop {
     onPress?: () => void;
 }
 
-export default function ButtonSettings( {onPress}: Prop ){
+export default function ButtonSettings( { onPress }: Prop ){
     return(
         <Pressable style={ ({pressed}) => [
             styles.container, 
             { 
-                backgroundColor: pressed ? "#FFCC99" : null,  // background al presionar
+                backgroundColor: pressed ? "#ddd" : null,  // background al presionar
                 opacity: pressed ? 1 : 0.6,     // opacidad mayor al presionar
             } 
             ]}
@@ -25,7 +25,6 @@ export default function ButtonSettings( {onPress}: Prop ){
 const styles = StyleSheet.create({
     container: {
         padding: 6,
-        // borderWidth: 1,
         borderRadius: 60,
     },
 })
