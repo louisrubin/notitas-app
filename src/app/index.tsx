@@ -1,13 +1,12 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
-import { deleteALL, getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
+import { getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonSettings from "../components/ButtonSettings";
 import { router } from "expo-router";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
-import { ejemplosNotas } from "../constants/EjemplosNotas";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -20,16 +19,17 @@ export default function Index(){
         const welcome = async () => {
             await initDB();
             // deleteALL();
+            // deleteNote(11);
 
             // ejemplosNotas.forEach( (nota) => {
             //     insertNote({
             //         title: nota.title, value: nota.value, created_at: nota.created_at})
             // })
-            // insertNote({title: "comprar", value: "comprar gas al chino", created_at: new Date("2025-07-14").toString(),
+            // insertNote({title: "Lorem ipsum 3", value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus facilisis fermentum metus, at congue augue malesuada ac.", created_at: new Date("2025-04-09").toString(),
             // })
             const allNotas = await getAllRows(orderBy.value);            
             setNotes(allNotas);
-            // console.log("length:",allNotas.length);
+            // console.log("length:",allNotas);
         }
 
         welcome();
@@ -56,9 +56,9 @@ export default function Index(){
 
 
                 {/* FOOTER */}
-                <View style={styles.footer}>
+                {/* <View style={styles.footer}>
                     <Text style={{ fontSize:18, textAlign: "center", marginBottom: 20 }}>Footer</Text>
-                </View>
+                </View> */}
             {/* </ScrollView> */}
             
             
