@@ -11,6 +11,7 @@ interface SettingsContextProp {
     orderBy: DropDownItem;
     designBy: DropDownItem;
     cambiarSetting: (key: KeyType, newConfig: DropDownItem) => Promise<void>;
+    getSavedSettingValue: (key: KeyType) => string;
 }
 
 // creando el contexto
@@ -20,6 +21,7 @@ const SettingsContext = createContext<SettingsContextProp>({
     orderBy: orderByList[0],      // Por fecha de creación --> [0]
     designBy: designByList[1],     // Ver en cuadrícula --> [1]
     cambiarSetting: null,
+    getSavedSettingValue: null,
 })
 
 // funct para obtener los valores del contexto
@@ -32,6 +34,11 @@ export function SettingsProvider( {children}: Props ) {
 
     useEffect( () => {
         const cargarSettingsLocal = async () =>{
+
+            // await storage.remove("designBy");
+            // await storage.remove("fontSize");
+            // await storage.remove("orderBy");
+
             // obtener datos desde el AsyncStorage
             const savedFontSize = await storage.get("fontSize");
             const savedOrder = await storage.get("orderBy");
@@ -51,19 +58,33 @@ export function SettingsProvider( {children}: Props ) {
     }, [] );
 
     const cambiarSetting = async ( key: KeyType, newConfig: DropDownItem) => {
-        functMap[key](newConfig);   // actualizar el estado
+        const functionMap: Record<KeyType, (value: DropDownItem) => void> = {
+            // mapa de funciones para setear el State
+            fontSize: (value) => setFontSize(value),
+            orderBy: (value) => setOrder(value),
+            designBy: (value) => setDesign(value),
+        };  
+        // ejecutar funct desde el map
+        functionMap[key](newConfig);   // actualizar el estado
         await storage.set(key, newConfig);  // guarda la config en AsyncStorage
+    }      
+
+    const getSavedSettingValue = (key: KeyType) : string => {
+        // get string para mostrar en el DropDown desde el Context Settings
+        const settingMap : Record<KeyType, string> = {
+            "fontSize": fontSize.value, // Cuando encuentra coincidencia
+            "orderBy": orderBy.value,   // item.value === props.value
+            "designBy": designBy.value  // muestra el 'item.label' asociado
+        }        
+        return settingMap[key] ?? "SettingsContext [key]"; // return label(string) del setting
     }
 
-    const functMap: Record<KeyType, (value: DropDownItem) => void> = {
-        // mapa de funciones para setear el State
-        fontSize: (value) => setFontSize(value),
-        orderBy: (value) => setOrder(value),
-        designBy: (value) => setDesign(value),
-    };
-
     return(
-        <SettingsContext.Provider value={{ fontSize, orderBy, designBy, cambiarSetting }}>
+        <SettingsContext.Provider 
+            value={{ fontSize, orderBy, designBy, 
+                cambiarSetting, getSavedSettingValue, 
+            }}
+        >
             { children }
         </SettingsContext.Provider>
     )

@@ -7,34 +7,29 @@ import { useDropDown } from '../hooks/DropDownContext';
 import { Colors } from '../constants/colors';
 import { useSettings } from '../hooks/SettingsContext';
 
-
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
 interface Prop {
     id?: string;
     settingKey: KeyType; // indica qué setting es
     title: string;
-    valueDefault?: DropDownItem | null;
     zIndex?: number;
     zIndexInverse?: number;
     containerStyle?: ViewStyle;
 }
 
-export default function LabelWithDropdown( { id, title, valueDefault, 
+export default function LabelWithDropdown( { id, title,  
 zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
 
-    // const itemList = OPTENER LISTA DE DROPDOWN LIST A PARTIR DEL settingKey
-    const { cambiarSetting } = useSettings();   // al cambiar la opcion elegida
+    const { getSavedSettingValue, cambiarSetting } = useSettings();   // al cambiar la opcion elegida
     const { openKey, setOpenKey } = useDropDown();
 
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState<string | null>(valueDefault?.value ?? null);
+    const [value, setValue] = useState<string | null>(getSavedSettingValue(settingKey));
     const [items, setItems] = useState<DropDownItem[]>(getListItem(settingKey));
     
-
     // identificador único para este picker
     const pickerId = title; // O usa un ID único
-
     const handleOpen = () => {
         setOpenKey(pickerId);
     };
