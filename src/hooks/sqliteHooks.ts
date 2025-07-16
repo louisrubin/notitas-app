@@ -1,7 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-
 const dbTableName = "notes";
-
 const db = SQLite.openDatabaseAsync('notesDB');
 
 export interface Nota {
@@ -10,6 +8,7 @@ export interface Nota {
     value: string;
     created_at: string;
     updated_at: string;
+    delete_date: string;
 }
 
 export const initDB = async () => {
@@ -54,6 +53,8 @@ export const updateNote = async ({id, title, value, updated_at}: Nota) => {
     }
 }
 
+// ESTE TIENE QUE SER DELETE TODOS LOS ELIMINADOS PASADOS 7-14-30 DIAS
+// EL 'ELIMINAR' TIENE QUE SER SETEAR EL ATRIBUTO delete_date +30 días
 export const deleteNote = async (id: number) => {
     try {
         await (await db).runAsync(`
@@ -64,16 +65,38 @@ export const deleteNote = async (id: number) => {
     }
 }
 
-export const getAllRows = async (): Promise<Nota[]> => {
+export const getAllRows = async (orderBy: string, removedRows = false): Promise<Nota[]> => {
+    const query = getQuery(orderBy, removedRows);    // query segun el param y Context Settings
+    // console.log("query:",query);
+    
     try {
-        const allRows = await (await db).getAllAsync(`
-            SELECT * FROM ${dbTableName}
-        `);
+        const allRows = await (await db).getAllAsync(query);
         return allRows as Nota[];
     } catch (e) {
         console.log("Error getting all notes:", e);
         return null;
     }
+}
+
+const getQuery = (orderBy: string, removedRows: boolean) : string => {
+    let query = `SELECT * FROM ${dbTableName} `;
+
+    if (removedRows) {
+        // get notas seteadas como eliminadas
+        query += `WHERE delete_date IS NOT NULL
+                  ORDER BY delete_date DESC`;
+    } 
+    else if (orderBy === "created_date") {
+        // Fecha de creación
+        query += `WHERE delete_date IS NULL
+                  ORDER BY created_at DESC`;
+    } 
+    else if (orderBy === "modification_date") {
+        // Fecha de modificación
+        query += `WHERE delete_date IS NULL
+                  ORDER BY updated_at DESC`;
+    }
+    return query + ";";
 }
 
 // prepared statements
@@ -84,3 +107,12 @@ export const getAllRows = async (): Promise<Nota[]> => {
 //             VALUES (${title}, ${value}, ${date}, ${date});
 //     `);
 // }
+
+export const deleteALL = async () => {
+    try {
+        await (await db).runAsync(`
+            DELETE FROM ${dbTableName};`);
+    } catch (e) {
+        console.log("Error deleting ALL note:", e); 
+    }
+}

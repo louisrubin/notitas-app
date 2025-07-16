@@ -2,8 +2,13 @@
 // CONSTANTES DE LISTAS DE LAS OPCIONES DE LOS DROPDOWN
 
 export type KeyType = "fontSize" | "orderBy" | "designBy";
-// export type FontSizeType = "small" | "medium" | "big" | "bigger";
+export type FontSizeType = "small" | "medium" | "big" | "bigger";   // valores
+export type OrderType = "created_date" | "modification_date";       // permitidos
+export type DesignType = "list" | "grid";                           // para 'value'
 
+// export type ItemsTypes = FontSizeType | OrderType | DesignType;
+
+// tipos de datos para el DropDown List
 export type DropDownItem = {
     label: string; 
     value: string;
@@ -26,17 +31,22 @@ export const designByList = [
     { label: "Ver en cuadrícula", value: "grid"},
 ]
 
-export const getListItem = (key : KeyType) : DropDownItem[] => {
-    // retornar la lista de objetos segun la Key Type
-    if (key === "fontSize") return fontSizeList;
-    if (key === "orderBy") return orderByList;
-    if (key === "designBy") return designByList;
-}
+
+// FUNCTIONS
+const listMap: Record<KeyType, DropDownItem[]> = {
+    fontSize: fontSizeList,
+    orderBy: orderByList,
+    designBy: designByList,
+};
+export const getListItem = (key : KeyType) : DropDownItem[] => listMap[key];
 
 export const getFontSize = (value: string) : number => {
     // retornar el valor del tamaño de fuente segun el param
-    if (value === "small") return 13;
-    if (value === "medium") return 16;
-    if (value === "big") return 18;
-    if (value === "bigger") return 21;
+    const sizeMap: Record<string, number> = {
+        "small": 13,
+        "medium": 16,
+        "big": 18,
+        "bigger": 21,
+    };
+    return sizeMap[value];
 }

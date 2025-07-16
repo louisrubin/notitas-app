@@ -1,22 +1,33 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
-import { getAllRows, initDB, Nota} from "../hooks/SQLiteHooks";
+import { getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonSettings from "../components/ButtonSettings";
 import { router } from "expo-router";
 import FlatListX from "../components/FlatListX";
+import { useSettings } from "../hooks/SettingsContext";
+import { ejemplosNotas } from "../constants/EjemplosNotas";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 export default function Index(){
     const insets = useSafeAreaInsets();
+    const { orderBy } = useSettings();
     const [notes, setNotes] = useState<Nota[]>();
 
     useEffect( () => {
         const welcome = async () => {
             await initDB();
-            const allNotas = await getAllRows();            
+
+            // ejemplosNotas.forEach( (nota) => {
+            //     insertNote({
+            //         id: nota.id, updated_at: nota.created_at, delete_date: nota.delete_date,
+            //         title: nota.title, value: nota.value, created_at: nota.created_at})
+            // })
+            const allNotas = await getAllRows(orderBy.value);
+            console.log("length:",allNotas.length);
+            
             setNotes(allNotas);
         }
 

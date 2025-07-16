@@ -32,32 +32,35 @@ export function SettingsProvider( {children}: Props ) {
 
     useEffect( () => {
         const cargarSettingsLocal = async () =>{
+            // obtener datos desde el AsyncStorage
             const savedFontSize = await storage.get("fontSize");
             const savedOrder = await storage.get("orderBy");
-            const savedDesign = await storage.get("designBy");        
+            const savedDesign = await storage.get("designBy");
+             
+            // verif si hay valores guardados
+            savedFontSize !== null ? setFontSize(savedFontSize) 
+                        : cambiarSetting("fontSize", fontSize); // la primera vez guarda
 
-            if (savedFontSize !== null) {
-                setFontSize(savedFontSize);
-            } else cambiarSetting("fontSize", fontSize);    // la primera vez guarda
+            savedOrder !== null ? setOrder(savedOrder)
+                        : cambiarSetting("orderBy", orderBy);
 
-            if (savedOrder !== null) {
-                setOrder(savedOrder);
-            } else cambiarSetting("orderBy", orderBy);
-
-            if (savedDesign !== null) {
-                setDesign(savedDesign);
-            } else cambiarSetting("designBy", designBy);
+            savedDesign !== null ? setDesign(savedDesign)
+                        : cambiarSetting("designBy", designBy);
         }
         cargarSettingsLocal();
     }, [] );
 
     const cambiarSetting = async ( key: KeyType, newConfig: DropDownItem) => {
-        if(key === "fontSize") setFontSize(newConfig);    // set estado
-        if(key === "orderBy") setOrder(newConfig);
-        if(key === "designBy") setDesign(newConfig);
-
+        functMap[key](newConfig);   // actualizar el estado
         await storage.set(key, newConfig);  // guarda la config en AsyncStorage
     }
+
+    const functMap: Record<KeyType, (value: DropDownItem) => void> = {
+        // mapa de funciones para setear el State
+        fontSize: (value) => setFontSize(value),
+        orderBy: (value) => setOrder(value),
+        designBy: (value) => setDesign(value),
+    };
 
     return(
         <SettingsContext.Provider value={{ fontSize, orderBy, designBy, cambiarSetting }}>
