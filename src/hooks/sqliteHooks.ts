@@ -3,12 +3,12 @@ const dbTableName = "notes";
 const db = SQLite.openDatabaseAsync('notesDB');
 
 export interface Nota {
-    id: number;
+    id?: number;
     title: string;
     value: string;
     created_at: string;
-    updated_at: string;
-    delete_date: string;
+    updated_at?: string;
+    delete_date?: string;
 }
 
 export const initDB = async () => {
