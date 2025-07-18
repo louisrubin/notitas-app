@@ -3,17 +3,17 @@ import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
 import { getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ButtonSettings from "../components/ButtonSettings";
-import { router } from "expo-router";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
+import TopAppBar from "../components/TopAppBar";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 export default function Index(){
     const insets = useSafeAreaInsets();
     const { orderBy } = useSettings();
-    const [notes, setNotes] = useState<Nota[]>();
+    const [notes, setNotes] = useState<Nota[]>([]);
+    const [selecting, setSelecting] = useState(true);
 
     useEffect( () => {
         const welcome = async () => {
@@ -39,9 +39,7 @@ export default function Index(){
         <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: Colors.light.background }}>
             
             {/* HEADER */}
-            <View style={styles.header}>
-                <ButtonSettings onPress={()=>{router.push("/settings")}}></ButtonSettings>
-            </View>
+            <TopAppBar selectState={selecting} cantNotas={notes.length} />
 
             {/* <ScrollView>     */}
 
@@ -72,13 +70,7 @@ const styles = StyleSheet.create({
         // backgroundColor: "#140A00", //FFE4B5
     },
     header:{
-        paddingHorizontal: 10,
-        flexDirection: "row",
-        paddingTop: 10,
-
-        // backgroundColor: "tomato",
-        alignItems:"center",
-        justifyContent: "flex-end"
+        
     },
     body:{
         flex: 1,
