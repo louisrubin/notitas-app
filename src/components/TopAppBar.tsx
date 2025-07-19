@@ -3,30 +3,27 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ButtonSettings from "./ButtonSettings";
 import { router } from "expo-router";
-import { useState } from "react";
 
 interface Prop {
     selectState?: boolean;
-    cantDeleting?: number;
+    cantNotas?: number;
+    deletingList?: number;
+    onToggleAll?: () => void;
 }
 
-export default function TopAppBar( {selectState, cantDeleting}: Prop){
-    const [isChecked, setIsChecked] = useState(false);  // check del icono
-
-    const handleToggle = () => {
-        return setIsChecked(!isChecked);    // para manejador de icono
-    }
+export default function TopAppBar( {selectState, cantNotas=0, deletingList, onToggleAll}: Prop){
+    const allSelected = cantNotas > 0 && deletingList === cantNotas;
 
     const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
         return(
             <ButtonSettings 
-            onPress={handleToggle}
+            onPress={onToggleAll}
             bgColorPressed={"#ddd"}
             >
                 <View style={[style, {flexDirection: "row", alignItems: "center",}]}>
                     <Ionicons 
-                    name={isChecked ? "radio-button-on" : "radio-button-off"} 
-                    size={24} color={ isChecked ? "red" : "black"}
+                    name={ allSelected ? "radio-button-on" : "radio-button-off"} 
+                    size={24} color={ allSelected ? "red" : "black"}
                     />
                     <Text style={{paddingHorizontal: 5, fontSize: 20}}>
                         Todas
@@ -38,23 +35,22 @@ export default function TopAppBar( {selectState, cantDeleting}: Prop){
 
     return(
         <View style={styles.container}>
-            
-            <SelectAllIcon 
-                style={ !selectState ? styles.invisible : undefined } 
-                cantDeleting={cantDeleting} 
-            />
 
             { selectState 
                 ? 
                     <Text style={[ styles.selectedText,
                         // !selectState ? {opacity:0} : null
                     ]}>
-                        <Text style={{fontWeight: "600"}}>({cantDeleting}) </Text>
+                        <Text style={{fontWeight: "600"}}>({deletingList}) </Text>
                         seleccionados
                     </Text>
                 : 
                     null    
             }
+            
+            <SelectAllIcon 
+                style={ !selectState ? styles.invisible : undefined }
+            />
 
             <ButtonSettings
             onPress={()=>{router.push("/settings")}} 
@@ -82,6 +78,7 @@ const styles = StyleSheet.create({
         width: "100%",
         bottom: 6, // ButtonSettings --> container --> padding
         fontSize: 20,
+        // backgroundColor: "tomato",
     },
     invisible: {
         opacity: 0, 

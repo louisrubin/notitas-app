@@ -40,7 +40,7 @@ export default function Index(){
         welcome();
     }, []);
 
-    const manejarToggleDelete = (id: number) => {
+    const handleToggleDeleteOne = (id: number) => {
         // funct que para usar el useState y pasarlo al <FlatListX />
         setDeletingList(prev => 
             prev.includes(id)
@@ -49,16 +49,33 @@ export default function Index(){
         );
     };
 
+    const handleToggleAllNotes = () => {
+        if (deletingList.length === notes.length) {
+        // Si ya están todos seleccionados, deselecciona todos
+            setDeletingList([]);
+        } else {
+            // Si no, selecciona todos
+            const allIds = notes.map(note => note.id);  // agarra todos los id
+            setDeletingList(allIds);    // los agrega a la lista
+        }
+    }
+
     return(
         <View style={[styles.container, {paddingTop: insets.top}]}>
             
             {/* HEADER */}
-            <TopAppBar selectState={selecting} cantDeleting={deletingList.length} />
+            <TopAppBar 
+            selectState={selecting} 
+            cantNotas={notes.length}
+            deletingList={deletingList.length}
+            onToggleAll={handleToggleAllNotes}
+            />
 
             {/* BODY */}
             <FlatListX 
                 listaNotas={notes}  
-                manejarToggleDelete={manejarToggleDelete}
+                deletingList={deletingList}
+                handleToggleDeleteOne={handleToggleDeleteOne}
             />
             
         </View>            

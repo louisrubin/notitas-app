@@ -7,10 +7,11 @@ import ButtonCheck from "./ButtonCheck";
 
 interface FlatListXProps {
     listaNotas: Nota[];     // toda la info de cada nota
-    manejarToggleDelete?: (id: number) => void; 
+    deletingList?: number[];
+    handleToggleDeleteOne?: (id: number) => void; 
 }
 
-export default function FlatListX( {listaNotas, manejarToggleDelete}: FlatListXProps ){
+export default function FlatListX( {listaNotas, deletingList, handleToggleDeleteOne}: FlatListXProps ){
     const { designBy, fontSize } = useSettings();
     const isGridView = designBy.value === "grid";   // verif el modo selected grid | list
     
@@ -53,7 +54,8 @@ export default function FlatListX( {listaNotas, manejarToggleDelete}: FlatListXP
                         <ButtonCheck
                         color={"red"} 
                         style={stylesGrid.button}
-                        onPress={ () => {manejarToggleDelete(item.id)}}
+                        isChecked={deletingList.includes(item.id)}
+                        onPress={ () => {handleToggleDeleteOne(item.id)}}
                         />
                         
                         <View style={stylesGrid.textContainer}>
