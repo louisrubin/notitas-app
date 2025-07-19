@@ -7,17 +7,17 @@ import { useState } from "react";
 
 interface Prop {
     selectState?: boolean;
-    cantNotas?: number;
+    cantDeleting?: number;
 }
 
-export default function TopAppBar( {selectState, cantNotas}: Prop){
+export default function TopAppBar( {selectState, cantDeleting}: Prop){
     const [isChecked, setIsChecked] = useState(false);  // check del icono
 
     const handleToggle = () => {
         return setIsChecked(!isChecked);    // para manejador de icono
     }
 
-    const SelectAllIcon = ( {cantNotas, style}: Prop & { style?: ViewStyle} ) => {
+    const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
         return(
             <ButtonSettings 
             onPress={handleToggle}
@@ -28,9 +28,8 @@ export default function TopAppBar( {selectState, cantNotas}: Prop){
                     name={isChecked ? "radio-button-on" : "radio-button-off"} 
                     size={24} color={ isChecked ? "red" : "black"}
                     />
-
                     <Text style={{paddingHorizontal: 5, fontSize: 20}}>
-                        Todas ({cantNotas})
+                        Todas
                     </Text>
                 </View>
             </ButtonSettings>
@@ -42,8 +41,20 @@ export default function TopAppBar( {selectState, cantNotas}: Prop){
             
             <SelectAllIcon 
                 style={ !selectState ? styles.invisible : undefined } 
-                cantNotas={cantNotas} 
+                cantDeleting={cantDeleting} 
             />
+
+            { selectState 
+                ? 
+                    <Text style={[ styles.selectedText,
+                        // !selectState ? {opacity:0} : null
+                    ]}>
+                        <Text style={{fontWeight: "600"}}>({cantDeleting}) </Text>
+                        seleccionados
+                    </Text>
+                : 
+                    null    
+            }
 
             <ButtonSettings
             onPress={()=>{router.push("/settings")}} 
@@ -57,13 +68,20 @@ export default function TopAppBar( {selectState, cantNotas}: Prop){
 
 const styles = StyleSheet.create({
     container:{
-        paddingHorizontal: 12,
+        marginHorizontal: 12,
         flexDirection: "row",
         paddingTop: 10,
 
         // backgroundColor: "tomato",
         alignItems: "flex-end",     // bottom eje Y
         justifyContent: "space-between"
+    },
+    selectedText: {
+        position: "absolute",
+        textAlign: "center", 
+        width: "100%",
+        bottom: 6, // ButtonSettings --> container --> padding
+        fontSize: 20,
     },
     invisible: {
         opacity: 0, 

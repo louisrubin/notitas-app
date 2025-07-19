@@ -5,11 +5,12 @@ import { FontSizeType, getFontSize } from "../constants/DropDownLists";
 import { getFormattedDate } from "../hooks/DateFunctions";
 import ButtonCheck from "./ButtonCheck";
 
-interface Prop {
-    listaNotas: Nota[];
+interface FlatListXProps {
+    listaNotas: Nota[];     // toda la info de cada nota
+    manejarToggleDelete?: (id: number) => void; 
 }
 
-export default function FlatListX( {listaNotas}: Prop ){
+export default function FlatListX( {listaNotas, manejarToggleDelete}: FlatListXProps ){
     const { designBy, fontSize } = useSettings();
     const isGridView = designBy.value === "grid";   // verif el modo selected grid | list
     
@@ -41,7 +42,7 @@ export default function FlatListX( {listaNotas}: Prop ){
 
             keyExtractor={(item) => item.id.toString()}
             numColumns={ isGridView ? 2 : 1 } // cambia entre grid y lista            
-            contentContainerStyle={{ padding: 13 }}     // cada item del Flat List
+            contentContainerStyle={{ paddingHorizontal: 10 }}     // cada item del Flat List
 
             renderItem={({ item }) => (
 
@@ -49,11 +50,10 @@ export default function FlatListX( {listaNotas}: Prop ){
                 ? 
                     // GRID VIEW --> TRUE
                     <View style={[stylesGrid.item, ]}>
-                        <ButtonCheck 
+                        <ButtonCheck
                         color={"red"} 
                         style={stylesGrid.button}
-                        onPress={()=>{console.log("id:",item.id);
-                        }}
+                        onPress={ () => {manejarToggleDelete(item.id)}}
                         />
                         
                         <View style={stylesGrid.textContainer}>

@@ -11,10 +11,11 @@ import TopAppBar from "../components/TopAppBar";
 
 export default function Index(){
     const insets = useSafeAreaInsets();
-    const { orderBy } = useSettings();
-    const [notes, setNotes] = useState<Nota[]>([]);
-    const [selecting, setSelecting] = useState(true);
-    // const [deletingList, setDeletingList] = useState<number[]>([]);
+    const { orderBy } = useSettings();      // context
+    const [notes, setNotes] = useState<Nota[]>([]);     // state de Notas
+    
+    const [selecting, setSelecting] = useState(true);   // state para manejar el "selecting" de notas
+    const [deletingList, setDeletingList] = useState<number[]>([]);
 
     useEffect( () => {
         const welcome = async () => {
@@ -39,30 +40,26 @@ export default function Index(){
         welcome();
     }, []);
 
+    const manejarToggleDelete = (id: number) => {
+        // funct que para usar el useState y pasarlo al <FlatListX />
+        setDeletingList(prev => 
+            prev.includes(id)
+                ? prev.filter(itemId => itemId !== id)  // mantiene todos los que son !== id
+                : [...prev, id]             // agrega el nuevo id
+        );
+    };
+
     return(
-        <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: Colors.light.background }}>
+        <View style={[styles.container, {paddingTop: insets.top}]}>
             
             {/* HEADER */}
-            <TopAppBar selectState={selecting} cantNotas={notes.length} />
+            <TopAppBar selectState={selecting} cantDeleting={deletingList.length} />
 
-            {/* <ScrollView>     */}
-
-                {/* BODY */}            
-                <View style={styles.body}>
-                    <Text style={styles.text} >
-                        Inicio
-                    </Text>
-                </View>
-
-                <FlatListX listaNotas={notes} />
-
-
-                {/* FOOTER */}
-                {/* <View style={styles.footer}>
-                    <Text style={{ fontSize:18, textAlign: "center", marginBottom: 20 }}>Footer</Text>
-                </View> */}
-            {/* </ScrollView> */}
-            
+            {/* BODY */}
+            <FlatListX 
+                listaNotas={notes}  
+                manejarToggleDelete={manejarToggleDelete}
+            />
             
         </View>            
     )
@@ -70,12 +67,11 @@ export default function Index(){
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1,         
+        backgroundColor: Colors.light.background
         // backgroundColor: "#140A00", //FFE4B5
     },
-    header:{
-        
-    },
+    
     body:{
         flex: 1,
         alignItems: "center",
