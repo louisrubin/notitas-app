@@ -3,11 +3,11 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useSettings } from "../hooks/SettingsContext";
 import { FontSizeType, getFontSize } from "../constants/DropDownLists";
 import { getFormattedDate } from "../hooks/DateFunctions";
+import ButtonCheck from "./ButtonCheck";
 
 interface Prop {
     listaNotas: Nota[];
 }
-
 
 export default function FlatListX( {listaNotas}: Prop ){
     const { designBy, fontSize } = useSettings();
@@ -34,10 +34,6 @@ export default function FlatListX( {listaNotas}: Prop ){
         return sizeMap[fontSize.value];
     }
 
-    // useEffect(()=> {
-    //     getFormatedDate();
-    // },[])
-
     return (
         <FlatList
             data={listaNotas}
@@ -48,94 +44,81 @@ export default function FlatListX( {listaNotas}: Prop ){
             contentContainerStyle={{ padding: 13 }}     // cada item del Flat List
 
             renderItem={({ item }) => (
-                // <View style={ isGridView ? styles.gridItem : styles.listItem}>
-                //     <Text style={[ styles.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
-                //     <Text style={[styles.contentText, {fontSize: getFontSize(fontSize.value)}]}>{item.value}</Text>
-                //     <Text style={[styles.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>{getFormattedDate(item.created_at)}</Text>
-                // </View>
+
                 isGridView 
-                
                 ? 
                     // GRID VIEW --> TRUE
-                    <View style={styles.gridItem}>
-                        <View style={styles.textContainerGrid}>
+                    <View style={[stylesGrid.item, ]}>
+                        <ButtonCheck 
+                        color={"red"} 
+                        style={stylesGrid.button}
+                        onPress={()=>{console.log("id:",item.id);
+                        }}
+                        />
+                        
+                        <View style={stylesGrid.textContainer}>
+                            
                             <Text numberOfLines={getNumberLinesGridView()} 
-                                style={[styles.contentTextGrid, {fontSize: getFontSize(fontSize.value)}]}>
+                                style={[stylesGrid.contentText, {fontSize: getFontSize(fontSize.value)}]}>
                                 {item.value}
                             </Text>
                         </View>
 
-                        <Text style={[styles.titleGrid, { fontSize: getFontSize(fontSize.value)+2 } ]}>
+                        <Text style={[stylesGrid.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>
                             {item.title}
                         </Text>
 
-                        <Text style={[ styles.dateGrid, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
+                        <Text style={[ stylesGrid.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
                             {getFormattedDate(item.created_at)}
                         </Text>
                     </View>
 
                 :
                     // LIST VIEW --> FALSE
-                    <View style={[styles.listItem, {height: getHeightListView()}]}>
-                        <Text style={[ styles.titleList, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
+                    <View style={[stylesList.item, {height: getHeightListView()}]}>
+                        <Text style={[ stylesList.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
                         <Text numberOfLines={3} 
-                            style={[styles.contentTextList, {fontSize: getFontSize(fontSize.value)}]}>
+                            style={[stylesList.contentText, {fontSize: getFontSize(fontSize.value)}]}>
                                 {item.value}
                         </Text>
-                        <Text style={[styles.dateList, {fontSize: getFontSize(fontSize.value) -3.5 }]}>{getFormattedDate(item.created_at)}</Text>
+                        <Text style={[stylesList.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>{getFormattedDate(item.created_at)}</Text>
                     </View>
             )}
         />
     );
 }
 
-const styles = StyleSheet.create({
-    // gridItem: {
-    //     flex: 1,
-    //     margin: 5,
-    //     paddingVertical: 10,
-    //     paddingHorizontal: 13,
-    //     backgroundColor: "#fff",
-    //     borderRadius: 12,
-    //     // para cuadrícula uniforme
-    //     maxWidth: "48%",
-    // },
-    gridItem:{
+const stylesGrid = StyleSheet.create({
+    item:{
         flex: 1,
+        position: "relative", 
         height: 290,
         maxWidth: "46%",
         margin: 8,
         marginBottom: 25,
+        // backgroundColor: "tomato"
     },
-    listItem: {
-        flex: 1,
-        marginVertical: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        backgroundColor: "#fff",
-        borderRadius: 12,
+    button: {
+        position: "absolute", 
+        top: 3, 
+        left: 3, 
+        zIndex: 50,
+        backgroundColor: "rgba(220, 220, 220, 0.85)",
+        borderRadius: 20,
     },
 
-    titleGrid: {
+    title: {
         fontWeight: "bold",
         textAlign: "center",
         marginTop: 10,
         marginBottom: 3,
     },
-    titleList:{
-        marginBottom: 10,
-        fontWeight: "bold",
-    },
-    contentTextGrid: {
+    contentText: {
         // flex: 1,
         color: "#4B5563", 
     },
-    contentTextList: {
-        flex: 1,
-        color: "#4B5563", 
-    },
 
-    textContainerGrid:{
+    textContainer:{
         flex: 1,
         paddingVertical: 10,
         paddingHorizontal: 13,
@@ -143,13 +126,33 @@ const styles = StyleSheet.create({
         borderRadius: 12,
     },
 
-    dateGrid: {
+    date: {
         // paddingTop: 15,
         color: "#4B5563",
         textAlign: "center",
     },
-    dateList: {
+});
+
+const stylesList = StyleSheet.create({
+
+    item: {
+        flex: 1,
+        marginVertical: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        backgroundColor: "#fff",
+        borderRadius: 12,
+    },
+    title:{
+        marginBottom: 10,
+        fontWeight: "bold",
+    },
+    contentText: {
+        flex: 1,
+        color: "#4B5563", 
+    },
+    date: {
         paddingTop: 15,
         color: "#4B5563",
     },
-});
+})

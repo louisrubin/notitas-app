@@ -14,6 +14,7 @@ export default function Index(){
     const { orderBy } = useSettings();
     const [notes, setNotes] = useState<Nota[]>([]);
     const [selecting, setSelecting] = useState(true);
+    // const [deletingList, setDeletingList] = useState<number[]>([]);
 
     useEffect( () => {
         const welcome = async () => {
@@ -25,11 +26,14 @@ export default function Index(){
             //     insertNote({
             //         title: nota.title, value: nota.value, created_at: nota.created_at})
             // })
-            // insertNote({title: "Lorem ipsum 3", value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus facilisis fermentum metus, at congue augue malesuada ac.", created_at: new Date("2025-04-09").toString(),
+            // insertNote({title: "Lorem ipsum 2", value: `Lorem ipsum dolor sit amet, 
+            //     consectetur adipiscing elit. Vivamus facilisis fermentum metus, 
+            //     at congue augue malesuada ac.`, 
+            //     created_at: new Date("2025-04-09").toString(),
             // })
             const allNotas = await getAllRows(orderBy.value);            
             setNotes(allNotas);
-            // console.log("length:",allNotas);
+            // console.log("length:",allNotas.length);
         }
 
         welcome();

@@ -1,18 +1,19 @@
-import { Pressable, StyleSheet, ViewStyle } from "react-native";
+import { OpaqueColorValue, Pressable, StyleSheet, ViewStyle } from "react-native";
 
 interface Prop {
     children: React.ReactNode;
     onPress?: () => void;
     style?: ViewStyle;
+    bgColorPressed?: string | OpaqueColorValue;
 }
 
-export default function ButtonSettings( { children, onPress, style }: Prop ){
+export default function ButtonSettings( { children, onPress, style, bgColorPressed }: Prop ){
     return(
         <Pressable style={ ({pressed}) => [
             styles.container, 
             style,
             { 
-                backgroundColor: pressed ? "#ddd" : null,  // background al presionar
+                backgroundColor: pressed ? bgColorPressed : null,  // background al presionar
                 opacity: pressed ? 1 : 0.6,     // opacidad mayor al presionar
             } 
             ]}

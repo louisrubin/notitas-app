@@ -12,22 +12,23 @@ interface Prop {
 
 export default function TopAppBar( {selectState, cantNotas}: Prop){
     const [isChecked, setIsChecked] = useState(false);  // check del icono
-    
 
     const handleToggle = () => {
         return setIsChecked(!isChecked);    // para manejador de icono
     }
 
-    const SelectAllIcon = ( {cantNotas, styleParam}: Prop & { styleParam?: ViewStyle} ) => {
+    const SelectAllIcon = ( {cantNotas, style}: Prop & { style?: ViewStyle} ) => {
         return(
             <ButtonSettings 
             onPress={handleToggle}
+            bgColorPressed={"#ddd"}
             >
-                <View style={[styleParam, {flexDirection: "row", alignItems: "center",}]}>
+                <View style={[style, {flexDirection: "row", alignItems: "center",}]}>
                     <Ionicons 
                     name={isChecked ? "radio-button-on" : "radio-button-off"} 
-                    size={24} color="black"
+                    size={24} color={ isChecked ? "red" : "black"}
                     />
+
                     <Text style={{paddingHorizontal: 5, fontSize: 20}}>
                         Todas ({cantNotas})
                     </Text>
@@ -40,12 +41,13 @@ export default function TopAppBar( {selectState, cantNotas}: Prop){
         <View style={styles.container}>
             
             <SelectAllIcon 
-                styleParam={ !selectState ? styles.invisible : null } 
+                style={ !selectState ? styles.invisible : undefined } 
                 cantNotas={cantNotas} 
             />
 
             <ButtonSettings
             onPress={()=>{router.push("/settings")}} 
+            bgColorPressed={"#ddd"}
             >
                 <AntDesign name="setting" size={24} color={"black"} />
             </ButtonSettings>
