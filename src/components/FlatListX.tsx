@@ -78,6 +78,13 @@ export default function FlatListX( {listaNotas, deletingList, handleToggleDelete
                 :
                     // LIST VIEW --> FALSE
                     <View style={[stylesList.item, {height: getHeightListView()}]}>
+                        <ButtonCheck
+                        color={"red"} 
+                        style={stylesGrid.button}
+                        isChecked={deletingList.includes(item.id)}
+                        onPress={ () => {handleToggleDeleteOne(item.id)}}
+                        />
+                        
                         <Text style={[ stylesList.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
                         <Text numberOfLines={3} 
                             style={[stylesList.contentText, {fontSize: getFontSize(fontSize.value)}]}>
@@ -136,9 +143,9 @@ const stylesGrid = StyleSheet.create({
 });
 
 const stylesList = StyleSheet.create({
-
     item: {
         flex: 1,
+        position: "relative", 
         marginVertical: 8,
         paddingVertical: 10,
         paddingHorizontal: 15,
