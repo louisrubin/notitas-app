@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
-import { OpaqueColorValue, View, ViewStyle } from 'react-native';
+import { OpaqueColorValue, StyleProp, View, ViewStyle } from 'react-native';
 import ButtonSettings from './ButtonSettings';
 
 interface Prop {
@@ -8,7 +8,7 @@ interface Prop {
     onPress?: () => void;
     size?: number;
     color?: string | OpaqueColorValue;
-    style?: ViewStyle;
+    style?: StyleProp<ViewStyle>;
     styleButton?: ViewStyle;
 }
 

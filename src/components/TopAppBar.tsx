@@ -6,12 +6,19 @@ import { router } from "expo-router";
 
 interface Prop {
     selectState?: boolean;
+    handleSelectState?: () => void;
     cantNotas?: number;
     deletingList?: number;
     onToggleAll?: () => void;
 }
 
-export default function TopAppBar( {selectState, cantNotas=0, deletingList, onToggleAll}: Prop){
+export default function TopAppBar( { 
+    selectState, 
+    handleSelectState = () => {}, 
+    cantNotas=0, 
+    deletingList, 
+    onToggleAll
+}: Prop){
     const allSelected = cantNotas > 0 && deletingList === cantNotas;
 
     const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
@@ -53,7 +60,10 @@ export default function TopAppBar( {selectState, cantNotas=0, deletingList, onTo
             />
 
             <ButtonSettings
-            onPress={()=>{router.push("/settings")}} 
+            onPress={ () => {
+                router.push("/settings"); 
+                handleSelectState();
+            }} 
             bgColorPressed={"#ddd"}
             >
                 <AntDesign name="setting" size={24} color={"black"} />

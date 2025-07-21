@@ -1,5 +1,5 @@
 import { Nota } from "../hooks/SQLiteHooks"
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSettings } from "../hooks/SettingsContext";
 import { FontSizeType, getFontSize } from "../constants/DropDownLists";
 import { getFormattedDate } from "../hooks/DateFunctions";
@@ -7,11 +7,20 @@ import ButtonCheck from "./ButtonCheck";
 
 interface FlatListXProps {
     listaNotas: Nota[];     // toda la info de cada nota
+    selectingMode?: boolean;
+    setSelectingMode?: () => void;
     deletingList?: number[];
     handleToggleDeleteOne?: (id: number) => void; 
 }
 
-export default function FlatListX( {listaNotas, deletingList, handleToggleDeleteOne}: FlatListXProps ){
+export default function FlatListX( {
+    listaNotas, 
+    selectingMode,
+    setSelectingMode,
+    deletingList, 
+    handleToggleDeleteOne
+}: FlatListXProps ){
+
     const { designBy, fontSize } = useSettings();
     const isGridView = designBy.value === "grid";   // verif el modo selected grid | list
     
@@ -36,6 +45,31 @@ export default function FlatListX( {listaNotas, deletingList, handleToggleDelete
         return sizeMap[fontSize.value];
     }
 
+    const OverlayPressable = ( {id}: {id: number} ) => {
+        // COMPONENTE OVERLAY SOBRE LAS NOTES Y ACTIVAR EL MODO SELECCION
+        return(
+            <Pressable 
+            style={ ({pressed}) => [
+                stylesGrid.overlay,
+                { backgroundColor: pressed && selectingMode 
+                    ? "rgba(0,0,0,0.1)" 
+                    : null 
+                },
+            ] } 
+
+            onPress={() => selectingMode? handleToggleDeleteOne(id) : null}
+            onLongPress={
+                () => {
+                    if(!selectingMode){
+                        setSelectingMode();
+                        handleToggleDeleteOne(id);
+                    }
+                }
+            }
+            />
+        )
+    }
+
     return (
         <FlatList
             data={listaNotas}
@@ -53,14 +87,16 @@ export default function FlatListX( {listaNotas, deletingList, handleToggleDelete
                     <View style={[stylesGrid.item, ]}>
                         <ButtonCheck
                         color={"red"} 
-                        style={stylesGrid.button}
+                        style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
                         isChecked={deletingList.includes(item.id)}
                         onPress={ () => {handleToggleDeleteOne(item.id)}}
                         />
                         
                         <View style={stylesGrid.textContainer}>
-                            
-                            <Text numberOfLines={getNumberLinesGridView()} 
+
+                            <OverlayPressable id={item.id} />
+
+                            <Text numberOfLines={getNumberLinesGridView()}
                                 style={[stylesGrid.contentText, {fontSize: getFontSize(fontSize.value)}]}>
                                 {item.value}
                             </Text>
@@ -80,11 +116,13 @@ export default function FlatListX( {listaNotas, deletingList, handleToggleDelete
                     <View style={[stylesList.item, {height: getHeightListView()}]}>
                         <ButtonCheck
                         color={"red"} 
-                        style={stylesGrid.button}
+                        style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
                         isChecked={deletingList.includes(item.id)}
-                        onPress={ () => {handleToggleDeleteOne(item.id)}}
+                        // onPress={ () => {handleToggleDeleteOne(item.id)}}
                         />
-                        
+
+                        <OverlayPressable id={item.id} />
+
                         <Text style={[ stylesList.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
                         <Text numberOfLines={3} 
                             style={[stylesList.contentText, {fontSize: getFontSize(fontSize.value)}]}>
@@ -108,12 +146,21 @@ const stylesGrid = StyleSheet.create({
         // backgroundColor: "tomato"
     },
     button: {
+        // Grid && List
         position: "absolute", 
         top: 3, 
         left: 3, 
         zIndex: 50,
         backgroundColor: "rgba(220, 220, 220, 0.85)",
         borderRadius: 20,
+    },
+    overlay: {
+        // Grid && List
+        ...StyleSheet.absoluteFillObject, // { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 12,
+        zIndex: 55,
     },
 
     title: {
@@ -129,6 +176,7 @@ const stylesGrid = StyleSheet.create({
 
     textContainer:{
         flex: 1,
+        position: "relative", 
         paddingVertical: 10,
         paddingHorizontal: 13,
         backgroundColor: "#fff",

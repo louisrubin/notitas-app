@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { BackHandler, StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
 import { getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
@@ -14,7 +14,7 @@ export default function Index(){
     const { orderBy } = useSettings();      // context
     const [notes, setNotes] = useState<Nota[]>([]);     // state de Notas
     
-    const [selecting, setSelecting] = useState(true);   // state para manejar el "selecting" de notas
+    const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
 
     useEffect( () => {
@@ -40,6 +40,22 @@ export default function Index(){
         welcome();
     }, []);
 
+    useEffect( () => {
+        // PARA SALIR DEL MODO SELECCION A TRAVES DEL BOTON O GESTO VOLVER ATRAS
+        const volverAction = () => {
+            if (selecting) {
+                exitSelecting(); // sale del modo selecting y limpia la lista actual
+                return true; // bloquea el volver y evita salir de la app
+            }
+            return false; // permite comportamiento normal si no está seleccionando
+        };
+        const volverHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            volverAction
+        );
+        return () => volverHandler.remove();
+    },[selecting])
+
     const handleToggleDeleteOne = (id: number) => {
         // funct que para usar el useState y pasarlo al <FlatListX />
         setDeletingList(prev => 
@@ -59,6 +75,13 @@ export default function Index(){
             setDeletingList(allIds);    // los agrega a la lista
         }
     }
+    const exitSelecting = () => {
+        setSelecting(false);    // salir del modo Selecting
+        setDeletingList([]);    // limpia la lista para limpiar los state de <ButtonCheck>
+    }
+    const handleSelectingMode = () => {
+        setSelecting(!selecting);        
+    }
 
     return(
         <View style={[styles.container, {paddingTop: insets.top}]}>
@@ -66,6 +89,7 @@ export default function Index(){
             {/* HEADER */}
             <TopAppBar 
             selectState={selecting} 
+            handleSelectState={exitSelecting}
             cantNotas={notes.length}
             deletingList={deletingList.length}
             onToggleAll={handleToggleAllNotes}
@@ -74,6 +98,8 @@ export default function Index(){
             {/* BODY */}
             <FlatListX 
                 listaNotas={notes}  
+                selectingMode={selecting}
+                setSelectingMode={handleSelectingMode}
                 deletingList={deletingList}
                 handleToggleDeleteOne={handleToggleDeleteOne}
             />
