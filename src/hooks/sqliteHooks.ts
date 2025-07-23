@@ -65,6 +65,22 @@ export const deleteNote = async (id: number) => {
     }
 }
 
+export const setDeleteNote = async (listDelet: number[]) => {
+    // RECIBE ARRAY Y CADA ID SETEA LAS NOTAS EN LA BD CON 'delete_date'
+    const diaFuturo = new Date(new Date().setDate(new Date().getDate() + 7));   // hoy + 4 dias
+    try {
+        listDelet.forEach( async (id) => {
+            (await db).runAsync(`UPDATE ${dbTableName} 
+                SET delete_date = ? 
+                WHERE id = ?;
+            `, [diaFuturo.toDateString() ,id]);
+        });
+        
+    } catch (e) {
+        console.log("2 Error set deleting note:", e); 
+    }
+} 
+
 export const getAllRows = async (orderBy: string, removedRows = false): Promise<Nota[]> => {
     const query = getQuery(orderBy, removedRows);    // query segun el param y Context Settings
     // console.log("query:",query);

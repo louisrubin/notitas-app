@@ -39,8 +39,8 @@ export default function Index(){
             //     created_at: new Date().toDateString()})
             const allNotas = await getAllRows(orderBy.value);
             setNotes(allNotas);
-            // const futureDate = new Date(new Date().setDate(new Date().getDate() + 7));
-            // console.log(futureDate);
+            // console.log(allNotas);
+            
             
             // console.log("length:",allNotas.length);
             // console.log(notes.at(2));
@@ -66,7 +66,11 @@ export default function Index(){
             volverAction
         );
         return () => volverHandler.remove();
-    },[selecting])
+    },[selecting]);
+
+    const setNoteList = (newList: Nota[]) => {
+        setNotes(newList);
+    }
 
     const handleToggleDeleteOne = (id: number) => {
         // funct que para usar el useState y pasarlo al <FlatListX />
@@ -115,9 +119,11 @@ export default function Index(){
             {
                 showBottomBar && (
                     <BottomBar
-                        cantSelect={deletingList.length}
+                        deleteList={deletingList}
                         visible={selecting}
-                        onHidden={ () => setShowBottomBar(false) }
+                        onHidden={ () => setShowBottomBar(false)}
+                        exitSelectingMode={exitSelecting}
+                        setNotes={setNoteList}  // setea el use State con nueva list
                     />
                 )
             }            
