@@ -130,11 +130,15 @@ export default function FlatListX( {
                             }
                         </View>
 
-                        <Text numberOfLines={1} style={[stylesGrid.title, { fontSize: getFontSize(fontSize.value) +2 } ]}>
+                        <Text numberOfLines={1} 
+                        style={[ stylesGrid.title, { fontSize: getFontSize(fontSize.value) +2 } 
+                        ]}>
                             {item.title}
                         </Text>
 
-                        <Text style={[ stylesGrid.date_created, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
+                        <Text 
+                        style={[ stylesGrid.date_created, {fontSize: getFontSize(fontSize.value) -3.5 }
+                        ]}>
                             {getFormattedDate(item.created_at)}
                         </Text>
                     </View>
@@ -152,10 +156,12 @@ export default function FlatListX( {
 
                         {/* HEADER LIST ITEM --> TITLE, CREATE_AT */}
                         <View style={stylesList.headerListItem}>
-                            <Text style={{fontWeight: "bold", fontSize: getFontSize(fontSize.value)+2 }}>
+                            <Text style={{ flexShrink: 1, fontWeight: "bold", fontSize: getFontSize(fontSize.value)+2 }}
+                            numberOfLines={1}
+                            >
                                 {item.title}
                             </Text>
-                            <Text style={{fontSize: getFontSize(fontSize.value) -3.5, color: "#4B5563" }}>
+                            <Text style={{fontSize: getFontSize(fontSize.value) -3.5, color: "#4B5563", marginLeft: 8 }}>
                                 {getFormattedDate(item.created_at)}
                             </Text>
                         </View>

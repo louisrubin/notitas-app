@@ -14,11 +14,11 @@ export function getFormattedDate(dateString: string): string {
     } 
     else if (diasDiff < 7) {
         // Menos de 7 días
-        return format(fecha, "EEEE HH:mm", { locale: es });
+        return format(fecha, "EEE HH:mm", { locale: es });
     } 
     else {
         // 7 días o más
-        return format(fecha, "d MMMM yyyy", { locale: es });
+        return format(fecha, "d MMM yyyy", { locale: es });
     }
 }
 
