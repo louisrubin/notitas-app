@@ -1,8 +1,9 @@
-import { format, differenceInHours, differenceInDays } from "date-fns";
+import { format, differenceInHours, differenceInDays, differenceInCalendarDays } from "date-fns";
 import { es } from "date-fns/locale";
 
 export function getFormattedDate(dateString: string): string {
-    const fecha = new Date(dateString);
+    // OBTENER LA FECHA DE CREACION SEGUN HACE CUANTO SE CREÓ
+    const fecha = new Date(dateString);  // crear objeto Date con el pasado por param
 
     const horasDiff = differenceInHours(new Date(), fecha);
     const diasDiff = differenceInDays(new Date(), fecha);
@@ -17,7 +18,7 @@ export function getFormattedDate(dateString: string): string {
     } 
     else {
         // 7 días o más
-        return format(fecha, "d 'de' MMMM 'de' yyyy", { locale: es });
+        return format(fecha, "d MMMM yyyy", { locale: es });
     }
 }
 
@@ -26,3 +27,22 @@ export function getFormattedDate(dateString: string): string {
     si la fecha es menos de 7 días              --> format 'Lunes HH:mm'
     si pasa esas cantidad                       --> format '16 de julio de 2025' 
 */
+
+export function getDiffDate(deleteDate: string): string {
+    // RETORNAR LA DIFERENCIA DE DÍAS/HORAS HASTA LA FECHA DE ELIMINACION
+    const fechaParam = new Date(deleteDate);  // crear objeto Date con el pasado por param
+
+    const horasDiff = differenceInHours(fechaParam, new Date());
+    const diasDiff = differenceInCalendarDays(fechaParam, new Date());
+
+    if (diasDiff < 1 ) {
+        // cantidad de horas
+        const strFinal = horasDiff > 1 ? " horas" : " hora";
+        return horasDiff.toString() + strFinal;
+    } 
+    else {
+        // cantidad de días
+        const strFinal = diasDiff > 1 ? " días" : " día";
+        return diasDiff.toString() + strFinal;
+    }
+}

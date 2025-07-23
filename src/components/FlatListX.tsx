@@ -2,7 +2,7 @@ import { Nota } from "../hooks/SQLiteHooks"
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSettings } from "../hooks/SettingsContext";
 import { FontSizeType, getFontSize } from "../constants/DropDownLists";
-import { getFormattedDate } from "../hooks/DateFunctions";
+import { getDiffDate, getFormattedDate } from "../hooks/DateFunctions";
 import ButtonCheck from "./ButtonCheck";
 import { router } from "expo-router";
 
@@ -13,6 +13,7 @@ interface FlatListXProps {
     deletingList?: number[];
     handleToggleDeleteOne?: (id: number) => void;// agregar-quitar el item pressed de la lista
     navigationOnPress?: boolean;
+    trashView?: boolean;
 }
 
 export default function FlatListX( {
@@ -22,6 +23,7 @@ export default function FlatListX( {
     deletingList, 
     handleToggleDeleteOne,
     navigationOnPress = true,
+    trashView = false,  // si está en pantalla 'Papelera' 
 }: FlatListXProps ){
 
     const { designBy, fontSize } = useSettings();
@@ -116,13 +118,23 @@ export default function FlatListX( {
                                 style={[stylesGrid.contentText, {fontSize: getFontSize(fontSize.value)}]}>
                                 {item.value}
                             </Text>
+                            {
+                                trashView ? 
+                                <View style={stylesGrid.date_delete}>
+                                    <Text style={stylesGrid.text_date_delete}>
+                                        {getDiffDate(item.delete_date)}
+                                    </Text>
+                                </View>
+                                
+                                : null
+                            }
                         </View>
 
                         <Text numberOfLines={1} style={[stylesGrid.title, { fontSize: getFontSize(fontSize.value) +2 } ]}>
                             {item.title}
                         </Text>
 
-                        <Text style={[ stylesGrid.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
+                        <Text style={[ stylesGrid.date_created, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
                             {getFormattedDate(item.created_at)}
                         </Text>
                     </View>
@@ -138,12 +150,33 @@ export default function FlatListX( {
 
                         <OverlayPressable nota={item} />
 
-                        <Text style={[ stylesList.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
+                        {/* HEADER LIST ITEM --> TITLE, CREATE_AT */}
+                        <View style={stylesList.headerListItem}>
+                            <Text style={{fontWeight: "bold", fontSize: getFontSize(fontSize.value)+2 }}>
+                                {item.title}
+                            </Text>
+                            <Text style={{fontSize: getFontSize(fontSize.value) -3.5, color: "#4B5563" }}>
+                                {getFormattedDate(item.created_at)}
+                            </Text>
+                        </View>
+                        
                         <Text numberOfLines={3} 
-                            style={[stylesList.contentText, {fontSize: getFontSize(fontSize.value)}]}>
-                                {item.value}
+                            style={[stylesList.contentText, {fontSize: getFontSize(fontSize.value)}]}
+                        >
+                            {item.value}
                         </Text>
-                        <Text style={[stylesList.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>{getFormattedDate(item.created_at)}</Text>
+                        {/* <Text style={[stylesList.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
+                            {getFormattedDate(item.created_at)}
+                        </Text> */}
+                        {
+                            trashView ? 
+                            <View style={stylesGrid.date_delete}>
+                                <Text style={stylesGrid.text_date_delete}>
+                                    {getDiffDate(item.delete_date)}
+                                </Text>
+                            </View>
+                            : null
+                        }
                     </View>
             )}
         />
@@ -185,7 +218,7 @@ const stylesGrid = StyleSheet.create({
         marginBottom: 3,
     },
     contentText: {
-        // flex: 1,
+        flex: 1,
         color: "#4B5563", 
     },
 
@@ -197,11 +230,25 @@ const stylesGrid = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 12,
     },
-
-    date: {
-        // paddingTop: 15,
+    date_created: {
         color: "#4B5563",
         textAlign: "center",
+    },
+    date_delete: {
+        position: "absolute",
+        alignItems: "center",   // X
+        justifyContent: "center",   // Y
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 25,
+        
+        borderBottomLeftRadius: 16,
+        borderBottomEndRadius: 16,
+        backgroundColor: "#ddd",
+    },
+    text_date_delete: {
+        fontSize: 16, fontWeight: 600
     },
 });
 
@@ -215,9 +262,11 @@ const stylesList = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 12,
     },
-    title:{
+    headerListItem: {
+        flexDirection: "row", 
+        justifyContent: "space-between", 
+        alignItems: "center", 
         marginBottom: 10,
-        fontWeight: "bold",
     },
     contentText: {
         flex: 1,

@@ -23,6 +23,7 @@ export default function TrashView(){
             <FlatListX 
                 listaNotas={notesTrash}
                 navigationOnPress={false}   // al hacer clic no puede ir a esa nota
+                trashView={true}    // vista: Papelera
             />
         </View>
     )
