@@ -88,7 +88,7 @@ export default function FlatListX( {
 
             keyExtractor={ (item) => item.id.toString()}
             numColumns={ isGridView ? 2 : 1 } // cambia entre grid y lista            
-            contentContainerStyle={{ paddingHorizontal: 10 }}     // cada item del Flat List
+            contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 105 }} // container del FlatList
 
             renderItem={({ item }) => (
 

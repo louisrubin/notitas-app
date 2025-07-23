@@ -1,14 +1,15 @@
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, StyleSheet, Text } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { useEffect, useRef } from "react";
 
-interface BarProp {
+interface BottomBarProp {
     cantSelect?: number;
     visible?: boolean;
     onHidden?: () => void; 
 }
 
-export default function BottomBar( {cantSelect, visible, onHidden}: BarProp ) {
+export default function BottomBar( {cantSelect, visible, onHidden}: BottomBarProp ) {
+
     const translateY = useRef(new Animated.Value(100)).current; // Comienza fuera de pantalla abajo
     const opacity = useRef(new Animated.Value(0)).current;      // Comienza invisible
 
@@ -66,9 +67,15 @@ export default function BottomBar( {cantSelect, visible, onHidden}: BarProp ) {
             >
                 <Feather name="trash" size={24} color="white" />
                 <Text style={{color: "white", fontSize: 15}}>Papelera</Text>
-                <Text style={[styles.cantidad, cantSelect > 0 ? {backgroundColor: "tomato"} : null]}>
-                    {cantSelect > 0 ? cantSelect : null}
-                </Text>
+                {
+                    // al menos 1 seleccionado --> visible
+                    cantSelect > 0 && (
+                    <Text style={styles.cantidad}>
+                        {cantSelect}
+                    </Text>
+                    )
+                }
+                
             </Pressable>
         </Animated.View>
     )
@@ -104,5 +111,6 @@ const styles = StyleSheet.create({
         top: 0,
         borderRadius: 16,
         paddingHorizontal: 5,
+        backgroundColor: "tomato"
     },
 })

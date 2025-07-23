@@ -1,4 +1,4 @@
-import { BackHandler, StyleSheet, Text, View } from "react-native"
+import { BackHandler, StyleSheet, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
 import { deleteALL, getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
@@ -44,9 +44,7 @@ export default function Index(){
             
             // console.log("length:",allNotas.length);
             // console.log(notes.at(2));
-            
         }
-
         welcome();
     }, []);
 
@@ -107,12 +105,13 @@ export default function Index(){
                 onToggleAll={handleToggleAllNotes}
             />
             <FlatListX 
-                listaNotas={notes}  
-                selectingMode={selecting}
-                setSelectingMode={handleSelectingMode}
-                deletingList={deletingList}
-                handleToggleDeleteOne={handleToggleDeleteOne}
-            />
+                    listaNotas={notes}  
+                    selectingMode={selecting}
+                    setSelectingMode={handleSelectingMode}
+                    deletingList={deletingList}
+                    handleToggleDeleteOne={handleToggleDeleteOne}
+                />
+            
             {
                 showBottomBar && (
                     <BottomBar
@@ -121,31 +120,14 @@ export default function Index(){
                         onHidden={ () => setShowBottomBar(false) }
                     />
                 )
-            }
-            
-        </View>            
+            }            
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,         
-        backgroundColor: Colors.light.background
-        // backgroundColor: "#140A00", //FFE4B5
+        backgroundColor: Colors.light.background,
     },
-    
-    body:{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    footer:{},
-
-    text: {
-        textAlign: "center",
-        color: Colors.light.text,
-        fontSize: 30,
-        fontWeight: "bold",
-        height: 400
-    }
 })

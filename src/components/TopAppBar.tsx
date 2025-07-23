@@ -23,39 +23,41 @@ export default function TopAppBar( {
 
     const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
         return(
-            <ButtonSettings 
-            onPress={onToggleAll}
-            bgColorPressed={"#ddd"}
-            >
-                <View style={[style, {flexDirection: "row", alignItems: "center",}]}>
-                    <Ionicons 
-                    name={ allSelected ? "radio-button-on" : "radio-button-off"} 
-                    size={24} color={ allSelected ? "red" : "black"}
-                    />
-                    <Text style={{paddingHorizontal: 5, fontSize: 20}}>
-                        Todas
-                    </Text>
-                </View>
-            </ButtonSettings>
+            <View style={style}>
+                <ButtonSettings 
+                onPress={onToggleAll}
+                bgColorPressed={"#ddd"}
+                >
+                    <View style={{flexDirection: "row", alignItems: "center",}}>
+                        <Ionicons 
+                        name={ allSelected ? "radio-button-on" : "radio-button-off"} 
+                        size={24} color={ allSelected ? "red" : "black"}
+                        />
+                        <Text style={{paddingHorizontal: 5, fontSize: 20}}>
+                            Todas
+                        </Text>
+                    </View>
+                </ButtonSettings>
+            </View>            
         )
     }
 
     return(
         <View style={styles.container}>
-            { selectState 
-                ? 
-                    <Text style={[ styles.selectedText,
-                        // !selectState ? {opacity:0} : null
-                    ]}>
-                        <Text style={{fontWeight: "600"}}>({deletingCount}) </Text>
-                        seleccionados
-                    </Text>
-                : 
-                    null    
-            }            
+            { selectState && (
+                <Text style={[ styles.selectedText,
+                    // !selectState ? {opacity:0} : null
+                ]}>
+                    <Text style={{fontWeight: "600"}}>({deletingCount}) </Text>
+                    seleccionados
+                </Text>
+                ) 
+            }
+
             <SelectAllIcon 
                 style={ !selectState ? styles.invisible : undefined }
             />
+
             <ButtonSettings
             onPress={ () => {
                 router.push("/settings"); 
