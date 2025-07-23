@@ -4,6 +4,7 @@ import { useSettings } from "../hooks/SettingsContext";
 import { FontSizeType, getFontSize } from "../constants/DropDownLists";
 import { getFormattedDate } from "../hooks/DateFunctions";
 import ButtonCheck from "./ButtonCheck";
+import { router } from "expo-router";
 
 interface FlatListXProps {
     listaNotas: Nota[];     // toda la info de cada nota
@@ -45,24 +46,34 @@ export default function FlatListX( {
         return sizeMap[fontSize.value];
     }
 
-    const OverlayPressable = ( {id}: {id: number} ) => {
-        // COMPONENTE OVERLAY SOBRE LAS NOTES Y ACTIVAR EL MODO SELECCION
+    const OverlayPressable = ( {nota}: {nota: Nota} ) => {
+        // COMPONENTE OVERLAY SOBRE LAS NOTES -> NAVEGAR Y ACTIVAR EL MODO SELECCION
         return(
             <Pressable 
             style={ ({pressed}) => [
                 stylesGrid.overlay,
-                { backgroundColor: pressed && selectingMode 
+                { backgroundColor: pressed
                     ? "rgba(0,0,0,0.1)" 
                     : null 
                 },
             ] } 
 
-            onPress={() => selectingMode? handleToggleDeleteOne(id) : null}
+            onPress={ () => selectingMode? handleToggleDeleteOne(nota.id) 
+                : router.push({
+                    pathname: "/nota/NotaDetailScreen",
+                    params:{
+                        id: nota.id,
+                        title: nota.title,
+                        value: nota.value,
+                        created_at: nota.created_at,
+                    }
+                })
+            }
             onLongPress={
                 () => {
                     if(!selectingMode){
                         setSelectingMode();
-                        handleToggleDeleteOne(id);
+                        handleToggleDeleteOne(nota.id);
                     }
                 }
             }
@@ -75,7 +86,7 @@ export default function FlatListX( {
             data={listaNotas}
             key={ isGridView ? "grid" : "list" } // forzar render al cambiar de modo
 
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={ (item) => item.id.toString()}
             numColumns={ isGridView ? 2 : 1 } // cambia entre grid y lista            
             contentContainerStyle={{ paddingHorizontal: 10 }}     // cada item del Flat List
 
@@ -87,14 +98,14 @@ export default function FlatListX( {
                     <View style={[stylesGrid.item, ]}>
                         <ButtonCheck
                         color={"red"} 
-                        style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
+                        style={[stylesGrid.button, selectingMode? {opacity: 1}: {opacity: 0}]}
                         isChecked={deletingList.includes(item.id)}
-                        onPress={ () => {handleToggleDeleteOne(item.id)}}
+                        // onPress={ () => {handleToggleDeleteOne(item.id)}}
                         />
                         
                         <View style={stylesGrid.textContainer}>
 
-                            <OverlayPressable id={item.id} />
+                            <OverlayPressable nota={item} />
 
                             <Text numberOfLines={getNumberLinesGridView()}
                                 style={[stylesGrid.contentText, {fontSize: getFontSize(fontSize.value)}]}>
@@ -102,7 +113,7 @@ export default function FlatListX( {
                             </Text>
                         </View>
 
-                        <Text style={[stylesGrid.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>
+                        <Text numberOfLines={1} style={[stylesGrid.title, { fontSize: getFontSize(fontSize.value) +2 } ]}>
                             {item.title}
                         </Text>
 
@@ -121,7 +132,7 @@ export default function FlatListX( {
                         // onPress={ () => {handleToggleDeleteOne(item.id)}}
                         />
 
-                        <OverlayPressable id={item.id} />
+                        <OverlayPressable nota={item} />
 
                         <Text style={[ stylesList.title, { fontSize: getFontSize(fontSize.value)+2 } ]}>{item.title}</Text>
                         <Text numberOfLines={3} 

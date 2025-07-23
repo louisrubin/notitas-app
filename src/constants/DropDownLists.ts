@@ -43,10 +43,10 @@ export const getListItem = (key : KeyType) : DropDownItem[] => listMap[key];
 export const getFontSize = (value: string) : number => {
     // retornar el valor del tamaño de fuente segun el param
     const sizeMap: Record<string, number> = {
-        "small": 13,
-        "medium": 16,
-        "big": 18,
-        "bigger": 21,
+        "small": 13,    // +2
+        "medium": 16,   // +2
+        "big": 18,      // +2
+        "bigger": 20,   // +2
     };
     return sizeMap[value];
 }

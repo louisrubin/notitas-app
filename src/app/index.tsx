@@ -1,11 +1,12 @@
 import { BackHandler, StyleSheet, Text, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
-import { getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
+import { deleteALL, getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
 import TopAppBar from "../components/TopAppBar";
+import BottomBar from "../components/BottomBar";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -16,6 +17,7 @@ export default function Index(){
     
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
+    const [showBottomBar, setShowBottomBar] = useState(false);
 
     useEffect( () => {
         const welcome = async () => {
@@ -32,9 +34,17 @@ export default function Index(){
             //     at congue augue malesuada ac.`, 
             //     created_at: new Date("2025-04-09").toString(),
             // })
-            const allNotas = await getAllRows(orderBy.value);            
+            // insertNote({title: "Implementación de app notas📝", 
+            //     value: "1️⃣ Buscador en tiempo real en SQLite\n2️⃣ Redireccionar al detalle de la nota\n3️⃣ Implementar soporte Markdown", 
+            //     created_at: new Date().toDateString()})
+            const allNotas = await getAllRows(orderBy.value);
             setNotes(allNotas);
+            // const futureDate = new Date(new Date().setDate(new Date().getDate() + 7));
+            // console.log(futureDate);
+            
             // console.log("length:",allNotas.length);
+            // console.log(notes.at(2));
+            
         }
 
         welcome();
@@ -42,6 +52,10 @@ export default function Index(){
 
     useEffect( () => {
         // PARA SALIR DEL MODO SELECCION A TRAVES DEL BOTON O GESTO VOLVER ATRAS
+        if (selecting) {
+            setShowBottomBar(true); // Monta <BottomBar> al activar selecting
+        }
+
         const volverAction = () => {
             if (selecting) {
                 exitSelecting(); // sale del modo selecting y limpia la lista actual
@@ -85,17 +99,13 @@ export default function Index(){
 
     return(
         <View style={[styles.container, {paddingTop: insets.top}]}>
-            
-            {/* HEADER */}
             <TopAppBar 
-            selectState={selecting} 
-            handleSelectState={exitSelecting}
-            cantNotas={notes.length}
-            deletingList={deletingList.length}
-            onToggleAll={handleToggleAllNotes}
+                selectState={selecting} 
+                handleSelectState={exitSelecting}
+                cantNotas={notes.length}
+                deletingCount={deletingList.length}
+                onToggleAll={handleToggleAllNotes}
             />
-
-            {/* BODY */}
             <FlatListX 
                 listaNotas={notes}  
                 selectingMode={selecting}
@@ -103,6 +113,15 @@ export default function Index(){
                 deletingList={deletingList}
                 handleToggleDeleteOne={handleToggleDeleteOne}
             />
+            {
+                showBottomBar && (
+                    <BottomBar
+                        cantSelect={deletingList.length}
+                        visible={selecting}
+                        onHidden={ () => setShowBottomBar(false) }
+                    />
+                )
+            }
             
         </View>            
     )

@@ -8,7 +8,7 @@ interface Prop {
     selectState?: boolean;
     handleSelectState?: () => void;
     cantNotas?: number;
-    deletingList?: number;
+    deletingCount?: number;
     onToggleAll?: () => void;
 }
 
@@ -16,10 +16,10 @@ export default function TopAppBar( {
     selectState, 
     handleSelectState = () => {}, 
     cantNotas=0, 
-    deletingList, 
+    deletingCount, 
     onToggleAll
 }: Prop){
-    const allSelected = cantNotas > 0 && deletingList === cantNotas;
+    const allSelected = cantNotas > 0 && deletingCount === cantNotas;
 
     const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
         return(
@@ -42,23 +42,20 @@ export default function TopAppBar( {
 
     return(
         <View style={styles.container}>
-
             { selectState 
                 ? 
                     <Text style={[ styles.selectedText,
                         // !selectState ? {opacity:0} : null
                     ]}>
-                        <Text style={{fontWeight: "600"}}>({deletingList}) </Text>
+                        <Text style={{fontWeight: "600"}}>({deletingCount}) </Text>
                         seleccionados
                     </Text>
                 : 
                     null    
-            }
-            
+            }            
             <SelectAllIcon 
                 style={ !selectState ? styles.invisible : undefined }
             />
-
             <ButtonSettings
             onPress={ () => {
                 router.push("/settings"); 
