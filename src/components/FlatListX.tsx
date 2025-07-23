@@ -11,7 +11,8 @@ interface FlatListXProps {
     selectingMode?: boolean;
     setSelectingMode?: () => void;
     deletingList?: number[];
-    handleToggleDeleteOne?: (id: number) => void; 
+    handleToggleDeleteOne?: (id: number) => void;// agregar-quitar el item pressed de la lista
+    navigationOnPress?: boolean;
 }
 
 export default function FlatListX( {
@@ -19,7 +20,8 @@ export default function FlatListX( {
     selectingMode,
     setSelectingMode,
     deletingList, 
-    handleToggleDeleteOne
+    handleToggleDeleteOne,
+    navigationOnPress = true,
 }: FlatListXProps ){
 
     const { designBy, fontSize } = useSettings();
@@ -56,22 +58,26 @@ export default function FlatListX( {
                     ? "rgba(0,0,0,0.1)" 
                     : null 
                 },
-            ] } 
-
+            ] }
+            // si está en Selecting agrega a la lista, si no navega a la ruta
             onPress={ () => selectingMode? handleToggleDeleteOne(nota.id) 
-                : router.push({
-                    pathname: "/nota/NotaDetailScreen",
-                    params:{
-                        id: nota.id,
-                        title: nota.title,
-                        value: nota.value,
-                        created_at: nota.created_at,
-                    }
-                })
+                : 
+                navigationOnPress?   // verif si puede navegar para el router
+                    router.push({
+                        pathname: "/nota/NotaDetailScreen",
+                        params:{
+                            id: nota.id,
+                            title: nota.title,
+                            value: nota.value,
+                            created_at: nota.created_at,
+                        }
+                    })
+                : null
             }
             onLongPress={
                 () => {
-                    if(!selectingMode){
+                    // si se pasaron las props y no están vacías
+                    if(!selectingMode && setSelectingMode && handleToggleDeleteOne){
                         setSelectingMode();
                         handleToggleDeleteOne(nota.id);
                     }
@@ -99,8 +105,7 @@ export default function FlatListX( {
                         <ButtonCheck
                         color={"red"} 
                         style={[stylesGrid.button, selectingMode? {opacity: 1}: {opacity: 0}]}
-                        isChecked={deletingList.includes(item.id)}
-                        // onPress={ () => {handleToggleDeleteOne(item.id)}}
+                        isChecked={deletingList?.includes(item.id)}
                         />
                         
                         <View style={stylesGrid.textContainer}>
@@ -128,8 +133,7 @@ export default function FlatListX( {
                         <ButtonCheck
                         color={"red"} 
                         style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
-                        isChecked={deletingList.includes(item.id)}
-                        // onPress={ () => {handleToggleDeleteOne(item.id)}}
+                        isChecked={deletingList?.includes(item.id)}
                         />
 
                         <OverlayPressable nota={item} />

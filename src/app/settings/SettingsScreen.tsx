@@ -13,7 +13,7 @@ export default function SettingsScreen() {
         <View style={{ flex: 1, backgroundColor: Colors.light.background}}>
             <AnimatedScrollViewX title="Notitas">
 
-                <View style={styles.container}>
+                <View style={{flex: 1}}>
                     
                     {/* HEADER */}
                     <View>
@@ -49,8 +49,7 @@ export default function SettingsScreen() {
                     <SubtitleX text="Eliminados" style={{paddingHorizontal: 26}} />
                     <LabelWithNavigation 
                         title="Papelera" 
-                        onPress={() => { router.back();
-                        }}
+                        onPress={() => { router.push("trash"); }}
                     />
 
                     <HorizontalLine />
@@ -58,8 +57,7 @@ export default function SettingsScreen() {
                     <SubtitleX text="OTROS" style={{paddingHorizontal: 26}} />
                     <LabelWithNavigation 
                         title="Política de Privacidad" 
-                        onPress={() => { router.back();
-                        }}
+                        onPress={() => { router.back(); }}
                     />
             
                 </View>
@@ -69,19 +67,10 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignContent: "center",
-        backgroundColor: Colors.light.background,
-        // backgroundColor: "tomato",
-    },
     headerTitle:{
         fontSize: 30, 
         fontWeight: 400, 
         marginBottom: 14, 
         paddingHorizontal: 26, 
     },
-    header:{},
-    body:{},
-    footer:{},
 })
