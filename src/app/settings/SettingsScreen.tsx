@@ -49,7 +49,7 @@ export default function SettingsScreen() {
                     <SubtitleX text="Eliminados" style={{paddingHorizontal: 26}} />
                     <LabelWithNavigation 
                         title="Papelera" 
-                        onPress={() => { router.push("trash"); }}
+                        onPress={() => { router.replace("trash"); }}
                     />
 
                     <HorizontalLine />

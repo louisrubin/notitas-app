@@ -81,9 +81,22 @@ export const setDeleteNote = async (listDelet: number[]) => {
     }
 } 
 
-export const getAllRows = async (orderBy: string, removedRows = false): Promise<Nota[]> => {
-    const query = getQuery(orderBy, removedRows);    // query segun el param y Context Settings
-    // console.log("query:",query);
+export const undoNotesFromTrash = async (listTrash: number[]) => {
+    // RECIBE ARRAY Y CADA ID SETEA SU CAMPO 'delete_date' = NULL;
+    try {
+        listTrash.forEach( async (id) => {
+            (await db).runAsync(`UPDATE ${dbTableName} 
+                SET delete_date = NULL 
+                WHERE id = ?;
+            `, [id]);
+        });
+    } catch (e) {
+        console.log("Error undo note from trash:", e); 
+    }
+}
+
+export const getAllRows = async (orderBy: string, trashRows = false): Promise<Nota[]> => {
+    const query = getQuery(orderBy, trashRows);    // query segun el param y Context Settings
     
     try {
         const allRows = await (await db).getAllAsync(query);
@@ -94,10 +107,10 @@ export const getAllRows = async (orderBy: string, removedRows = false): Promise<
     }
 }
 
-const getQuery = (orderBy: string, removedRows: boolean) : string => {
+const getQuery = (orderBy: string, trashRows: boolean) : string => {
     let query = `SELECT * FROM ${dbTableName} `;
 
-    if (removedRows) {
+    if (trashRows) {
         // get notas seteadas como eliminadas
         query += `WHERE delete_date IS NOT NULL
                   ORDER BY delete_date DESC`;

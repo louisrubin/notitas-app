@@ -1,12 +1,13 @@
 import { BackHandler, StyleSheet, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
-import { deleteALL, getAllRows, initDB, insertNote, Nota} from "../hooks/SQLiteHooks";
+import { deleteALL, getAllRows, insertNote, Nota, setDeleteNote} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
 import TopAppBar from "../components/TopAppBar";
 import BottomBar from "../components/BottomBar";
+import BottomBarButton from "../components/BottomBarButton";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -20,8 +21,8 @@ export default function Index(){
     const [showBottomBar, setShowBottomBar] = useState(false);
 
     useEffect( () => {
-        const welcome = async () => {
-            await initDB();
+        const cargarNotas = async () => {
+            // await initDB();
             // deleteALL();
             // deleteNote(11);
 
@@ -39,13 +40,12 @@ export default function Index(){
             //     created_at: new Date().toDateString()})
             const allNotas = await getAllRows(orderBy.value);
             setNotes(allNotas);
-            // console.log(allNotas);
-            
+            // console.log(allNotas);            
             
             // console.log("length:",allNotas.length);
             // console.log(notes.at(2));
         }
-        welcome();
+        cargarNotas();
     }, []);
 
     useEffect( () => {
@@ -67,10 +67,6 @@ export default function Index(){
         );
         return () => volverHandler.remove();
     },[selecting]);
-
-    const setNoteList = (newList: Nota[]) => {
-        setNotes(newList);
-    }
 
     const handleToggleDeleteOne = (id: number) => {
         // funct que para usar el useState y pasarlo al <FlatListX />
@@ -99,6 +95,16 @@ export default function Index(){
         setSelecting(!selecting);        
     }
 
+    const deleteFunction = async () => {
+        // método para SETEAR 'delete_date' a notas seleccionadas
+        if (deletingList.length > 0) {
+            await setDeleteNote(deletingList);    // set atributo 'delete_date' = hoy
+            const newNotesList = await getAllRows(orderBy.value);   // get nueva lista
+            setNotes(newNotesList); // setear nueva lista para el index
+            exitSelecting();    // salir modo selecting y limpiar lista deleting
+        }
+    }
+
     return(
         <View style={[styles.container, {paddingTop: insets.top}]}>
             <TopAppBar 
@@ -119,12 +125,16 @@ export default function Index(){
             {
                 showBottomBar && (
                     <BottomBar
-                        deleteList={deletingList}
                         visible={selecting}
                         onHidden={ () => setShowBottomBar(false)}
-                        exitSelectingMode={exitSelecting}
-                        setNotes={setNoteList}  // setea el use State con nueva list
-                    />
+                    >
+                        <BottomBarButton 
+                            name="Papelera" 
+                            iconName="trash" 
+                            cantSelected={deletingList.length}
+                            onPress={deleteFunction}
+                        />
+                    </BottomBar>
                 )
             }            
         </View>
