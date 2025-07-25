@@ -5,9 +5,12 @@ import { useSettings } from "../../hooks/SettingsContext";
 import FlatListX from "../../components/FlatListX";
 import BottomBar from "../../components/BottomBar";
 import BottomBarButton from "../../components/BottomBarButton";
+import { useNotes } from "../../hooks/NotesContext";
 
 export default function TrashView(){
     const { orderBy } = useSettings();     // context del setting actual 
+    const { cargarNotas } = useNotes();    // context
+
     const [selecting, setSelecting] = useState(false);
     const [notesTrash, setNotesTrash] = useState<Nota[]>([]);
     const [deletingList, setDeletingList] = useState<number[]>([]);
@@ -63,12 +66,18 @@ export default function TrashView(){
 
     const undoFunction = async () => {
         // método para SETEAR 'delete_date' = NULL
-        if (deletingList.length > 0) {
-            await undoNotesFromTrash(deletingList);    // set atributo 'delete_date' = NULL
-            const newNotesList = await getAllRows(orderBy.value, true);   // get nueva lista
-            setNotesTrash(newNotesList); // setear nueva lista para el FlatList
-            exitSelectingMode();    // salir modo selecting y limpiar lista deleting
+        try {
+            if (deletingList.length > 0) {
+                await undoNotesFromTrash(deletingList);    // set atributo 'delete_date' = NULL
+                const newNotesList = await getAllRows(orderBy.value, true);   // get nueva lista
+                setNotesTrash(newNotesList); // setear nueva lista para el FlatList
+                exitSelectingMode();    // salir modo selecting y limpiar lista deleting
+                await cargarNotas();    // recarga la lista para el INDEX
+            }
+        } catch (er) {
+            throw new Error("error al restaurar notas:",er);
         }
+        
     }
 
     return(

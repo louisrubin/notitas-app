@@ -1,52 +1,25 @@
 import { BackHandler, StyleSheet, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
-import { deleteALL, getAllRows, insertNote, Nota, setDeleteNote} from "../hooks/SQLiteHooks";
+import { deleteALL, getAllRows, insertNote, setDeleteNote} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
 import TopAppBar from "../components/TopAppBar";
 import BottomBar from "../components/BottomBar";
 import BottomBarButton from "../components/BottomBarButton";
+import { useNotes } from "../hooks/NotesContext";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 export default function Index(){
     const insets = useSafeAreaInsets();
     const { orderBy } = useSettings();      // context
-    const [notes, setNotes] = useState<Nota[]>([]);     // state de Notas
+    const { notes, setNotes } = useNotes(); // context
     
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
     const [showBottomBar, setShowBottomBar] = useState(false);
-
-    useEffect( () => {
-        const cargarNotas = async () => {
-            // await initDB();
-            // deleteALL();
-            // deleteNote(11);
-
-            // ejemplosNotas.forEach( (nota) => {
-            //     insertNote({
-            //         title: nota.title, value: nota.value, created_at: nota.created_at})
-            // })
-            // insertNote({title: "Lorem ipsum 2", value: `Lorem ipsum dolor sit amet, 
-            //     consectetur adipiscing elit. Vivamus facilisis fermentum metus, 
-            //     at congue augue malesuada ac.`, 
-            //     created_at: new Date("2025-04-09").toString(),
-            // })
-            // insertNote({title: "Implementación de app notas📝", 
-            //     value: "1️⃣ Buscador en tiempo real en SQLite\n2️⃣ Redireccionar al detalle de la nota\n3️⃣ Implementar soporte Markdown", 
-            //     created_at: new Date().toDateString()})
-            const allNotas = await getAllRows(orderBy.value);
-            setNotes(allNotas);
-            // console.log(allNotas);            
-            
-            // console.log("length:",allNotas.length);
-            // console.log(notes.at(2));
-        }
-        cargarNotas();
-    }, []);
 
     useEffect( () => {
         // PARA SALIR DEL MODO SELECCION A TRAVES DEL BOTON O GESTO VOLVER ATRAS
