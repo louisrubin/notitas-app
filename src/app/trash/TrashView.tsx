@@ -1,6 +1,6 @@
 import { BackHandler, Text, View } from "react-native";
 import { useEffect, useState } from "react";
-import { deleteNoteVencidas, diasParaDelete, getAllRows, Nota, undoNotesFromTrash } from "../../hooks/SQLiteHooks";
+import { deleteNotesManual, deleteNoteVencidas, diasParaDelete, getAllRows, Nota, undoNotesFromTrash } from "../../hooks/SQLiteHooks";
 import { useSettings } from "../../hooks/SettingsContext";
 import FlatListX from "../../components/FlatListX";
 import BottomBar from "../../components/BottomBar";
@@ -76,10 +76,23 @@ export default function TrashView(){
                 exitSelectingMode();    // salir modo selecting y limpiar lista deleting
                 await cargarNotas();    // recarga la lista para el INDEX
             }
-        } catch (er) {
-            throw new Error("error al restaurar notas:",er);
+        } catch (error) {
+            throw new Error("error al restaurar notas:",error);
         }
         
+    }
+
+    const deletePermantente = async () => {
+        try {
+            if (deletingList.length > 0) {
+                await deleteNotesManual(deletingList);
+                const newNotesList = await getAllRows(orderBy.value, true);   // get nueva lista
+                setNotesTrash(newNotesList); // setear nueva lista para el FlatList
+                exitSelectingMode();    // salir modo selecting y limpiar lista deleting
+            }
+        } catch (error) {
+            throw new Error("error al eliminar notas:",error);
+        }
     }
 
     return(
@@ -110,8 +123,12 @@ export default function TrashView(){
                         <BottomBarButton 
                             name="Restaurar"
                             iconName="rotate-ccw"
-                            cantSelected={deletingList.length}
                             onPress={undoFunction}
+                        />
+                        <BottomBarButton 
+                            name="Eliminar"
+                            iconName="trash"
+                            onPress={deletePermantente}
                         />
                     </BottomBar>
                 )

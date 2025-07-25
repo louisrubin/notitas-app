@@ -55,13 +55,29 @@ export const updateNote = async ({id, title, value, updated_at}: Nota) => {
     }
 }
 
-// ESTE TIENE QUE SER DELETE TODOS LOS ELIMINADOS PASADOS 7-14-30 DIAS
-// EL 'ELIMINAR' SETEA EL ATRIBUTO delete_date = +X días
+export const deleteNotesManual = async (listDelet: number[]) => {
+    try {
+        if (listDelet.length > 0) {
+            // Si el array está vacío la query se rompe
+            (await db).runAsync(
+                `DELETE FROM ${dbTableName} 
+                WHERE id IN (${listDelet.map( () => '?').join(',')});`, // Genera un string como "?, ?, ?, ..."
+                listDelet
+            );
+        }
+    } catch (error) {
+        throw new Error("Error al eliminar notas manualmente:",error);        
+    }
+}
+
+
 export const deleteNoteVencidas = async () => {
+    // TODAS LAS NOTAS CON delete_date CON FECHA PASADA SE ELIMINAN 
     try {
         const today = new Date().toISOString(); // fecha actual
 
-        await (await db).runAsync(`
+        await (await db).runAsync(
+            `
             DELETE FROM ${dbTableName} 
             WHERE delete_date IS NOT NULL AND delete_date <= ?;
         `, [today]);
@@ -75,29 +91,38 @@ export const setDeleteNote = async (listDelet: number[]) => {
     const diaFuturo = new Date(new Date().setDate(new Date().getDate() + diasParaDelete));
     
     try {
-        listDelet.forEach( async (id) => {
-            (await db).runAsync(`UPDATE ${dbTableName} 
+        if (listDelet.length > 0) {
+            // Si el array está vacío la query se rompe
+            (await db).runAsync(
+                `
+                UPDATE ${dbTableName} 
                 SET delete_date = ? 
-                WHERE id = ?;
-            `, [diaFuturo.toISOString(), id]);
-        });
-        
-    } catch (e) {
-        console.log("2 Error set deleting note:", e); 
+                WHERE id IN (${listDelet.map( () => '?').join(',')});
+                `, // Genera un string como "?, ?, ?, ..."
+                [diaFuturo.toISOString(), ...listDelet]
+            );
+        }
+    } catch (error) {
+        throw new Error("Error al eliminar nota:",error);        
     }
 } 
 
 export const undoNotesFromTrash = async (listTrash: number[]) => {
     // RECIBE ARRAY Y CADA ID SETEA SU CAMPO 'delete_date' = NULL;
     try {
-        listTrash.forEach( async (id) => {
-            (await db).runAsync(`UPDATE ${dbTableName} 
+        if (listTrash.length > 0) {
+            // Si el array está vacío la query se rompe
+            (await db).runAsync(
+                `
+                UPDATE ${dbTableName} 
                 SET delete_date = NULL 
-                WHERE id = ?;
-            `, [id]);
-        });
-    } catch (e) {
-        console.log("Error undo note from trash:", e); 
+                WHERE id IN (${listTrash.map( () => '?').join(',')});
+                `, // Genera un string como "?, ?, ?, ..."
+                listTrash
+            );
+        }
+    } catch (error) {
+        throw new Error("Error al restaurar notas:",error);
     }
 }
 
