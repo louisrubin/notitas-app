@@ -1,6 +1,6 @@
-import { BackHandler, View } from "react-native";
+import { BackHandler, Text, View } from "react-native";
 import { useEffect, useState } from "react";
-import { getAllRows, Nota, undoNotesFromTrash } from "../../hooks/SQLiteHooks";
+import { deleteNoteVencidas, diasParaDelete, getAllRows, Nota, undoNotesFromTrash } from "../../hooks/SQLiteHooks";
 import { useSettings } from "../../hooks/SettingsContext";
 import FlatListX from "../../components/FlatListX";
 import BottomBar from "../../components/BottomBar";
@@ -19,8 +19,10 @@ export default function TrashView(){
     useEffect( () => {
         // AL MONTAR LA VISTA
         const cargarNotasTrash = async () => {
+            deleteNoteVencidas();   // elimina las notas vencidas al montar la vista
             const allNotes = await getAllRows(orderBy.value, true); // true --> get eliminados
             setNotesTrash(allNotes);
+            // console.log(allNotes);            
         };
         cargarNotasTrash();
     }, []);
@@ -82,6 +84,13 @@ export default function TrashView(){
 
     return(
         <View style={{flex: 1}}>
+            <Text style={{
+                textAlign: "center", fontWeight: 500, color: "#4B5563",
+                marginBottom: 10, paddingHorizontal: 70,
+            }}>
+                Las notas serán borradas de forma permanente pasados {diasParaDelete} días de su eliminación.
+            </Text>
+            
             <FlatListX 
                 listaNotas={notesTrash}
                 selectingMode={selecting}

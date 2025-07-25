@@ -1,7 +1,7 @@
 import { BackHandler, StyleSheet, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
-import { deleteALL, getAllRows, insertNote, setDeleteNote} from "../hooks/SQLiteHooks";
+import { deleteNoteVencidas, getAllRows, setDeleteNote} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
@@ -20,6 +20,11 @@ export default function Index(){
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
     const [showBottomBar, setShowBottomBar] = useState(false);
+
+    useEffect( () => {
+        // AL MONTAR LA VISTA
+        deleteNoteVencidas();   // elimina las notas vencidas en la papelera
+    }, []);
 
     useEffect( () => {
         // PARA SALIR DEL MODO SELECCION A TRAVES DEL BOTON O GESTO VOLVER ATRAS

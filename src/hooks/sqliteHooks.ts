@@ -2,6 +2,8 @@ import * as SQLite from 'expo-sqlite';
 const dbTableName = "notes";
 const db = SQLite.openDatabaseAsync('notesDB');
 
+export const diasParaDelete = 14;   // días para la eliminacion permanente
+
 export interface Nota {
     id?: number;
     title: string;
@@ -9,7 +11,7 @@ export interface Nota {
     created_at: string;
     updated_at?: string;
     delete_date?: string;
-}
+};
 
 export const initDB = async () => {
     try{
@@ -54,26 +56,30 @@ export const updateNote = async ({id, title, value, updated_at}: Nota) => {
 }
 
 // ESTE TIENE QUE SER DELETE TODOS LOS ELIMINADOS PASADOS 7-14-30 DIAS
-// EL 'ELIMINAR' TIENE QUE SER SETEAR EL ATRIBUTO delete_date +30 días
-export const deleteNote = async (id: number) => {
+// EL 'ELIMINAR' SETEA EL ATRIBUTO delete_date = +X días
+export const deleteNoteVencidas = async () => {
     try {
+        const today = new Date().toISOString(); // fecha actual
+
         await (await db).runAsync(`
-            DELETE FROM ${dbTableName} WHERE id = ?;
-        `, [id]);
+            DELETE FROM ${dbTableName} 
+            WHERE delete_date IS NOT NULL AND delete_date <= ?;
+        `, [today]);
     } catch (e) {
-        console.log("Error deleting note:", e); 
+        console.log("Error eliminando notas vencidas:", e); 
     }
 }
 
 export const setDeleteNote = async (listDelet: number[]) => {
     // RECIBE ARRAY Y CADA ID SETEA LAS NOTAS EN LA BD CON 'delete_date'
-    const diaFuturo = new Date(new Date().setDate(new Date().getDate() + 7));   // hoy + 4 dias
+    const diaFuturo = new Date(new Date().setDate(new Date().getDate() + diasParaDelete));
+    
     try {
         listDelet.forEach( async (id) => {
             (await db).runAsync(`UPDATE ${dbTableName} 
                 SET delete_date = ? 
                 WHERE id = ?;
-            `, [diaFuturo.toDateString() ,id]);
+            `, [diaFuturo.toISOString(), id]);
         });
         
     } catch (e) {

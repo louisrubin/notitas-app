@@ -1,4 +1,4 @@
-import { format, differenceInHours, differenceInDays, differenceInCalendarDays } from "date-fns";
+import { format, differenceInHours, differenceInDays, differenceInCalendarDays, differenceInMinutes } from "date-fns";
 import { es } from "date-fns/locale";
 
 export function getFormattedDate(dateString: string): string {
@@ -35,14 +35,18 @@ export function getDiffDate(deleteDate: string): string {
     const horasDiff = differenceInHours(fechaParam, new Date());
     const diasDiff = differenceInCalendarDays(fechaParam, new Date());
 
-    if (diasDiff < 1 ) {
-        // cantidad de horas
-        const strFinal = horasDiff > 1 ? " horas" : " hora";
-        return horasDiff.toString() + strFinal;
-    } 
-    else {
-        // cantidad de días
+    if (diasDiff >= 1) {
+        // cantidad de DIAS
         const strFinal = diasDiff > 1 ? " días" : " día";
         return diasDiff.toString() + strFinal;
+    }
+    else if (horasDiff >= 1) {
+        // cantidad de HORAS
+        const strFinal = horasDiff > 1 ? " horas" : " hora";
+        return horasDiff.toString() + strFinal;
+    }
+    else {
+        // cantidad de MINUTOS
+        return differenceInMinutes(fechaParam, new Date()) + " minutos";
     }
 }
