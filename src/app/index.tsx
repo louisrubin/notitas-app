@@ -9,6 +9,8 @@ import TopAppBar from "../components/TopAppBar";
 import BottomBar from "../components/BottomBar";
 import BottomBarButton from "../components/BottomBarButton";
 import { useNotes } from "../hooks/NotesContext";
+import ButtonCreateNote from "../components/buttons/ButtonCreateNote";
+import { router } from "expo-router";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -92,13 +94,18 @@ export default function Index(){
                 deletingCount={deletingList.length}
                 onToggleAll={handleToggleAllNotes}
             />
+
+            <ButtonCreateNote 
+                onPress={ () => router.push("nota")}
+            />
+
             <FlatListX 
-                    listaNotas={notes}  
-                    selectingMode={selecting}
-                    setSelectingMode={handleSelectingMode}
-                    deletingList={deletingList}
-                    handleToggleDeleteOne={handleToggleDeleteOne}
-                />
+                listaNotas={notes}  
+                selectingMode={selecting}
+                setSelectingMode={handleSelectingMode}
+                deletingList={deletingList}
+                handleToggleDeleteOne={handleToggleDeleteOne}
+            />
             
             {
                 showBottomBar && (

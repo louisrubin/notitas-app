@@ -43,6 +43,23 @@ export const insertNote = async ({title, value, created_at}: Nota) => {
     }
 }
 
+export async function getNoteByID(id: number): Promise<Nota> {
+    // OBTENER UN SOLO REGISTRO DE LA BD RETORNANDO COMO 'Nota'
+    try {
+        const nota = await (await db).getFirstAsync(
+                `
+                SELECT * 
+                FROM ${dbTableName} 
+                WHERE id = ?;
+                `, [id]
+            );
+        return nota as Nota;
+    } catch (error) {
+        console.log("Error al cargar la nota:", error);
+    }
+}
+
+
 export const updateNote = async ({id, title, value, updated_at}: Nota) => {
     try {
         await (await db).runAsync(`
@@ -66,7 +83,7 @@ export const deleteNotesManual = async (listDelet: number[]) => {
             );
         }
     } catch (error) {
-        throw new Error("Error al eliminar notas manualmente:",error);        
+        console.log("Error al eliminar notas manualmente:",error);        
     }
 }
 
@@ -103,7 +120,7 @@ export const setDeleteNote = async (listDelet: number[]) => {
             );
         }
     } catch (error) {
-        throw new Error("Error al eliminar nota:",error);        
+        console.log("Error al eliminar nota:",error);        
     }
 } 
 
@@ -122,7 +139,7 @@ export const undoNotesFromTrash = async (listTrash: number[]) => {
             );
         }
     } catch (error) {
-        throw new Error("Error al restaurar notas:",error);
+        console.log("Error al restaurar notas:",error);
     }
 }
 

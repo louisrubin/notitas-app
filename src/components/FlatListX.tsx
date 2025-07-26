@@ -68,10 +68,7 @@ export default function FlatListX( {
                     router.push({
                         pathname: "/nota/NotaDetailScreen",
                         params:{
-                            id: nota.id,
-                            title: nota.title,
-                            value: nota.value,
-                            created_at: nota.created_at,
+                            id_P: nota.id,
                         }
                     })
                 : null
