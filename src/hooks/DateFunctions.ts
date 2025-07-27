@@ -6,7 +6,7 @@ import { es } from "date-fns/locale";
 export function getTodayDateLocal( date_P = new Date()): string {
     return format(
         date_P,
-        "d MMM yyyy HH:mm", 
+        "d MMM yyyy", 
         { locale: es }
     );
 }

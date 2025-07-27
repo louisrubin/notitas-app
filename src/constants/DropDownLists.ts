@@ -48,5 +48,5 @@ export const getFontSize = (value: string) : number => {
         "big": 34,   
         "bigger": 42,
     };
-    return sizeMap[value];
+    return sizeMap[value] ?? 16;
 }

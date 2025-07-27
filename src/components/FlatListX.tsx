@@ -111,8 +111,8 @@ export default function FlatListX( {
 
                             <OverlayPressable nota={item} />
 
-                            <Text numberOfLines={getNumberLinesGridView()}
-                                style={[stylesGrid.contentText, {fontSize: getFontSize(fontSize.value)}]}>
+                            <Text numberOfLines={14}
+                                style={[stylesGrid.contentText, {fontSize: getFontSize(null)}]}>
                                 {item.value}
                             </Text>
                             {
@@ -128,13 +128,13 @@ export default function FlatListX( {
                         </View>
 
                         <Text numberOfLines={1} 
-                        style={[ stylesGrid.title, { fontSize: getFontSize(fontSize.value) +2 } 
+                        style={[ stylesGrid.title, { fontSize: getFontSize(null) +2 } 
                         ]}>
                             {item.title}
                         </Text>
 
                         <Text 
-                        style={[ stylesGrid.date_created, {fontSize: getFontSize(fontSize.value) -3.5 }
+                        style={[ stylesGrid.date_created, {fontSize: getFontSize(null) -3.5 }
                         ]}>
                             {getFormattedDate(item.created_at)}
                         </Text>
@@ -142,7 +142,7 @@ export default function FlatListX( {
 
                 :
                     // LIST VIEW --> FALSE
-                    <View style={[stylesList.item, {height: getHeightListView()}]}>
+                    <View style={ stylesList.item }>
                         <ButtonCheck
                         color={"red"} 
                         style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
@@ -153,24 +153,22 @@ export default function FlatListX( {
 
                         {/* HEADER LIST ITEM --> TITLE, CREATE_AT */}
                         <View style={stylesList.headerListItem}>
-                            <Text style={{ flexShrink: 1, fontWeight: "bold", fontSize: getFontSize(fontSize.value)+2 }}
+                            <Text style={{ flexShrink: 1, fontWeight: "bold", fontSize: getFontSize(null)+2 }}
                             numberOfLines={1}
                             >
                                 {item.title}
                             </Text>
-                            <Text style={{fontSize: getFontSize(fontSize.value) -3.5, color: "#4B5563", marginLeft: 8 }}>
+                            <Text style={{fontSize: getFontSize(null) -3.5, color: "#4B5563", marginLeft: 8 }}>
                                 {getFormattedDate(item.created_at)}
                             </Text>
                         </View>
                         
-                        <Text numberOfLines={3} 
-                            style={[stylesList.contentText, {fontSize: getFontSize(fontSize.value)}]}
+                        <Text numberOfLines={4} 
+                            style={[stylesList.contentText, {fontSize: getFontSize(null)}]}
                         >
                             {item.value}
                         </Text>
-                        {/* <Text style={[stylesList.date, {fontSize: getFontSize(fontSize.value) -3.5 }]}>
-                            {getFormattedDate(item.created_at)}
-                        </Text> */}
+                        
                         {
                             trashView ? 
                             <View style={stylesGrid.date_delete}>
@@ -258,6 +256,7 @@ const stylesGrid = StyleSheet.create({
 const stylesList = StyleSheet.create({
     item: {
         flex: 1,
+        height: 120,
         position: "relative", 
         marginVertical: 8,
         paddingVertical: 10,
