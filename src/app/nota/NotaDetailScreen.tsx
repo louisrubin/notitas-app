@@ -1,11 +1,13 @@
-import { BackHandler, StyleSheet, Text, TextInput, View } from "react-native";
-import { getNoteByID, Nota, updateNote } from "../../hooks/SQLiteHooks";
-import { useLocalSearchParams } from "expo-router";
+import { BackHandler, StyleSheet, TextInput, View } from "react-native";
+import { getNoteByID, insertNote, Nota, updateNote } from "../../hooks/SQLiteHooks";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { getFontSize } from "../../constants/DropDownLists";
 import { useSettings } from "../../hooks/SettingsContext";
 import HorizontalLine from "../../components/HorizontalLine";
 import { useEffect, useState } from "react";
 import { useNotes } from "../../hooks/NotesContext";
+import HeaderNotaEditor from "../../components/HeaderNotaEditor";
+import { getTodayDateLocal } from "../../hooks/DateFunctions";
 
 
 export default function NotaDetailScreen() {
@@ -13,6 +15,7 @@ export default function NotaDetailScreen() {
     const { fontSize } = useSettings();
     const { cargarNotas } = useNotes();
     const fontSizeValue = getFontSize(fontSize.value);
+    
 
     const [nota, setNota] = useState<Nota | null>(null);
     const [originalNota, setOriginalNota] = useState<Nota | null>(null);
@@ -25,7 +28,16 @@ export default function NotaDetailScreen() {
         }
 
         if (id_P) {
-            cargarNota();   // cargar solo si ingresó en una nota
+            //  SI HAY ID (nota existente) CARGAR SU INFO DESDE LA BD
+            cargarNota();
+        }
+        else{
+            //  CREO UN OBJETO NOTA VACIO PARA SETEAR EN EL STATE
+            const nuevaNota: Nota = {
+                title: "", value: "", created_at: new Date().toISOString(),
+            };
+            setNota(nuevaNota);
+            setOriginalNota(nuevaNota);
         }
     }, []);
 
@@ -33,7 +45,7 @@ export default function NotaDetailScreen() {
         const volverHandler = BackHandler.addEventListener(
             "hardwareBackPress",
             volverYGuardar
-        );
+        );       
 
         return () => volverHandler.remove();    // elimina el event listener
     }, [nota, originalNota]);
@@ -47,35 +59,58 @@ export default function NotaDetailScreen() {
                 { ...prev, [campo]: value } // copia todos los campos anterior
             :                               //  actualiza solo ese 'campo'
                 prev    // si la nota es null no hace nada
-        );
+        );        
     }
 
     function volverYGuardar(): boolean{
         // SI HUBO CAMBIOS GUARDA EN BD SINO NADA
-
         const huboCambios =
             // boolean
-            nota?.title !== originalNota?.title ||
+            nota?.title !== originalNota?.title 
+            ||
             nota?.value !== originalNota?.value;
 
         if (!huboCambios) {
             // router.back(); // No hace falta guardar, solo volver
             return false;
         }
+        if (id_P) {
+            // SI INGRESO A UNA NOTA
+            updateNote({
+                id: nota.id,
+                title: nota.title.trim(),
+                value: nota.value.trim(), 
+                updated_at: new Date().toISOString(),
+                created_at: nota.created_at,
+            }) 
+        } 
+        else {
+            // CREANDO NOTA E INSERTANDO EN LA BD
+            let notaTitle = nota.title;
+            const createDate = new Date();
 
-        updateNote({
-            id: nota.id, 
-            title: nota.title,
-            value: nota.value, 
-            updated_at: new Date().toISOString(),
-            created_at: nota.created_at,
-        }) 
-        cargarNotas();  // actualizar Flat List
-        
+            if (notaTitle.length === 0 && nota.value.length > 0) {
+                // ESCRIBIÓ CONTENIDO PERO NO EL TÍTULO 
+                notaTitle = getTodayDateLocal(createDate);  // titulo en formato 'es'
+            }
+            insertNote({
+                title: notaTitle.trim(),
+                value: nota.value.trim(),
+                created_at: createDate.toISOString(),   // to ISO String
+            })
+        }        
+        cargarNotas();  // actualizar Flat List        
         return false;
     }
 
     return(
+        <>
+        <Stack.Screen 
+            options={{
+                header: () => <HeaderNotaEditor onPressBack={volverYGuardar} />
+            }}
+        />
+
         <View style={styles.container}>
 
             <TextInput 
@@ -104,6 +139,8 @@ export default function NotaDetailScreen() {
                 { nota?.value }
             </TextInput>
         </View>
+
+        </>
     )
 }
 
@@ -111,20 +148,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1, 
         paddingHorizontal: 16,
-        // alignItems: "center", 
-        // justifyContent: "center",
-        // backgroundColor: "tomato"
+    },
+    header: {
+        flexDirection: "row", 
 
+        backgroundColor:"tomato"
     },
     textArea: {
         flex: 1, 
         textAlignVertical: "top",
-        
-        // color: "#737373",
-        // justifyContent: "flex-start",
-        // borderWidth: 0.5,
-        // flexDirection: "row",
-        // backgroundColor: "tomato"
     },
     text: {
         flex: 1,
@@ -132,8 +164,4 @@ const styles = StyleSheet.create({
         fontSize: 22,
         paddingHorizontal: 40,
     },
-    // title: {
-    //     fontWeight: "600",
-    //     color: "#ddd",
-    // }
 })

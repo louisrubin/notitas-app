@@ -1,5 +1,15 @@
-import { format, differenceInHours, differenceInDays, differenceInCalendarDays, differenceInMinutes } from "date-fns";
+import { format, differenceInHours, differenceInDays, 
+    differenceInCalendarDays, differenceInMinutes,
+} from "date-fns";
 import { es } from "date-fns/locale";
+
+export function getTodayDateLocal( date_P = new Date()): string {
+    return format(
+        date_P,
+        "d MMM yyyy HH:mm", 
+        { locale: es }
+    );
+}
 
 export function getFormattedDate(dateString: string): string {
     // OBTENER LA FECHA DE CREACION SEGUN HACE CUANTO SE CREÓ
