@@ -6,6 +6,8 @@ interface NotesContextType {
     notes: Nota[];
     cargarNotas: () => Promise<void>;
     setNotes: React.Dispatch<React.SetStateAction<Nota[]>>; // use State (hook)
+    cargando: boolean;
+    // setCargando: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const NotesContext = createContext<NotesContextType>(null); // inicial vacío
@@ -18,12 +20,15 @@ export const useNotes = () => {
 
 export function NotesProvider( {children}: {children: React.ReactNode} ){
     const [notes, setNotes] = useState<Nota[]>([]);
+    const [cargando, setCargando] = useState(true);
     const { orderBy } = useSettings();
 
     const cargarNotas = async () => {
         // SETEA TODAS LAS NOTAS DESDE LA BD AL STATE
+        setCargando(true);    // set
         const allNotas = await getAllRows(orderBy.value);
         setNotes(allNotas);
+        setCargando(false);    // set
     };
 
     useEffect( () => {
@@ -32,7 +37,9 @@ export function NotesProvider( {children}: {children: React.ReactNode} ){
 
 
     return (
-        <NotesContext.Provider value={{ notes, cargarNotas, setNotes }}>
+        <NotesContext.Provider 
+        value={{ notes, cargarNotas, setNotes, cargando }}
+        >
             {children}
         </NotesContext.Provider>
     );

@@ -1,6 +1,6 @@
 import { BackHandler, StyleSheet, ToastAndroid, View } from "react-native"
 import { Colors } from "../constants/colors"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { deleteNoteVencidas, getAllRows, setDeleteNote} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
@@ -10,18 +10,19 @@ import BottomBar from "../components/BottomBar";
 import BottomBarButton from "../components/BottomBarButton";
 import { useNotes } from "../hooks/NotesContext";
 import ButtonCreateNote from "../components/buttons/ButtonCreateNote";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
 export default function Index(){
     const insets = useSafeAreaInsets();
     const { orderBy } = useSettings();      // context
-    const { notes, setNotes } = useNotes(); // context
+    const { notes, setNotes, cargando } = useNotes();
     
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
     const [showBottomBar, setShowBottomBar] = useState(false);
+    const [puedeRenderizar, setPuedeRenderizar] = useState(false);  // 
 
     useEffect( () => {
         // AL MONTAR LA VISTA
@@ -47,6 +48,17 @@ export default function Index(){
         );
         return () => volverHandler.remove();
     },[selecting]);
+
+    useFocusEffect( 
+        // AL ENTRAR EN LA VISTA PUEDE RENDERIZAR PARA MOSTRAR ANIMACIÓN
+        useCallback(() => {
+            // Se ejecuta al volver a esta vista (focus)
+            setPuedeRenderizar(true);
+
+            // resetear para que anime cada vez
+            return () => setPuedeRenderizar(false);
+        }, [])
+    );
 
     const handleToggleDeleteOne = (id: number) => {
         // funct que para usar el useState y pasarlo al <FlatListX />
@@ -83,8 +95,8 @@ export default function Index(){
                 const newNotesList = await getAllRows(orderBy.value);   // get nueva lista
                 setNotes(newNotesList); // setear nueva lista para el index
                 exitSelecting();    // salir modo selecting y limpiar lista deleting
+                ToastAndroid.show(`Movido a Papelera`, ToastAndroid.SHORT);
             }
-            ToastAndroid.show(`Movido a Papelera`, ToastAndroid.SHORT);
         } catch (error) {
             ToastAndroid.show(`Hubo un error al eliminar`, ToastAndroid.SHORT);
             console.log("error al mover a papelera:",error);
@@ -106,13 +118,18 @@ export default function Index(){
                 onPress={ () => router.push("nota")}
             />
 
-            <FlatListX 
-                listaNotas={notes}  
-                selectingMode={selecting}
-                setSelectingMode={handleSelectingMode}
-                deletingList={deletingList}
-                handleToggleDeleteOne={handleToggleDeleteOne}
-            />
+            {
+                puedeRenderizar && !cargando && (
+                    <FlatListX 
+                        listaNotas={notes}  
+                        selectingMode={selecting}
+                        setSelectingMode={handleSelectingMode}
+                        deletingList={deletingList}
+                        handleToggleDeleteOne={handleToggleDeleteOne}
+                    />
+                )
+            }
+            
             
             {
                 showBottomBar && (

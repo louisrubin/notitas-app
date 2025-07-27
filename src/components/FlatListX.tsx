@@ -1,10 +1,11 @@
 import { Nota } from "../hooks/SQLiteHooks"
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSettings } from "../hooks/SettingsContext";
-import { FontSizeType, getFontSize } from "../constants/DropDownLists";
+import { getFontSize } from "../constants/DropDownLists";
 import { getDiffDate, getFormattedDate } from "../hooks/DateFunctions";
 import ButtonCheck from "./ButtonCheck";
 import { router } from "expo-router";
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 interface FlatListXProps {
     listaNotas: Nota[];     // toda la info de cada nota
@@ -23,32 +24,12 @@ export default function FlatListX( {
     deletingList, 
     handleToggleDeleteOne,
     navigationOnPress = true,
-    trashView = false,  // si está en pantalla 'Papelera' 
+    trashView = false,  // si está en pantalla 'Papelera'
 }: FlatListXProps ){
 
-    const { designBy, fontSize } = useSettings();
+    const { designBy } = useSettings();
     const isGridView = designBy.value === "grid";   // verif el modo selected grid | list
-    
-    const getHeightListView = () : number => {
-        // get Height From Font Size para la List View
-        const sizeMap: Record<FontSizeType, number> = {
-            "small": 120,
-            "medium": 130,
-            "big": 150,
-            "bigger": 160,
-        }
-        return sizeMap[fontSize.value];
-    }
-    const getNumberLinesGridView = () : number => {
-        // obtener el num de lineas para el <Text> de la vista Grid
-        const sizeMap: Record<FontSizeType, number> = {
-            "small": 17,
-            "medium": 14,
-            "big": 12,
-            "bigger": 10
-        }
-        return sizeMap[fontSize.value];
-    }
+    const animation = FadeInUp.duration(400);
 
     const OverlayPressable = ( {nota}: {nota: Nota} ) => {
         // COMPONENTE OVERLAY SOBRE LAS NOTES -> NAVEGAR Y ACTIVAR EL MODO SELECCION
@@ -87,7 +68,7 @@ export default function FlatListX( {
     }
 
     return (
-        <FlatList
+        <Animated.FlatList
             data={listaNotas}
             key={ isGridView ? "grid" : "list" } // forzar render al cambiar de modo
 
@@ -97,10 +78,12 @@ export default function FlatListX( {
 
             renderItem={({ item }) => (
 
-                isGridView 
+                isGridView
                 ? 
                     // GRID VIEW --> TRUE
-                    <View style={[stylesGrid.item, ]}>
+                    <Animated.View entering={ animation }
+                    style={[stylesGrid.item, ]}
+                    >
                         <ButtonCheck
                         color={"red"} 
                         style={[stylesGrid.button, selectingMode? {opacity: 1}: {opacity: 0}]}
@@ -138,11 +121,13 @@ export default function FlatListX( {
                         ]}>
                             {getFormattedDate(item.created_at)}
                         </Text>
-                    </View>
+                    </Animated.View>
 
                 :
                     // LIST VIEW --> FALSE
-                    <View style={ stylesList.item }>
+                    <Animated.View entering={ animation } 
+                    style={ stylesList.item }
+                    >
                         <ButtonCheck
                         color={"red"} 
                         style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
@@ -178,7 +163,7 @@ export default function FlatListX( {
                             </View>
                             : null
                         }
-                    </View>
+                    </Animated.View>
             )}
         />
     );
