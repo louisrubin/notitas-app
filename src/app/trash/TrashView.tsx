@@ -1,4 +1,4 @@
-import { BackHandler, Text, View } from "react-native";
+import { BackHandler, Text, ToastAndroid, View } from "react-native";
 import { useEffect, useState } from "react";
 import { deleteNotesManual, deleteNoteVencidas, diasParaDelete, getAllRows, Nota, undoNotesFromTrash } from "../../hooks/SQLiteHooks";
 import { useSettings } from "../../hooks/SettingsContext";
@@ -77,7 +77,8 @@ export default function TrashView(){
                 await cargarNotas();    // recarga la lista para el INDEX
             }
         } catch (error) {
-            throw new Error("error al restaurar notas:",error);
+            ToastAndroid.show("Hubo un error al restaurar",ToastAndroid.SHORT);
+            console.log("error al restaurar notas:",error);
         }
         
     }
@@ -89,9 +90,11 @@ export default function TrashView(){
                 const newNotesList = await getAllRows(orderBy.value, true);   // get nueva lista
                 setNotesTrash(newNotesList); // setear nueva lista para el FlatList
                 exitSelectingMode();    // salir modo selecting y limpiar lista deleting
+                ToastAndroid.show("Borrado permanente",ToastAndroid.SHORT);
             }
         } catch (error) {
-            throw new Error("error al eliminar notas:",error);
+            ToastAndroid.show("Hubo un error al eliminar",ToastAndroid.SHORT);
+            console.log("error al eliminar notas:",error);
         }
     }
 

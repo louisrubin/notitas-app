@@ -244,8 +244,8 @@ const stylesGrid = StyleSheet.create({
         right: 0,
         height: 25,
         
-        borderBottomLeftRadius: 16,
-        borderBottomEndRadius: 16,
+        borderBottomLeftRadius: 12,
+        borderBottomEndRadius: 12,
         backgroundColor: "#ddd",
     },
     text_date_delete: {

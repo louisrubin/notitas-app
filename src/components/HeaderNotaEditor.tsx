@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+// import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import React from "react";
@@ -36,7 +36,7 @@ export default function HeaderNotaEditor({
                 </Pressable>
             </View>
 
-            <Pressable style={ ({pressed}) => [
+            {/* <Pressable style={ ({pressed}) => [
                 styles.cancelButton,
                 {
                     backgroundColor: pressed ? "#ddd" : null,
@@ -44,9 +44,9 @@ export default function HeaderNotaEditor({
             ]}
             // onPress={ () => {router.back()} }
             >
-                {/* <Text style={styles.cancelButton}>Cancelar</Text> */}
+                <Text style={styles.cancelButton}>Cancelar</Text>
                 <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-            </Pressable>
+            </Pressable> */}
         </View>
     )
 }

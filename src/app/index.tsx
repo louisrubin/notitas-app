@@ -1,4 +1,4 @@
-import { BackHandler, StyleSheet, View } from "react-native"
+import { BackHandler, StyleSheet, ToastAndroid, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useEffect, useState } from "react"
 import { deleteNoteVencidas, getAllRows, setDeleteNote} from "../hooks/SQLiteHooks";
@@ -77,12 +77,19 @@ export default function Index(){
 
     const deleteFunction = async () => {
         // método para SETEAR 'delete_date' a notas seleccionadas
-        if (deletingList.length > 0) {
-            await setDeleteNote(deletingList);    // set atributo 'delete_date' = hoy
-            const newNotesList = await getAllRows(orderBy.value);   // get nueva lista
-            setNotes(newNotesList); // setear nueva lista para el index
-            exitSelecting();    // salir modo selecting y limpiar lista deleting
+        try {
+            if (deletingList.length > 0) {
+                await setDeleteNote(deletingList);    // set atributo 'delete_date' = hoy
+                const newNotesList = await getAllRows(orderBy.value);   // get nueva lista
+                setNotes(newNotesList); // setear nueva lista para el index
+                exitSelecting();    // salir modo selecting y limpiar lista deleting
+            }
+            ToastAndroid.show(`Movido a Papelera`, ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(`Hubo un error al eliminar`, ToastAndroid.SHORT);
+            console.log("error al mover a papelera:",error);
         }
+        
     }
 
     return(

@@ -38,7 +38,7 @@ export default function ButtonCreateNote({
 const estilos = StyleSheet.create({
     container: {
         position: "absolute",
-        bottom: 55,
+        bottom: 70,
         right: 25,
 
         padding: 15,
