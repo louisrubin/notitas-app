@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "Notitas",
-    "slug": "Tus notitas",
+    "slug": "tus-notitas",
     "version": "1.0.0",
-    "scheme": "notitas-app-scheme",
+    "scheme": "notitas-app",
     "orientation": "portrait",
     "icon": "./src/assets/notitas-icon.png",
     "userInterfaceStyle": "light",
@@ -21,7 +21,7 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "package": "com.louisrubin.tusnotitas"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -29,6 +29,14 @@
     "plugins": [
       "expo-router",
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7b967558-ef4d-495f-b1f4-c72bdbad8322"
+      }
+    }
   }
 }

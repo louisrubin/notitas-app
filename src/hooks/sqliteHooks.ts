@@ -1,7 +1,8 @@
-import * as SQLite from 'expo-sqlite';
-const dbTableName = "notes";
-const db = SQLite.openDatabaseAsync('notesDB');
+import { SQLiteDatabase } from "expo-sqlite";
 
+// https://docs.expo.dev/versions/latest/sdk/sqlite/
+
+export const dbTableName = "notes";
 export const diasParaDelete = 14;   // días para la eliminacion permanente
 
 export interface Nota {
@@ -13,9 +14,10 @@ export interface Nota {
     delete_date?: string;
 };
 
-export const initDB = async () => {
-    try{
-        await (await db).runAsync(`
+export const initDB = async (db: SQLiteDatabase) => {
+    try{     
+        await db.execAsync(`
+            PRAGMA journal_mode = 'wal';
             CREATE TABLE IF NOT EXISTS ${dbTableName} (
                 id INTEGER PRIMARY KEY NOT NULL,
                 title TEXT, 
@@ -26,16 +28,16 @@ export const initDB = async () => {
             );
         `);
     } catch(e) {
-        console.log("Error creating table:", e);
+        console.log("Error creando la tabla:", e);
     }
 }
 
-export const insertNote = async ({title, value, created_at}: Nota) => {
+export const insertNote = async (db: SQLiteDatabase, nota: Nota) => {
     try{
-        await (await db).runAsync(`
+        await db.runAsync(`
             INSERT INTO ${dbTableName} (title, value, created_at, updated_at)
             VALUES (?, ?, ?, ?);
-        `, [title, value, created_at, created_at]);
+        `, [nota.title, nota.value, nota.created_at, nota.created_at]);
         // (await preparedInsertStatement(title, value, date)).executeAsync(title, value, date);
 
     }catch(e){
@@ -43,10 +45,10 @@ export const insertNote = async ({title, value, created_at}: Nota) => {
     }
 }
 
-export async function getNoteByID(id: number): Promise<Nota> {
+export async function getNoteByID(db: SQLiteDatabase, id: number): Promise<Nota> {
     // OBTENER UN SOLO REGISTRO DE LA BD RETORNANDO COMO 'Nota'
     try {
-        const nota = await (await db).getFirstAsync(
+        const nota = await db.getFirstAsync(
                 `
                 SELECT * 
                 FROM ${dbTableName} 
@@ -60,9 +62,12 @@ export async function getNoteByID(id: number): Promise<Nota> {
 }
 
 
-export const updateNote = async ({id, title, value, updated_at}: Nota) => {
+export const updateNote = async ( 
+    db: SQLiteDatabase, 
+    { id, title, value, updated_at }: Nota
+) => {
     try {
-        await (await db).runAsync(`
+        await db.runAsync(`
             UPDATE ${dbTableName} 
             SET title = ?, value = ?, updated_at = ?
             WHERE id = ?;
@@ -72,11 +77,11 @@ export const updateNote = async ({id, title, value, updated_at}: Nota) => {
     }
 }
 
-export const deleteNotesManual = async (listDelet: number[]) => {
+export const deleteNotesManual = async (db: SQLiteDatabase, listDelet: number[]) => {
     try {
         if (listDelet.length > 0) {
             // Si el array está vacío la query se rompe
-            (await db).runAsync(
+            db.runAsync(
                 `DELETE FROM ${dbTableName} 
                 WHERE id IN (${listDelet.map( () => '?').join(',')});`, // Genera un string como "?, ?, ?, ..."
                 listDelet
@@ -88,12 +93,11 @@ export const deleteNotesManual = async (listDelet: number[]) => {
 }
 
 
-export const deleteNoteVencidas = async () => {
+export const deleteNoteVencidas = async (db: SQLiteDatabase) => {
     // TODAS LAS NOTAS CON delete_date CON FECHA PASADA SE ELIMINAN 
     try {
         const today = new Date().toISOString(); // fecha actual
-
-        await (await db).runAsync(
+        await db.runAsync(
             `
             DELETE FROM ${dbTableName} 
             WHERE delete_date IS NOT NULL AND delete_date <= ?;
@@ -103,14 +107,14 @@ export const deleteNoteVencidas = async () => {
     }
 }
 
-export const setDeleteNote = async (listDelet: number[]) => {
+export const setDeleteNote = async (db: SQLiteDatabase, listDelet: number[]) => {
     // RECIBE ARRAY Y CADA ID SETEA LAS NOTAS EN LA BD CON 'delete_date'
     const diaFuturo = new Date(new Date().setDate(new Date().getDate() + diasParaDelete));
     
     try {
         if (listDelet.length > 0) {
             // Si el array está vacío la query se rompe
-            (await db).runAsync(
+            await db.runAsync(
                 `
                 UPDATE ${dbTableName} 
                 SET delete_date = ? 
@@ -124,12 +128,12 @@ export const setDeleteNote = async (listDelet: number[]) => {
     }
 } 
 
-export const undoNotesFromTrash = async (listTrash: number[]) => {
+export const undoNotesFromTrash = async (db: SQLiteDatabase, listTrash: number[]) => {
     // RECIBE ARRAY Y CADA ID SETEA SU CAMPO 'delete_date' = NULL;
     try {
         if (listTrash.length > 0) {
             // Si el array está vacío la query se rompe
-            (await db).runAsync(
+            await db.runAsync(
                 `
                 UPDATE ${dbTableName} 
                 SET delete_date = NULL 
@@ -143,11 +147,15 @@ export const undoNotesFromTrash = async (listTrash: number[]) => {
     }
 }
 
-export const getAllRows = async (orderBy: string, trashRows = false): Promise<Nota[]> => {
+export const getAllRows = async (
+    db: SQLiteDatabase, 
+    orderBy: string, 
+    trashRows = false,
+): Promise<Nota[]> => {
     const query = getQuery(orderBy, trashRows);    // query segun el param y Context Settings
     
     try {
-        const allRows = await (await db).getAllAsync(query);
+        const allRows = await db.getAllAsync(query);
         return allRows as Nota[];
     } catch (e) {
         console.log("Error getting all notes:", e);
@@ -179,17 +187,17 @@ const getQuery = (orderBy: string, trashRows: boolean) : string => {
 // prepared statements
 // const preparedInsertStatement = async (title: string, value: string, date: string) => {
 //     // compile your SQL query once and execute it multiple times
-//     return (await db).prepareAsync(`
+//     return await db.prepareAsync(`
 //         INSERT INTO notes (title, value, date, updated_at)
 //             VALUES (${title}, ${value}, ${date}, ${date});
 //     `);
 // }
 
-export const deleteALL = async () => {
+export const deleteALL = async (db: SQLiteDatabase) => {
     try {
-        await (await db).runAsync(`
+        await db.runAsync(`
             DELETE FROM ${dbTableName};`);
     } catch (e) {
-        console.log("Error deleting ALL note:", e); 
+        console.log("Error eliminando ALL:", e); 
     }
 }

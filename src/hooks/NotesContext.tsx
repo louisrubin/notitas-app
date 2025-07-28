@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getAllRows, Nota } from "./SQLiteHooks";
 import { useSettings } from "./SettingsContext";
+import { useSQLiteContext } from "expo-sqlite";
 
 interface NotesContextType {
     notes: Nota[];
@@ -22,11 +23,12 @@ export function NotesProvider( {children}: {children: React.ReactNode} ){
     const [notes, setNotes] = useState<Nota[]>([]);
     const [cargando, setCargando] = useState(true);
     const { orderBy } = useSettings();
+    const db = useSQLiteContext();
 
     const cargarNotas = async () => {
         // SETEA TODAS LAS NOTAS DESDE LA BD AL STATE
         setCargando(true);    // set
-        const allNotas = await getAllRows(orderBy.value);
+        const allNotas = await getAllRows(db, orderBy.value);
         setNotes(allNotas);
         setCargando(false);    // set
     };

@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { useNotes } from "../../hooks/NotesContext";
 import HeaderNotaEditor from "../../components/HeaderNotaEditor";
 import { getTodayDateLocal } from "../../hooks/DateFunctions";
+import { useSQLiteContext } from "expo-sqlite";
 
 
 export default function NotaDetailScreen() {
     const { id_P } = useLocalSearchParams();
     const { fontSize } = useSettings();
     const { cargarNotas } = useNotes();
+    const db = useSQLiteContext();
     const fontSizeValue = getFontSize(fontSize.value);
     
 
@@ -22,7 +24,7 @@ export default function NotaDetailScreen() {
 
     useEffect( () => {
         const cargarNota = async () => {
-            const nota = await getNoteByID(Number(id_P));
+            const nota = await getNoteByID(db, Number(id_P));
             setNota(nota);
             setOriginalNota(nota);
         }
@@ -76,7 +78,7 @@ export default function NotaDetailScreen() {
         }
         if (id_P) {
             // SI INGRESO A UNA NOTA
-            updateNote({
+            updateNote(db, {
                 id: nota.id,
                 title: nota.title.trim(),
                 value: nota.value.trim(), 
@@ -93,7 +95,7 @@ export default function NotaDetailScreen() {
                 // ESCRIBIÓ CONTENIDO PERO NO EL TÍTULO 
                 notaTitle = getTodayDateLocal(createDate);  // titulo en formato 'es'
             }
-            insertNote({
+            insertNote(db, {
                 title: notaTitle.trim(),
                 value: nota.value.trim(),
                 created_at: createDate.toISOString(),   // to ISO String

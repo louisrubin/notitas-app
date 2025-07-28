@@ -1,15 +1,20 @@
 import { BackHandler, Text, ToastAndroid, View } from "react-native";
 import { useEffect, useState } from "react";
-import { deleteNotesManual, deleteNoteVencidas, diasParaDelete, getAllRows, Nota, undoNotesFromTrash } from "../../hooks/SQLiteHooks";
+import { deleteNotesManual, deleteNoteVencidas, 
+    diasParaDelete, getAllRows, Nota, 
+    undoNotesFromTrash, 
+} from "../../hooks/SQLiteHooks";
 import { useSettings } from "../../hooks/SettingsContext";
 import FlatListX from "../../components/FlatListX";
 import BottomBar from "../../components/BottomBar";
 import BottomBarButton from "../../components/BottomBarButton";
 import { useNotes } from "../../hooks/NotesContext";
+import { useSQLiteContext } from "expo-sqlite";
 
 export default function TrashView(){
     const { orderBy } = useSettings();     // context del setting actual 
     const { cargarNotas } = useNotes();    // context
+    const db = useSQLiteContext();
 
     const [selecting, setSelecting] = useState(false);
     const [notesTrash, setNotesTrash] = useState<Nota[]>([]);
@@ -19,8 +24,8 @@ export default function TrashView(){
     useEffect( () => {
         // AL MONTAR LA VISTA
         const cargarNotasTrash = async () => {
-            deleteNoteVencidas();   // elimina las notas vencidas al montar la vista
-            const allNotes = await getAllRows(orderBy.value, true); // true --> get eliminados
+            deleteNoteVencidas(db);   // elimina las notas vencidas al montar la vista
+            const allNotes = await getAllRows(db, orderBy.value, true); // true --> get eliminados
             setNotesTrash(allNotes);
             // console.log(allNotes);            
         };
@@ -70,8 +75,8 @@ export default function TrashView(){
         // método para SETEAR 'delete_date' = NULL
         try {
             if (deletingList.length > 0) {
-                await undoNotesFromTrash(deletingList);    // set atributo 'delete_date' = NULL
-                const newNotesList = await getAllRows(orderBy.value, true);   // get nueva lista
+                await undoNotesFromTrash(db, deletingList);    // set atributo 'delete_date' = NULL
+                const newNotesList = await getAllRows(db, orderBy.value, true);   // get nueva lista
                 setNotesTrash(newNotesList); // setear nueva lista para el FlatList
                 exitSelectingMode();    // salir modo selecting y limpiar lista deleting
                 await cargarNotas();    // recarga la lista para el INDEX
@@ -86,8 +91,8 @@ export default function TrashView(){
     const deletePermantente = async () => {
         try {
             if (deletingList.length > 0) {
-                await deleteNotesManual(deletingList);
-                const newNotesList = await getAllRows(orderBy.value, true);   // get nueva lista
+                await deleteNotesManual(db, deletingList);
+                const newNotesList = await getAllRows(db, orderBy.value, true);   // get nueva lista
                 setNotesTrash(newNotesList); // setear nueva lista para el FlatList
                 exitSelectingMode();    // salir modo selecting y limpiar lista deleting
                 ToastAndroid.show("Borrado permanente",ToastAndroid.SHORT);

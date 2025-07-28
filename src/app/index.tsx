@@ -1,7 +1,6 @@
 import { BackHandler, StyleSheet, ToastAndroid, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useCallback, useEffect, useState } from "react"
-import { deleteNoteVencidas, getAllRows, setDeleteNote} from "../hooks/SQLiteHooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
@@ -11,6 +10,8 @@ import BottomBarButton from "../components/BottomBarButton";
 import { useNotes } from "../hooks/NotesContext";
 import ButtonCreateNote from "../components/buttons/ButtonCreateNote";
 import { router, useFocusEffect } from "expo-router";
+import { deleteNoteVencidas, getAllRows, setDeleteNote } from "../hooks/SQLiteHooks";
+import { useSQLiteContext } from "expo-sqlite";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -18,6 +19,7 @@ export default function Index(){
     const insets = useSafeAreaInsets();
     const { orderBy } = useSettings();      // context
     const { notes, setNotes, cargando } = useNotes();
+    const db = useSQLiteContext();
     
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
@@ -26,7 +28,7 @@ export default function Index(){
 
     useEffect( () => {
         // AL MONTAR LA VISTA
-        deleteNoteVencidas();   // elimina las notas vencidas en la papelera
+        deleteNoteVencidas(db);   // elimina las notas vencidas en la papelera
     }, []);
 
     useEffect( () => {
@@ -91,8 +93,8 @@ export default function Index(){
         // método para SETEAR 'delete_date' a notas seleccionadas
         try {
             if (deletingList.length > 0) {
-                await setDeleteNote(deletingList);    // set atributo 'delete_date' = hoy
-                const newNotesList = await getAllRows(orderBy.value);   // get nueva lista
+                await setDeleteNote(db, deletingList);    // set atributo 'delete_date' = hoy
+                const newNotesList = await getAllRows(db, orderBy.value);   // get nueva lista
                 setNotes(newNotesList); // setear nueva lista para el index
                 exitSelecting();    // salir modo selecting y limpiar lista deleting
                 ToastAndroid.show(`Movido a Papelera`, ToastAndroid.SHORT);
@@ -115,7 +117,10 @@ export default function Index(){
             />
 
             <ButtonCreateNote 
-                onPress={ () => router.push("nota")}
+                onPress={ () => {
+                    router.push("nota");
+                    exitSelecting();
+                }}
             />
 
             {
