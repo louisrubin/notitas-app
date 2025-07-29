@@ -2,14 +2,17 @@
 
 **Una app de notas desarrollado en React Native con Expo, implementando SQLite.**
 
-<img src="https://github.com/user-attachments/assets/b566fccd-1304-4b9e-ac29-ae982b9ee9fa" alt="Notitas-preview.gif" width="400"/>
+|  |
+|:---------------:|
+| <img src="https://github.com/user-attachments/assets/b566fccd-1304-4b9e-ac29-ae982b9ee9fa" alt="Notitas-preview.gif" width="400"/> |
 
 
 La idea de hacer este proyecto nació por el interés de querer crear algo simple en vacaciones y en el proceso me daba 
 cuenta que hasta lo que se ve simple puede ser complejo en llevar a cabo.
-Sin embargo estoy orgulloso de haberlo realizado, aunque me gustaría poder agregar más características, 
-como renderizar Markdown `(.md)` en tiempo real al escribir, como también enlazar notas dentro de otras notas... aún así 
-estoy muy contento con el resultado, la experiencia y conocimientos obtenidos. 😄
+
+Sin embargo estoy orgulloso de haberlo realizado, aunque me gustaría poder agregar más características en un futuro, 
+como renderizar Markdown `(.md)` en tiempo real al escribir, como también enlazar notas dentro de otras notas... 
+aún así estoy muy contento con el resultado, la experiencia y los conocimientos obtenidos. 😄
 
 # Estructura de la App (resumen)
 
