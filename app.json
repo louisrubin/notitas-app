@@ -3,7 +3,7 @@
     "name": "Notitas",
     "slug": "tus-notitas",
     "version": "1.0.0",
-    "scheme": "notitas-app",
+    "scheme": "notitas",
     "orientation": "portrait",
     "icon": "./src/assets/notitas-icon.png",
     "userInterfaceStyle": "light",
@@ -11,20 +11,20 @@
     "splash": {
       "image": "./src/assets/notitas-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFE4B5"
+      "backgroundColor": "#f0f0f0"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/notitas-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.louisrubin.tusnotitas"
     },
     "web": {
-      "favicon": "./src/assets/favicon.png"
+      "favicon": "./src/assets/notitas-icon.png"
     },
     "plugins": [
       "expo-router",

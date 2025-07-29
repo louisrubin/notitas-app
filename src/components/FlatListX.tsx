@@ -82,7 +82,7 @@ export default function FlatListX( {
                 ? 
                     // GRID VIEW --> TRUE
                     <Animated.View entering={ animation }
-                    style={[stylesGrid.item, ]}
+                    style={stylesGrid.item}
                     >
                         <ButtonCheck
                         color={"red"} 
@@ -111,13 +111,21 @@ export default function FlatListX( {
                         </View>
 
                         <Text numberOfLines={1} 
-                        style={[ stylesGrid.title, { fontSize: getFontSize(null) +2 } 
+                        style={[ 
+                            stylesGrid.title, { 
+                                fontSize: getFontSize(null) +2,
+                                // color: item.id === 1 ? "#57382F" : "#57382F",
+                            } 
                         ]}>
                             {item.title}
                         </Text>
 
                         <Text 
-                        style={[ stylesGrid.date_created, {fontSize: getFontSize(null) -3.5 }
+                        style={[ 
+                            stylesGrid.date_created, 
+                            {fontSize: getFontSize(null) -3.5,
+                                // color: item.id === 1 ? "#785347" : "#785347",
+                            }
                         ]}>
                             {getFormattedDate(item.created_at)}
                         </Text>
@@ -138,12 +146,21 @@ export default function FlatListX( {
 
                         {/* HEADER LIST ITEM --> TITLE, CREATE_AT */}
                         <View style={stylesList.headerListItem}>
-                            <Text style={{ flexShrink: 1, fontWeight: "bold", fontSize: getFontSize(null)+2 }}
+                            <Text style={[ 
+                                stylesList.title, { 
+                                    fontSize: getFontSize(null)+2,
+                                    // color: item.id === 1 ? "tomato" : "black",
+                                }]}
                             numberOfLines={1}
                             >
                                 {item.title}
                             </Text>
-                            <Text style={{fontSize: getFontSize(null) -3.5, color: "#4B5563", marginLeft: 8 }}>
+                            <Text style={{
+                                fontSize: getFontSize(null) -3.5, 
+                                // color: item.id === 1 ? "tomato" : "#4B5563", 
+                                color: "#57382F",
+                                marginLeft: 8,
+                            }}>
                                 {getFormattedDate(item.created_at)}
                             </Text>
                         </View>
@@ -198,6 +215,7 @@ const stylesGrid = StyleSheet.create({
     },
 
     title: {
+        color: "#57382F",
         fontWeight: "bold",
         textAlign: "center",
         marginTop: 10,
@@ -205,7 +223,8 @@ const stylesGrid = StyleSheet.create({
     },
     contentText: {
         flex: 1,
-        color: "#4B5563", 
+        // color: "#4B5563", 
+        color: "#57382F",
     },
 
     textContainer:{
@@ -217,7 +236,8 @@ const stylesGrid = StyleSheet.create({
         borderRadius: 12,
     },
     date_created: {
-        color: "#4B5563",
+        // color: "#4B5563",
+        color: "#785347",
         textAlign: "center",
     },
     date_delete: {
@@ -241,7 +261,7 @@ const stylesGrid = StyleSheet.create({
 const stylesList = StyleSheet.create({
     item: {
         flex: 1,
-        height: 120,
+        height: 115,
         position: "relative", 
         marginVertical: 8,
         paddingVertical: 10,
@@ -257,7 +277,13 @@ const stylesList = StyleSheet.create({
     },
     contentText: {
         flex: 1,
-        color: "#4B5563", 
+        // color: "#4B5563", 
+        color: "#57382F",
+    },
+    title: {
+        color: "#57382F",
+        flexShrink: 1, 
+        fontWeight: "bold",
     },
     date: {
         paddingTop: 15,

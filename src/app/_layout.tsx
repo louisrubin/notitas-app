@@ -43,24 +43,17 @@ async function onInitFunction(db: SQLiteDatabase) {
             title: firstNotitaInfo[0],
             value: firstNotitaInfo[1],
             created_at: new Date("2025-07-07T09:04:52").toISOString(),
+            // fecha de cuando se me ocurrió crear la app -3 hr por UTC-3 (real: 12:04:52)
         });
         currentDbVersion = 1;
     }
     await db.execAsync(`PRAGMA user_version = 1`);
 }
 
-// await initDB();
-//       await insertNote({
-//          title: firstNotitaInfo[0],
-//          value: firstNotitaInfo[1],
-//          created_at: new Date("2025-07-07T09:04:52").toISOString(),
-//          // fecha de cuando se me ocurrió crear la app -3 hr por UTC-3 (real: 12:04:52)
-//       });
 
 const firstNotitaInfo = [
     "Bienvenido/a a Notitas",
-`
-¡Esta es la bienvenida a la app! 🎉\n\n
+`¡Esta es la bienvenida a la app! 🎉\n
 Acá podés guardar tus ideas, tareas, pensamientos o lo que se te ocurra.\n
 Cada nota se guarda automáticamente y podés editarla cuando quieras.\n
 🌱 Todo comienza con una primera notita...\n
