@@ -1,4 +1,4 @@
-# Notitas 📝
+# 📝Notitas 
 
 **Una app de notas desarrollado en React Native con Expo, implementando SQLite.**
 
@@ -13,11 +13,9 @@ estoy muy contento con el resultado, la experiencia y conocimientos obtenidos. �
 
 # Estructura de la App (resumen)
 
+# 💾Base de datos 
 
-# Base de datos 💾
-
-
-## Tablas 📊
+## 📊Tablas 
 Solo existe esta única tabla `notes` y dependiendo de su atributo `delete_date` se obtienen
 las notas visibles en inicio (y editables) y las que "están" en papelera (no editables).
 ```js
@@ -37,7 +35,7 @@ else => null  // mostrar en papelera
 ```
 
 
-## Eliminar notas 🗑️
+## 🗑️Eliminar notas 
 
 Al momento de eliminar una o varias notas lo que se hace es agrupar los `id` de cada nota en un array
 para luego pasársela a la función `setDeleteNote(listDelet: number[])` el cual hace un UPDATE a cada nota en la BD
@@ -59,7 +57,7 @@ const setDeleteNote = async (db: SQLiteDatabase, listDelet: number[]) => {
 ```
 
 
-## Iniciando la app 🚀
+## 🚀Iniciando la app 
 
 A su vez al iniciar la app se ejecuta la función `deleteNoteVencidas()` la cual compara la fecha actual y las fechas
 de eliminación de cada nota en papelera eliminándolos de la BD:
@@ -73,7 +71,7 @@ await db.runAsync(
 ```
 
 
-## Configuraciones ⚙️
+# ⚙️Configuraciones 
 Toda esta información se gestionan mediante un `context` global para así poder leer los datos desde cualquier parte
 de la aplicación mediante sus funciones. 
 
@@ -99,12 +97,12 @@ savedFontSize !== null ? setFontSize(savedFontSize) // asigna el valor obtenido
 ```
 
 
-## Vistas 📂
+# 📂Vistas 
 Listado de los componentes de vistas
-- Index (pantalla de inicio)
-- Settings (cambiar configuraciones)
-- NotaDetails (editor de texto)
-- Trash (papelera)
+- `Index` (pantalla de inicio)
+- `Settings` (pantalla de configuraciones)
+- `NotaDetail` (editor de texto)
+- `Trash` (papelera)
 
 *Pequeño diagrama al diseñar la app, en principio también quería que se pueda agrupar las notas por carpetas*
 
@@ -112,5 +110,7 @@ Listado de los componentes de vistas
 
 
 *Desarrollado: 7/7 - 28/7/2025*
+
+# ⬇️Descargas 
 
 *[Instalar APK v1.0 (Expo.dev)](https://expo.dev/accounts/louisrubin/projects/tus-notitas/builds/9495b469-a216-48d6-bba1-96ba96d291c9)*
