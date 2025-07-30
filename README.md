@@ -14,6 +14,15 @@ Sin embargo estoy orgulloso de haberlo realizado, aunque me gustaría poder agre
 como renderizar Markdown `(.md)` en tiempo real al escribir, como también enlazar notas dentro de otras notas... 
 aún así estoy muy contento con el resultado, la experiencia y los conocimientos obtenidos. 😄
 
+## ⏳Características pendientes:
+
+* [ ] Renderizar Markdown en el editor
+* [ ] Enlazar notas dentro de otras notas
+* [ ] Paleta de colores personalizable para las fuentes
+* [ ] Modal de confirmación al eliminar/restaurar notas
+* [ ] Mensaje intuitivo al no haber ningúna nota
+* [ ] Botón "seleccionar todos" en papelera
+
 # Estructura de la App (resumen)
 
 # 💾Base de datos 
