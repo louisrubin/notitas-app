@@ -7,6 +7,7 @@ interface NotesContextType {
     notes: Nota[];
     cargarNotas: () => Promise<void>;
     setNotes: React.Dispatch<React.SetStateAction<Nota[]>>; // use State (hook)
+    setCargando: React.Dispatch<React.SetStateAction<boolean>>;
     cargando: boolean;
     // setCargando: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -40,7 +41,7 @@ export function NotesProvider( {children}: {children: React.ReactNode} ){
 
     return (
         <NotesContext.Provider 
-        value={{ notes, cargarNotas, setNotes, cargando }}
+        value={{ notes, cargarNotas, setNotes, cargando, setCargando }}
         >
             {children}
         </NotesContext.Provider>

@@ -1,4 +1,4 @@
-import { BackHandler, Text, ToastAndroid, View } from "react-native";
+import { BackHandler, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { useEffect, useState } from "react";
 import { deleteNotesManual, deleteNoteVencidas, 
     diasParaDelete, getAllRows, Nota, 
@@ -10,10 +10,12 @@ import BottomBar from "../../components/BottomBar";
 import BottomBarButton from "../../components/BottomBarButton";
 import { useNotes } from "../../hooks/NotesContext";
 import { useSQLiteContext } from "expo-sqlite";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 export default function TrashView(){
     const { orderBy } = useSettings();     // context del setting actual 
-    const { cargarNotas } = useNotes();    // context
+    const { cargarNotas, cargando, setCargando } = useNotes();    // context
     const db = useSQLiteContext();
 
     const [selecting, setSelecting] = useState(false);
@@ -24,9 +26,11 @@ export default function TrashView(){
     useEffect( () => {
         // AL MONTAR LA VISTA
         const cargarNotasTrash = async () => {
+            setCargando(true);  // ACTUALIZA EL CONTEXT 'CARGANDO'
             deleteNoteVencidas(db);   // elimina las notas vencidas al montar la vista
             const allNotes = await getAllRows(db, orderBy.value, true); // true --> get eliminados
             setNotesTrash(allNotes);
+            setCargando(false);  // ACTUALIZA EL CONTEXT 'CARGANDO'
             // console.log(allNotes);            
         };
         cargarNotasTrash();
@@ -111,36 +115,67 @@ export default function TrashView(){
             }}>
                 Las notas serán borradas de forma permanente pasados {diasParaDelete} días de su eliminación.
             </Text>
-            
-            <FlatListX 
-                listaNotas={notesTrash}
-                selectingMode={selecting}
-                setSelectingMode={handleSelectingMode}
-                deletingList={deletingList}
-                handleToggleDeleteOne={handleToggleDeleteOne}
 
-                navigationOnPress={false}   // al hacer clic no puede ir a esa nota
-                trashView={true}    // vista: Papelera
-            />
             {
-                showBottomBar && (
-                    <BottomBar 
-                    visible={selecting}
-                    onHidden={ () => setShowBottomBar(false) }
+                !cargando && notesTrash.length === 0
+                ? 
+                    <Animated.View 
+                        entering={FadeInUp.duration(500)}
+                        style={{flex: 1}} 
                     >
-                        <BottomBarButton 
-                            name="Restaurar"
-                            iconName="rotate-ccw"
-                            onPress={undoFunction}
-                        />
-                        <BottomBarButton 
-                            name="Eliminar"
-                            iconName="trash"
-                            onPress={deletePermantente}
-                        />
-                    </BottomBar>
-                )
-            }
+                        <View style={styles.messageContainer}>
+                            <MaterialCommunityIcons name="delete-empty" size={54} color="black" />
+                            <Text style={styles.messageText}>Papelera vacía</Text>
+                        </View>
+                    </Animated.View>
+                : 
+                <>
+                    <FlatListX 
+                    listaNotas={notesTrash}
+                    selectingMode={selecting}
+                    setSelectingMode={handleSelectingMode}
+                    deletingList={deletingList}
+                    handleToggleDeleteOne={handleToggleDeleteOne}
+
+                    navigationOnPress={false}   // al hacer clic no puede ir a esa nota
+                    trashView={true}    // vista: Papelera
+                    />
+                    {
+                        // BARRA INFERIOR 'RESTAURAR' Y 'ELIMINAR PERMANENTE'
+                        showBottomBar && (
+                            <BottomBar 
+                            visible={selecting}
+                            onHidden={ () => setShowBottomBar(false) }
+                            >
+                                <BottomBarButton 
+                                    name="Restaurar"
+                                    iconName="rotate-ccw"
+                                    onPress={undoFunction}
+                                />
+                                <BottomBarButton 
+                                    name="Eliminar"
+                                    iconName="trash"
+                                    onPress={deletePermantente}
+                                />
+                            </BottomBar>
+                        )
+                    }
+                </>
+            }            
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    messageContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom: 150,
+        opacity: 0.4,
+    },
+    messageText: {
+        fontSize: 18,
+        fontWeight: 500,
+    }
+})

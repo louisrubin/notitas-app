@@ -3,11 +3,9 @@ import { format, differenceInHours, differenceInDays,
 } from "date-fns";
 import { es } from "date-fns/locale";
 
-export function getTodayDateLocal( date_P = new Date()): string {
+export function getTodayDateLocal( date_P = new Date() ): string {
     return format(
-        date_P,
-        "d MMM yyyy", 
-        { locale: es }
+        date_P, "d MMM yyyy HH:mm", { locale: es }
     );
 }
 
