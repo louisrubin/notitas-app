@@ -1,4 +1,4 @@
-import { BackHandler, StyleSheet, ToastAndroid, View } from "react-native"
+import { BackHandler, StyleSheet, Text, ToastAndroid, View } from "react-native"
 import { Colors } from "../constants/colors"
 import { useCallback, useEffect, useState } from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,6 +12,8 @@ import ButtonCreateNote from "../components/buttons/ButtonCreateNote";
 import { router, useFocusEffect } from "expo-router";
 import { deleteNoteVencidas, getAllRows, setDeleteNote } from "../hooks/SQLiteHooks";
 import { useSQLiteContext } from "expo-sqlite";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -124,7 +126,8 @@ export default function Index(){
             />
 
             {
-                puedeRenderizar && !cargando && (
+                puedeRenderizar && notes.length > 0 
+                ? (
                     <FlatListX 
                         listaNotas={notes}  
                         selectingMode={selecting}
@@ -132,7 +135,22 @@ export default function Index(){
                         deletingList={deletingList}
                         handleToggleDeleteOne={handleToggleDeleteOne}
                     />
-                )
+                ) 
+                : puedeRenderizar && !cargando && (
+                    <Animated.View 
+                        entering={FadeInUp.duration(500)}
+                        style={{flex: 1}} 
+                    >
+                        <View style={styles.messageContainer}>
+                            <MaterialCommunityIcons name="file-edit" size={54} 
+                                color={Colors.light.marron} 
+                            />
+                            <Text style={[styles.messageText, {color: Colors.light.marron}]}>
+                                No hay notitas
+                            </Text>
+                        </View>
+                    </Animated.View>
+                )                
             }
             
             
@@ -160,4 +178,16 @@ const styles = StyleSheet.create({
         flex: 1,         
         backgroundColor: Colors.light.background,
     },
+    messageContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom: 150,
+        opacity: 0.4,
+    },
+    messageText: {
+        fontSize: 18,
+        fontWeight: 500,
+        // color: "#57382F"
+    }
 })

@@ -12,6 +12,7 @@ import { useNotes } from "../../hooks/NotesContext";
 import { useSQLiteContext } from "expo-sqlite";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeInUp } from "react-native-reanimated";
+import { Colors } from "../../constants/colors";
 
 export default function TrashView(){
     const { orderBy } = useSettings();     // context del setting actual 
@@ -124,8 +125,12 @@ export default function TrashView(){
                         style={{flex: 1}} 
                     >
                         <View style={styles.messageContainer}>
-                            <MaterialCommunityIcons name="delete-empty" size={54} color="black" />
-                            <Text style={styles.messageText}>Papelera vacía</Text>
+                            <MaterialCommunityIcons name="delete-empty" size={54} 
+                                color={Colors.light.marron} 
+                            />
+                            <Text style={[styles.messageText, {color: Colors.light.marron}]}>
+                                Papelera vacía
+                            </Text>
                         </View>
                     </Animated.View>
                 : 
@@ -177,5 +182,6 @@ const styles = StyleSheet.create({
     messageText: {
         fontSize: 18,
         fontWeight: 500,
+        // color: "#57382F",
     }
 })
