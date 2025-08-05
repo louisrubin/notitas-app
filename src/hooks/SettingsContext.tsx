@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { designByList, DropDownItem, fontSizeList, KeyType, orderByList } from "../constants/DropDownLists";
+import { designByList, DropDownItem, fontSizeList, 
+    KeyType, orderByList, themeList 
+} from "../constants/DropDownLists";
 import { storage } from "../Storage/storage";
 
 interface Props {
@@ -10,27 +12,29 @@ interface SettingsContextProp {
     fontSize: DropDownItem;
     orderBy: DropDownItem;
     designBy: DropDownItem;
+    theme: DropDownItem;
     cambiarSetting: (key: KeyType, newConfig: DropDownItem) => Promise<void>;
     getSavedSettingValue: (key: KeyType) => string;
 }
 
-// creando el contexto
-const SettingsContext = createContext<SettingsContextProp>({
-    // valores default del contexto
-    fontSize: fontSizeList[1],   // Mediana --> [1]
-    orderBy: orderByList[0],      // Por fecha de creación --> [0]
-    designBy: designByList[1],     // Ver en cuadrícula --> [1]
-    cambiarSetting: null,
-    getSavedSettingValue: null,
-})
+// creando el contexto de tipo 'SettingsContextProp'
+const SettingsContext = createContext<SettingsContextProp | undefined>(undefined);
 
 // funct para obtener los valores del contexto
-export const useSettings = () => useContext(SettingsContext);
+export const useSettings = () => {
+    const context = useContext(SettingsContext);
+    // VALIDACION PARA USAR SOLO DENTRO DE 'SettingsProvider'
+    if(!context) {
+        throw new Error("useSettings debe usarse dentro de un <SettingsProvider>");
+    }
+    return context;
+}
 
 export function SettingsProvider( {children}: Props ) {
-    const [fontSize, setFontSize] = useState<DropDownItem>(fontSizeList[1]); // valores default
-    const [orderBy, setOrder] = useState<DropDownItem>(orderByList[0]);
-    const [designBy, setDesign] = useState<DropDownItem>(designByList[1]);
+    const [fontSize, setFontSize] = useState<DropDownItem>(fontSizeList[1]); // Mediana --> [1]
+    const [orderBy, setOrder] = useState<DropDownItem>(orderByList[0]);// fecha de creación --> [0]
+    const [designBy, setDesign] = useState<DropDownItem>(designByList[1]);// Ver en cuadrícula --> [1]
+    const [theme, setTheme] = useState<DropDownItem>(themeList[0]);     // tema Claro --> [0]
 
     useEffect( () => {
         const cargarSettingsLocal = async () =>{
@@ -38,21 +42,20 @@ export function SettingsProvider( {children}: Props ) {
             // await storage.remove("designBy");
             // await storage.remove("fontSize");
             // await storage.remove("orderBy");
+            // await storage.remove("theme");
 
             // obtener datos desde el AsyncStorage
             const savedFontSize = await storage.get("fontSize");
             const savedOrder = await storage.get("orderBy");
             const savedDesign = await storage.get("designBy");
+            const savedTheme = await storage.get("theme");
              
-            // verif si hay valores guardados
-            savedFontSize !== null ? setFontSize(savedFontSize) 
-                        : cambiarSetting("fontSize", fontSize); // la primera vez guarda
-
-            savedOrder !== null ? setOrder(savedOrder)
-                        : cambiarSetting("orderBy", orderBy);
-
-            savedDesign !== null ? setDesign(savedDesign)
-                        : cambiarSetting("designBy", designBy);
+            // verif si hay valores guardados y setear
+            savedFontSize !== null ? setFontSize(savedFontSize) : null;
+            savedOrder !== null ? setOrder(savedOrder) : null;
+            savedDesign !== null ? setDesign(savedDesign) : null;
+            savedTheme !== null ? setTheme(savedTheme) : null;
+            
         }
         cargarSettingsLocal();
     }, [] );
@@ -63,6 +66,7 @@ export function SettingsProvider( {children}: Props ) {
             fontSize: (value) => setFontSize(value),
             orderBy: (value) => setOrder(value),
             designBy: (value) => setDesign(value),
+            theme: (value) => setTheme(value),
         };  
         // ejecutar funct desde el map
         functionMap[key](newConfig);   // actualizar el estado
@@ -74,14 +78,15 @@ export function SettingsProvider( {children}: Props ) {
         const settingMap : Record<KeyType, string> = {
             "fontSize": fontSize.value, // Cuando encuentra coincidencia
             "orderBy": orderBy.value,   // item.value === props.value
-            "designBy": designBy.value  // muestra el 'item.label' asociado
+            "designBy": designBy.value,  // muestra el 'item.label' asociado
+            "theme": theme.value,
         }        
         return settingMap[key] ?? "SettingsContext [key]"; // return label(string) del setting
     }
 
     return(
         <SettingsContext.Provider 
-            value={{ fontSize, orderBy, designBy, 
+            value={{ fontSize, orderBy, designBy, theme,
                 cambiarSetting, getSavedSettingValue, 
             }}
         >

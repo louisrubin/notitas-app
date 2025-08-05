@@ -35,13 +35,19 @@ export default function SettingsScreen() {
                             title="Ordenar por" 
                             settingKey="orderBy"
                             zIndex={9} 
-                        />
+                        />     
                         <LabelWithDropdown 
                             id="3"
+                            title="Tema"
+                            settingKey="theme"
+                            zIndex={8} 
+                        />   
+                        <LabelWithDropdown 
+                            id="4"
                             title="Diseño"
                             settingKey="designBy"
-                            zIndex={8} 
-                        />                        
+                            zIndex={7} 
+                        />
                     </View>        
 
                     <HorizontalLine />
