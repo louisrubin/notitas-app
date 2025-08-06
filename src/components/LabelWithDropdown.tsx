@@ -6,6 +6,7 @@ import TitleX from './TitleX';
 import { useDropDown } from '../hooks/DropDownContext';
 import { Colors } from '../constants/colors';
 import { useSettings } from '../hooks/SettingsContext';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
@@ -20,6 +21,8 @@ interface Prop {
 
 export default function LabelWithDropdown( { id, title,  
 zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
+
+    const { theme } = useSettings();
 
     const { getSavedSettingValue, cambiarSetting } = useSettings();   // al cambiar la opcion elegida
     const { openKey, setOpenKey } = useDropDown();
@@ -51,7 +54,7 @@ zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
 
     return(
         <View style={[styles.container, containerStyle]}>
-            <TitleX text={title} style={styles.title} />
+            <TitleX text={title} style={{width: "50%", color: Colors[theme.value].text}} />
 
             <DropDownPicker 
                 key={id}                
@@ -71,17 +74,24 @@ zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
 
                 // ESTILOS
                 style={{ borderWidth: 0, paddingRight: 0,  backgroundColor: "transparent" }}
-                containerStyle={styles.containerStyle}
+                containerStyle={{width: "50%",}}
                 
-                textStyle={{fontWeight: "600"}}
-                labelStyle={{ fontWeight: "600", textAlign: "right" }}
+                textStyle={{fontWeight: "600",}}
+                labelStyle={{ fontWeight: "600", textAlign: "right", color: Colors[theme.value].text }}
 
                 selectedItemContainerStyle={{ backgroundColor: "#b3e5fc"}}
 
                 dropDownContainerStyle={{ 
                     backgroundColor: Colors.light.background, 
                     borderStartStartRadius: 6 
-                }}                
+                }}
+
+                ArrowDownIconComponent={() => (
+                    <MaterialIcons name="keyboard-arrow-down" size={24} color={Colors[theme.value].text} />
+                )}
+                ArrowUpIconComponent={() => (
+                    <MaterialIcons name="keyboard-arrow-up" size={24} color={Colors[theme.value].text} />
+                )}
             />
         </View>
     )
@@ -94,10 +104,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    title: { 
-        width: "50%",
-    },
-    containerStyle: {
-        width: "50%",
-    }
+    // containerStyle: {
+    //     width: "50%",
+    // }
 });
