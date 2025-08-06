@@ -11,6 +11,7 @@ interface ColorProp {
     bgFlatList: string;
     overlayPressed: string;
     deleteDate: string;
+    bgCreateButton: string;
 }
 
 export const Colors: Record<string, ColorProp> = {
@@ -26,19 +27,21 @@ export const Colors: Record<string, ColorProp> = {
         bgFlatList: "#fff",
         overlayPressed: "rgba(0,0,0,0.1)",
         deleteDate: "#ddd",
+        bgCreateButton: "#D6D3D1",
     },
 
     dark: {
         text: "#fff",
-        background: '#121212',
-        bgOnPressed: "#212127",
+        background: '#000',
+        bgOnPressed: "rgba(255,255,255,0.1)",
         lineColor: "#36363F",
         subtitle: "#6E7D91",
         icon: "#B68677",
         marronText: "#F6F0EE",
-        marronSubText: "#E6D6D1",
-        bgFlatList: "#282828",
+        marronSubText: "#A7A7B4",
+        bgFlatList: "#171717",
         overlayPressed: "rgba(255,255,255,0.1)",
-        deleteDate: "#3B3B3B",
+        deleteDate: "#242424",
+        bgCreateButton: "#282828",
     }
 }

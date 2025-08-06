@@ -22,6 +22,7 @@ export default function Index(){
     const { orderBy, theme } = useSettings();      // context
     const { notes, setNotes, cargando } = useNotes();
     const db = useSQLiteContext();
+    const ColorTheme = Colors[theme.value];
     
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
@@ -110,7 +111,7 @@ export default function Index(){
 
     return(
         <View style={[styles.container, {
-            paddingTop: insets.top, backgroundColor: Colors[theme.value].background,
+            paddingTop: insets.top, backgroundColor: ColorTheme.background,
         }]}>
             <TopAppBar 
                 selectState={selecting} 
@@ -125,6 +126,7 @@ export default function Index(){
                     router.push("nota");
                     exitSelecting();
                 }}
+                bgColor={ColorTheme.bgCreateButton}
             />
 
             {
@@ -145,9 +147,9 @@ export default function Index(){
                     >
                         <View style={styles.messageContainer}>
                             <MaterialCommunityIcons name="file-edit" size={54} 
-                                color={Colors[theme.value].icon} 
+                                color={ColorTheme.icon} 
                             />
-                            <Text style={[styles.messageText, {color: Colors[theme.value].marronText}]}>
+                            <Text style={[styles.messageText, {color: ColorTheme.icon}]}>
                                 No hay notitas
                             </Text>
                         </View>
@@ -189,6 +191,5 @@ const styles = StyleSheet.create({
     messageText: {
         fontSize: 18,
         fontWeight: 500,
-        // color: "#57382F"
     }
 })

@@ -5,6 +5,7 @@ interface CreateProp {
     zIndex?: number;
     onPress?: () => void;
     iconColor?: string | OpaqueColorValue;
+    bgColor?: string | OpaqueColorValue;
     iconSize?: number;
 }
 
@@ -13,14 +14,15 @@ export default function ButtonCreateNote({
     onPress = () => {},
     iconColor = "tomato",
     iconSize = 36,
+    bgColor = "#D6D3D1",
 } : CreateProp) {
-
+    
     return(
         <Pressable
         style={ ({pressed}) => [
             estilos.container,
             {
-                backgroundColor: pressed ? "#D6D390" : "#D6D3D1",
+                backgroundColor: pressed ? "#D6D390" : bgColor,
                 zIndex: zIndex,
             }
         ]}
