@@ -4,6 +4,8 @@ interface ColorProp {
     background: string;
     bgOnPressed: string;
     lineColor: string;
+    subtitle: string;
+    icon: string;
     marron?: string; // solo está en light
 }
 
@@ -14,6 +16,8 @@ export const Colors: Record<string, ColorProp> = {
         background: '#f0f0f0',
         bgOnPressed: "#e8e8e8",
         lineColor: "#aaa",
+        subtitle: "#4B5563",
+        icon: "#57382F",
     },
 
     dark: {
@@ -21,5 +25,7 @@ export const Colors: Record<string, ColorProp> = {
         background: '#121212',
         bgOnPressed: "#18181C",
         lineColor: "#36363F",
+        subtitle: "#6E7D91",
+        icon: "#B68677",
     }
 }

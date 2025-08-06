@@ -15,7 +15,7 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 import { Colors } from "../../constants/colors";
 
 export default function TrashView(){
-    const { orderBy } = useSettings();     // context del setting actual 
+    const { orderBy, theme } = useSettings();     // context del setting actual 
     const { cargarNotas, cargando, setCargando } = useNotes();    // context
     const db = useSQLiteContext();
 
@@ -109,11 +109,8 @@ export default function TrashView(){
     }
 
     return(
-        <View style={{flex: 1}}>
-            <Text style={{
-                textAlign: "center", fontWeight: 500, color: "#4B5563",
-                marginBottom: 10, paddingHorizontal: 70,
-            }}>
+        <View style={{flex: 1, backgroundColor: Colors[theme.value].background}}>
+            <Text style={[styles.notification, {color: Colors[theme.value].subtitle}]}>
                 Las notas serán borradas de forma permanente pasados {diasParaDelete} días de su eliminación.
             </Text>
 
@@ -126,9 +123,9 @@ export default function TrashView(){
                     >
                         <View style={styles.messageContainer}>
                             <MaterialCommunityIcons name="delete-empty" size={54} 
-                                color={Colors.light.marron} 
+                                color={Colors[theme.value].icon} 
                             />
-                            <Text style={[styles.messageText, {color: Colors.light.marron}]}>
+                            <Text style={[styles.messageText, {color: Colors[theme.value].icon}]}>
                                 Papelera vacía
                             </Text>
                         </View>
@@ -183,5 +180,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 500,
         // color: "#57382F",
-    }
+    },
+    notification: {
+        textAlign: "center", 
+        fontWeight: 500,
+        marginBottom: 10, 
+        paddingHorizontal: 70,
+        // color: "#4B5563",
+    },
 })
