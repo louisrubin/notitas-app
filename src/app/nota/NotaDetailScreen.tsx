@@ -9,6 +9,7 @@ import { useNotes } from "../../hooks/NotesContext";
 import HeaderNotaEditor from "../../components/HeaderNotaEditor";
 import { getTodayDateLocal } from "../../hooks/DateFunctions";
 import { useSQLiteContext } from "expo-sqlite";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 export default function NotaDetailScreen() {
@@ -17,6 +18,7 @@ export default function NotaDetailScreen() {
     const { cargarNotas } = useNotes();
     const db = useSQLiteContext();
     const fontSizeValue = getFontSize(fontSize.value);
+    const insets = useSafeAreaInsets();
     
 
     const [nota, setNota] = useState<Nota | null>(null);
@@ -109,7 +111,11 @@ export default function NotaDetailScreen() {
         <>
         <Stack.Screen 
             options={{
-                header: () => <HeaderNotaEditor onPressBack={volverYGuardar} />
+                header: () => 
+                    <HeaderNotaEditor 
+                        onPressBack={volverYGuardar} 
+                        style={{marginTop: insets.top + 15}} 
+                    />
             }}
         />
 
@@ -150,11 +156,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1, 
         paddingHorizontal: 16,
-    },
-    header: {
-        flexDirection: "row", 
-
-        backgroundColor:"tomato"
     },
     textArea: {
         flex: 1, 

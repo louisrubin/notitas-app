@@ -1,64 +1,56 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
-// import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import React from "react";
+import { Colors } from "../constants/colors";
+import { useSettings } from "../hooks/SettingsContext";
+import AnimatedBackgroundView from "./AnimatedView";
 
 interface HeaderProp{
     children?: React.ReactNode;
-    onPressCancel?: () => void;
     onPressBack?: () => void | boolean;     // puede retornar void o boolean
+    style?: StyleProp<ViewStyle>;
 }
 
 export default function HeaderNotaEditor({
     onPressBack = () => {},
-    onPressCancel = () => {},
+    style,
 }: HeaderProp) {
-    const insets = useSafeAreaInsets();
+    const {theme} = useSettings();
 
     return(
-        <View style={[styles.container, {paddingTop: insets.top}]}>
+        <AnimatedBackgroundView style={[styles.container, style]}>
             <View>
                 <Pressable style={ ({pressed}) => [
                     styles.buttonBack,
                     {
-                        backgroundColor: pressed ? "#E7E5E4" : null,
+                        backgroundColor: pressed 
+                            ? Colors[theme.value].bgOnPressed 
+                            : null,
                     }
                 ]}
                 onPress={ () => {
                     onPressBack();
                     router.back();
                 }}
-                >
-                    
-                    <AntDesign name="arrowleft" size={24} color="black" />
+                >                    
+                    <AntDesign name="arrowleft" size={24} 
+                        color={Colors[theme.value].text} 
+                    />
                 </Pressable>
             </View>
-
-            {/* <Pressable style={ ({pressed}) => [
-                styles.cancelButton,
-                {
-                    backgroundColor: pressed ? "#ddd" : null,
-                }
-            ]}
-            // onPress={ () => {router.back()} }
-            >
-                <Text style={styles.cancelButton}>Cancelar</Text>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-            </Pressable> */}
-        </View>
+        </AnimatedBackgroundView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 15,
-        paddingHorizontal: 10,
+        // marginTop: 15,
+        paddingHorizontal: 15,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-
+        // backgroundColor: "tomato"
     },
     buttonBack: {
         borderRadius: 20,

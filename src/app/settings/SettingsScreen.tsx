@@ -4,16 +4,31 @@ import HorizontalLine from "../../components/HorizontalLine";
 import SubtitleX from "../../components/SubtitleX";
 import LabelWithDropdown from "../../components/LabelWithDropdown";
 import LabelWithNavigation from "../../components/LabelWithNavigation";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { useSettings } from "../../hooks/SettingsContext";
 import { Colors } from "../../constants/colors";
+import AnimatedBackgroundView from "../../components/AnimatedView";
+import HeaderNotaEditor from "../../components/HeaderNotaEditor";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function SettingsScreen() {
     const { theme } = useSettings();
     const ColorTheme = Colors[theme.value];
+    const insets = useSafeAreaInsets();
     
     return(
-        <View style={{ flex: 1, backgroundColor: ColorTheme.background}}>
+        <>
+        <Stack.Screen 
+            options={{
+                headerTintColor: Colors[theme.value].text,
+                header: () => 
+                    <HeaderNotaEditor 
+                        style={{paddingTop: insets.top + 15}} 
+                    />
+            }} 
+        />
+        
+        <AnimatedBackgroundView style={{flex: 1}}>
             <AnimatedScrollViewX title="Notitas">
 
                 <View style={{flex: 1}}>
@@ -73,7 +88,8 @@ export default function SettingsScreen() {
             
                 </View>
             </AnimatedScrollViewX>
-        </View>        
+        </AnimatedBackgroundView>    
+        </>    
     )
 }
 
