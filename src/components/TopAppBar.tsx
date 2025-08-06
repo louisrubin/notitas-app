@@ -3,6 +3,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ButtonSettings from "./ButtonSettings";
 import { router } from "expo-router";
+import { useSettings } from "../hooks/SettingsContext";
+import { Colors } from "../constants/colors";
 
 interface Prop {
     selectState?: boolean;
@@ -20,20 +22,24 @@ export default function TopAppBar( {
     onToggleAll
 }: Prop){
     const allSelected = cantNotas > 0 && deletingCount === cantNotas;
+    const {theme} = useSettings();
 
     const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
         return(
             <View style={style}>
                 <ButtonSettings 
                 onPress={onToggleAll}
-                bgColorPressed={"#ddd"}
+                bgColorPressed={Colors[theme.value].bgOnPressed}
                 >
                     <View style={{flexDirection: "row", alignItems: "center",}}>
                         <Ionicons 
                         name={ allSelected ? "radio-button-on" : "radio-button-off"} 
-                        size={24} color={ allSelected ? "red" : "black"}
+                        size={24} color={ allSelected ? "red" : Colors[theme.value].text}
                         />
-                        <Text style={{paddingHorizontal: 5, fontSize: 20}}>
+                        <Text style={{
+                            paddingHorizontal: 5, fontSize: 20, 
+                            color: Colors[theme.value].text,
+                        }}>
                             Todas
                         </Text>
                     </View>
@@ -45,8 +51,7 @@ export default function TopAppBar( {
     return(
         <View style={styles.container}>
             { selectState && (
-                <Text style={[ styles.selectedText,
-                    // !selectState ? {opacity:0} : null
+                <Text style={[ styles.selectedText, {color: Colors[theme.value].text}
                 ]}>
                     <Text style={{fontWeight: "600"}}>({deletingCount}) </Text>
                     seleccionados
@@ -63,9 +68,9 @@ export default function TopAppBar( {
                 router.push("/settings"); 
                 handleSelectState();
             }} 
-            bgColorPressed={"#ddd"}
+            bgColorPressed={Colors[theme.value].bgOnPressed}
             >
-                <AntDesign name="setting" size={24} color={"black"} />
+                <AntDesign name="setting" size={24} color={Colors[theme.value].text} />
             </ButtonSettings>
         </View>
     )
@@ -76,9 +81,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
         flexDirection: "row",
         paddingTop: 10,
-
-        // backgroundColor: "tomato",
-        alignItems: "flex-end",     // bottom eje Y
+        alignItems: "flex-end",
         justifyContent: "space-between"
     },
     selectedText: {

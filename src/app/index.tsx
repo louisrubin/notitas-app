@@ -19,7 +19,7 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 
 export default function Index(){
     const insets = useSafeAreaInsets();
-    const { orderBy } = useSettings();      // context
+    const { orderBy, theme } = useSettings();      // context
     const { notes, setNotes, cargando } = useNotes();
     const db = useSQLiteContext();
     
@@ -109,7 +109,9 @@ export default function Index(){
     }
 
     return(
-        <View style={[styles.container, {paddingTop: insets.top}]}>
+        <View style={[styles.container, {
+            paddingTop: insets.top, backgroundColor: Colors[theme.value].background,
+        }]}>
             <TopAppBar 
                 selectState={selecting} 
                 handleSelectState={exitSelecting}
@@ -143,9 +145,9 @@ export default function Index(){
                     >
                         <View style={styles.messageContainer}>
                             <MaterialCommunityIcons name="file-edit" size={54} 
-                                color={Colors.light.marron} 
+                                color={Colors[theme.value].icon} 
                             />
-                            <Text style={[styles.messageText, {color: Colors.light.marron}]}>
+                            <Text style={[styles.messageText, {color: Colors[theme.value].marronText}]}>
                                 No hay notitas
                             </Text>
                         </View>
@@ -175,8 +177,7 @@ export default function Index(){
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,         
-        backgroundColor: Colors.light.background,
+        flex: 1,
     },
     messageContainer: {
         flex: 1,
