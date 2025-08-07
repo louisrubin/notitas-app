@@ -12,6 +12,7 @@ interface ColorProp {
     overlayPressed: string;
     deleteDate: string;
     bgCreateButton: string;
+    placeholder: string;
 }
 
 export const Colors: Record<string, ColorProp> = {
@@ -28,6 +29,7 @@ export const Colors: Record<string, ColorProp> = {
         overlayPressed: "rgba(0,0,0,0.1)",
         deleteDate: "#ddd",
         bgCreateButton: "#D6D3D1",
+        placeholder: "#A0A0A0",
     },
 
     dark: {
@@ -43,5 +45,6 @@ export const Colors: Record<string, ColorProp> = {
         overlayPressed: "rgba(255,255,255,0.1)",
         deleteDate: "#242424",
         bgCreateButton: "#282828",
+        placeholder: "#888888",
     }
 }

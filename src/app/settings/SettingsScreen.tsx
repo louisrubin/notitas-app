@@ -28,7 +28,7 @@ export default function SettingsScreen() {
             }} 
         />
         
-        <AnimatedBackgroundView style={{flex: 1}}>
+        <AnimatedBackgroundView style={{flex: 1, paddingTop: 10}}>
             <AnimatedScrollViewX title="Notitas">
 
                 <View style={{flex: 1}}>

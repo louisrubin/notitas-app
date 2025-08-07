@@ -10,25 +10,28 @@ import HeaderNotaEditor from "../../components/HeaderNotaEditor";
 import { getTodayDateLocal } from "../../hooks/DateFunctions";
 import { useSQLiteContext } from "expo-sqlite";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Colors } from "../../constants/colors";
 
 
 export default function NotaDetailScreen() {
     const { id_P } = useLocalSearchParams();
-    const { fontSize } = useSettings();
+    const { fontSize, theme } = useSettings();
     const { cargarNotas } = useNotes();
     const db = useSQLiteContext();
-    const fontSizeValue = getFontSize(fontSize.value);
     const insets = useSafeAreaInsets();
-    
 
     const [nota, setNota] = useState<Nota | null>(null);
     const [originalNota, setOriginalNota] = useState<Nota | null>(null);
 
+    const fontSizeValue = getFontSize(fontSize.value);
+    const ColorTheme = Colors[theme.value];     // simplificar llamado en cada lugar
+
     useEffect( () => {
+        // FUNCT PARA OBTENER DATOS DE LA NOTA SELECCIONADA
         const cargarNota = async () => {
             const nota = await getNoteByID(db, Number(id_P));
-            setNota(nota);
-            setOriginalNota(nota);
+            setNota(nota);  // setea en State
+            setOriginalNota(nota);      // State copia para verif hubo cambios 
         }
 
         if (id_P) {
@@ -46,6 +49,7 @@ export default function NotaDetailScreen() {
     }, []);
 
     useEffect( () => {
+        // HANDLER DEL 'VOLVER ATRAS' PARA EJECUTAR EL GUARDADO
         const volverHandler = BackHandler.addEventListener(
             "hardwareBackPress",
             volverYGuardar
@@ -79,7 +83,7 @@ export default function NotaDetailScreen() {
             return false;
         }
         if (id_P) {
-            // SI INGRESO A UNA NOTA
+            // SI INGRESO A UNA NOTA (SU ID != NULL)
             updateNote(db, {
                 id: nota.id,
                 title: nota.title.trim(),
@@ -88,7 +92,7 @@ export default function NotaDetailScreen() {
                 created_at: nota.created_at,
             }) 
         } 
-        else {
+        else {  // NO HAY ID --> NULL
             // CREANDO NOTA E INSERTANDO EN LA BD
             let notaTitle = nota.title;
             const createDate = new Date();
@@ -103,7 +107,7 @@ export default function NotaDetailScreen() {
                 created_at: createDate.toISOString(),   // to ISO String
             })
         }        
-        cargarNotas();  // actualizar Flat List        
+        cargarNotas();  // NotesContext --> actualizar Flat List
         return false;
     }
 
@@ -111,37 +115,38 @@ export default function NotaDetailScreen() {
         <>
         <Stack.Screen 
             options={{
+                headerTintColor: ColorTheme.text,
                 header: () => 
                     <HeaderNotaEditor 
                         onPressBack={volverYGuardar} 
-                        style={{marginTop: insets.top + 15}} 
+                        style={{paddingTop: insets.top + 15}} 
                     />
             }}
         />
 
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: ColorTheme.background}]}>
 
             <TextInput 
                 numberOfLines={1}
                 placeholder="Título"
+                placeholderTextColor={ColorTheme.placeholder}
                 maxLength={40}
-                style={[ {
-                    fontSize: fontSizeValue
-                    }]}
+                style={{ fontSize: fontSizeValue, color: ColorTheme.text, }}
                 onChangeText={ (input) => { handleChangeText("title", input) }}
-                >
+            >
                 { nota?.title }
             </TextInput>
 
-            <HorizontalLine />
+            <HorizontalLine color={ColorTheme.lineColor} />
 
-            <TextInput 
-                // autoFocus
+            <TextInput
                 multiline 
-                placeholder="Escribe tu notita..."
                 style={[styles.textArea, {
                     fontSize: fontSizeValue * 0.8, lineHeight: fontSizeValue * 1.2,
+                    color: ColorTheme.text,
                 }]}
+                placeholder="Escribe tu notita..."
+                placeholderTextColor={ColorTheme.placeholder}
                 onChangeText={ (input) => { handleChangeText("value", input) }}
             >
                 { nota?.value }
