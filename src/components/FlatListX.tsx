@@ -5,8 +5,9 @@ import { getFontSize } from "../constants/DropDownLists";
 import { getDiffDate, getFormattedDate } from "../hooks/DateFunctions";
 import ButtonCheck from "./ButtonCheck";
 import { router } from "expo-router";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import Animated, { FadeInUp, useSharedValue, withSpring } from "react-native-reanimated";
 import { Colors } from "../constants/colors";
+import { useEffect } from "react";
 
 interface FlatListXProps {
     listaNotas: Nota[];     // toda la info de cada nota
@@ -32,6 +33,21 @@ export default function FlatListX( {
     const ColorTheme = Colors[theme.value];
     const isGridView = designBy.value === "grid";   // verif el modo selected grid | list
     const animation = FadeInUp.duration(400);
+    const paddingLeftAnimated = useSharedValue(0);     // valor para mover el icono al SelectMode
+
+    useEffect( () => {
+        // ANIMACION AL MODO SELECTING --> LIST VIEW
+        // AL ENTRAR EN MODO SELECTING
+        if (selectingMode) {
+            paddingLeftAnimated.value = withSpring(30); // withSpring (movimiento animado)
+        } 
+        else {
+            // AL SALIR DE MODO SELECTING
+            paddingLeftAnimated.value = withSpring(0, {
+                dampingRatio: 0.6   // no rebote al llegar al final
+            });
+        }
+    }, [selectingMode])
 
     const OverlayPressable = ( {nota}: {nota: Nota} ) => {
         // COMPONENTE OVERLAY SOBRE LAS NOTES -> NAVEGAR Y ACTIVAR EL MODO SELECCION
@@ -144,25 +160,31 @@ export default function FlatListX( {
                     <Animated.View entering={ animation } 
                     style={ [stylesList.item, {backgroundColor: ColorTheme.bgFlatList}] }
                     >
-                        <ButtonCheck
-                        color={"red"} 
-                        style={[stylesGrid.button, selectingMode? {opacity:1}: {opacity:0}]}
-                        isChecked={deletingList?.includes(item.id)}
-                        />
+                        {
+                            selectingMode && (
+                                <ButtonCheck
+                                color={"red"} 
+                                style={stylesGrid.button}
+                                isChecked={deletingList?.includes(item.id)}
+                                />
+                            )
+                        }                        
 
                         <OverlayPressable nota={item} />
 
                         {/* HEADER LIST ITEM --> TITLE, CREATE_AT */}
                         <View style={stylesList.headerListItem}>
-                            <Text style={[ 
-                                stylesList.title, { 
+                            <Animated.Text style={[ 
+                                stylesList.title,
+                                {   paddingLeft: paddingLeftAnimated,
                                     fontSize: getFontSize(null)+2,
-                                    color: ColorTheme.marronText
+                                    color: ColorTheme.marronText,
                                 }]}
                             numberOfLines={1}
                             >
                                 {item.title}
-                            </Text>
+                            </Animated.Text>
+
                             <Text style={{
                                 fontSize: getFontSize(null) -3.5,
                                 color: ColorTheme.marronSubText,
@@ -173,9 +195,9 @@ export default function FlatListX( {
                         </View>
                         
                         <Text numberOfLines={4} 
-                            style={[stylesList.contentText, {
-                                fontSize: getFontSize(null), color: ColorTheme.marronText,
-                        }]}>
+                            style={{ flex: 1, fontSize: getFontSize(null), 
+                                color: ColorTheme.marronText,
+                        }}>
                             {item.value}
                         </Text>
                         
@@ -288,13 +310,10 @@ const stylesList = StyleSheet.create({
         alignItems: "center", 
         marginBottom: 10,
     },
-    contentText: {
-        flex: 1,
-        // color: "#4B5563", 
-        // color: "#57382F",
-    },
+    // contentText: {
+    //     flex: 1,
+    // },
     title: {
-        // color: "#57382F",
         flexShrink: 1, 
         fontWeight: "bold",
     },
