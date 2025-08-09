@@ -1,4 +1,4 @@
-import { BackHandler, StyleSheet, TextInput, View } from "react-native";
+import { BackHandler, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from "react-native";
 import { getNoteByID, insertNote, Nota, updateNote } from "../../hooks/SQLiteHooks";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { getFontSize } from "../../constants/DropDownLists";
@@ -17,7 +17,7 @@ export default function NotaDetailScreen() {
     const { cargarNotas } = useNotes();
     const db = useSQLiteContext();
     const fontSizeValue = getFontSize(fontSize.value);
-    
+    const { height } = useWindowDimensions();
 
     const [nota, setNota] = useState<Nota | null>(null);
     const [originalNota, setOriginalNota] = useState<Nota | null>(null);
@@ -113,33 +113,43 @@ export default function NotaDetailScreen() {
             }}
         />
 
-        <View style={styles.container}>
+        <View style={{flex: 1}}>
 
-            <TextInput 
-                numberOfLines={1}
-                placeholder="Título"
-                maxLength={40}
-                style={[ {
-                    fontSize: fontSizeValue
-                    }]}
-                onChangeText={ (input) => { handleChangeText("title", input) }}
-                >
-                { nota?.title }
-            </TextInput>
+            <View style={{paddingHorizontal: 16}}>
+                <TextInput 
+                    numberOfLines={1}
+                    placeholder="Título"
+                    maxLength={40}
+                    style={[ {
+                        fontSize: fontSizeValue
+                        }]}
+                    onChangeText={ (input) => { handleChangeText("title", input) }}
+                    >
+                    { nota?.title }
+                </TextInput>
+                <HorizontalLine />
+            </View>
 
-            <HorizontalLine />
-
-            <TextInput 
-                // autoFocus
-                multiline 
-                placeholder="Escribe tu notita..."
-                style={[styles.textArea, {
-                    fontSize: fontSizeValue * 0.8, lineHeight: fontSizeValue * 1.2,
-                }]}
-                onChangeText={ (input) => { handleChangeText("value", input) }}
+            <ScrollView 
+            style={{flex: 1, }}
+            contentContainerStyle={{ flexGrow: 1 }}
             >
-                { nota?.value }
-            </TextInput>
+                <TextInput
+                    multiline 
+                    placeholder="Escribe tu notita..."
+                    style={[styles.textArea, {
+                        fontSize: fontSizeValue * 0.8, 
+                        lineHeight: fontSizeValue * 1.2, 
+                        minHeight: height * 0.4,    // altura minima
+                    }]}
+                    onChangeText={ (input) => { handleChangeText("value", input) }}
+                >
+                    { nota?.value }
+                </TextInput> 
+
+                <View style={{height: height * 0.3}} />
+            </ScrollView>
+            
         </View>
 
         </>
@@ -147,23 +157,9 @@ export default function NotaDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1, 
-        paddingHorizontal: 16,
-    },
-    header: {
-        flexDirection: "row", 
-
-        backgroundColor:"tomato"
-    },
     textArea: {
         flex: 1, 
         textAlignVertical: "top",
-    },
-    text: {
-        flex: 1,
-        marginBottom: 20,
-        fontSize: 22,
-        paddingHorizontal: 40,
+        paddingHorizontal: 18,
     },
 })
