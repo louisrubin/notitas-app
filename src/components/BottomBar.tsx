@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from "react";
 
 interface BottomBarProp {
     children: React.ReactNode;
-    visible?: boolean;
-    onHidden?: () => void;
+    visible: boolean;
+    onHidden: () => void;
 }
 
 export default function BottomBar( {

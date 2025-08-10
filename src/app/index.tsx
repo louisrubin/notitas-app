@@ -14,6 +14,7 @@ import { deleteNoteVencidas, getAllRows, setDeleteNote } from "../hooks/SQLiteHo
 import { useSQLiteContext } from "expo-sqlite";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeInUp } from "react-native-reanimated";
+import ModalConfirmacion from "../components/ModalConfirmacion";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 
@@ -108,8 +109,14 @@ export default function Index(){
         
     }
 
+    function messg_Sing_Plur(num: number): string {
+        let message = num + " nota";
+        return num === 1 ? message : message + "s";
+    }
+
     return(
-        <View style={[styles.container, {paddingTop: insets.top}]}>
+    <View style={[{ flex: 1, paddingTop: insets.top}]}>
+        <View style={styles.container}>
             <TopAppBar 
                 selectState={selecting} 
                 handleSelectState={exitSelecting}
@@ -170,12 +177,19 @@ export default function Index(){
                 )
             }            
         </View>
+        
+        <ModalConfirmacion 
+            visible={true}
+            title={`¿Mover ${messg_Sing_Plur(deletingList.length)} a la Papelera?`}
+            confirmBtn="Mover a Papelera"
+        />
+    </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,         
+        flex: 1,
         backgroundColor: Colors.light.background,
     },
     messageContainer: {
