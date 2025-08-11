@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         bottom: 0,
 
         justifyContent: "center",
-        gap: 6,
+        gap: 60,
         alignItems: "center",
         backgroundColor: "black",
     },
