@@ -1,103 +1,115 @@
-import React, { useEffect, useState } from "react";
-import { Modal, View, Text, StyleSheet, Pressable } from "react-native";
-import Animated, { FadeInDown, FadeInUp, FadeOutDown } from "react-native-reanimated";
-import * as NavigationBar from "expo-navigation-bar";
-import { Colors } from "../constants/colors";
-import { useSettings } from "../hooks/SettingsContext";
+import { useEffect } from "react";
+import { View, Text, StyleSheet, Pressable, OpaqueColorValue, BackHandler } from "react-native";
+import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 
 interface ModalProp {
     visible: boolean;
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>;  // hook
 
     title?: string;
-    confirmBtn?: string;
-    // number?: number;
+    confirmText?: string;
+    cancelText?: string;
+    colorConfirmText?: string | OpaqueColorValue;
     onConfirm?: () => void;
-
+    onCancel?: () => void;
 }
 
 export default function ModalConfirmacion( {
-    title = "¿Confirmar?", 
-    confirmBtn = "Confirmar", 
+    title = "¿Confirmar operación?", 
+    confirmText = "Confirmar", 
+    cancelText = "Cancelar", 
+    colorConfirmText = "white",
+
     visible = false,
-    // number,
+    setVisible,
+    onCancel = () => {},
     onConfirm = () => {},
 }: ModalProp) {
-    // const {theme} = useSettings();
-//   const [visible, setVisible] = useState(true);
 
     useEffect( () => {
-        // NavigationBar.setBackgroundColorAsync(Colors.)
-    }, [])
+        // COMPORTAMIENTO AL VOLVER ATRAS Y CERRAR MODAL
+        const volverAction = () => {
+            if (visible) {
+                setVisible(false); // SETEA PARA CERRAR
+                return true;
+            }
+            return false;   // ok
+        };
+        const volverHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            volverAction
+        );
+        return () => volverHandler.remove();
+    },[visible]);
 
-  const handleOnConfirm = () => {
-    // Lógica al confirmar modal
-    onConfirm();    
-    // setVisible(false);
-  };
+    // AL 'CONFIRMAR' OPERACION
+    const handleOnConfirm = () => {
+        // Lógica al CONFIRMAR modal
+        onConfirm();    
+        setVisible(false);
+    };
 
-  return (
-    <View style={styles.container}>
+    // AL 'CANCELAR' OPERACION
+    const handleOnCancel = () => {
+        // Lógica al CANCELAR modal
+        onCancel();    
+        setVisible(false);
+    };
 
-      <Modal
-        visible={visible}
-        transparent
-        animationType="fade"
-        // onRequestClose={() => setVisible(false)}
-      >
-        <View style={styles.overlay}>
+    if (!visible) return null; // No renderiza nada si está oculto
 
-            <Animated.View style={styles.modal} 
-                entering={FadeInDown.duration(300)}
-                exiting={FadeOutDown.duration(200)}
-            >
-                <Text style={styles.title}>{title}</Text>
+    return (
+        <View style={styles.wrapper}>
+            <View style={styles.overlay}>
 
-                <View style={styles.buttons}>
-                    <Pressable
-                        style={ ({pressed}) => [
-                            styles.btn, 
-                            {
-                                backgroundColor: pressed ? "#242424" : null,
-                            }
-                        ]}
-                        // onPress={() => setVisible(false)}
-                    >
-                        <Text style={styles.btn_Text}>Cancelar</Text>
-                    </Pressable>
+                <Animated.View style={styles.modal} 
+                    entering={FadeInDown.duration(200)}
+                    exiting={FadeOutDown.duration(200)}
+                >
+                    <Text style={styles.title}>{title}</Text>
 
-                    <Text style={[styles.btn_Text, {opacity: 0.3}]}>|</Text>
+                    <View style={styles.buttons}>
+                        <Pressable
+                            style={ ({pressed}) => [
+                                styles.btn, 
+                                {
+                                    backgroundColor: pressed ? "#585858" : null,
+                                }
+                            ]}
+                            onPress={handleOnCancel}
+                        >
+                            <Text style={styles.btn_Text}>{cancelText}</Text>
+                        </Pressable>
 
-                    <Pressable
-                        style={({pressed}) => [
-                            styles.btn, 
-                            {
-                                backgroundColor: pressed ? "#242424" : null,
-                            }
-                        ]}
-                        onPress={handleOnConfirm}
-                    >
-                        <Text style={styles.btn_Text}>{confirmBtn}</Text>
-                    </Pressable>
+                        <Text style={[styles.btn_Text, {opacity: 0.3}]}>|</Text>
 
-                </View>
+                        <Pressable
+                            style={({pressed}) => [
+                                styles.btn, 
+                                {
+                                    backgroundColor: pressed ? "#585858" : null,
+                                }
+                            ]}
+                            onPress={handleOnConfirm}
+                        >
+                            <Text style={[styles.btn_Text, {color: colorConfirmText}]}>
+                                {confirmText}
+                            </Text>
+                        </Pressable>
 
+                    </View>
 
-            </Animated.View>
-          
+                </Animated.View>
+            
+            </View>
         </View>
-      </Modal>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-    container: { 
-        flex: 1, 
-        position: "absolute",
-
-        justifyContent: "center", 
-        alignItems: "center", 
-        backgroundColor: "tomato"
+    wrapper: { 
+        ...StyleSheet.absoluteFillObject,
+        zIndex: 9999,
     },
     overlay: {
         flex: 1,
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
         paddingVertical: 25,
         borderRadius: 22,
         width: "95%",
-        backgroundColor: "black",
+        backgroundColor: "#333333",
     },
     title: { 
         color: "white", 
@@ -130,8 +142,6 @@ const styles = StyleSheet.create({
     btn: { 
         padding: 6, 
         paddingHorizontal: 30,
-        // marginLeft: 10, 
-        // marginHorizontal: 10,
         borderRadius: 20, 
     },
     btn_Text: {
@@ -139,6 +149,5 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 22,
         fontWeight: 500,
-        // backgroundColor: "tomato"
     },
 });

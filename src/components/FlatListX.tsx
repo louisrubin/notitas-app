@@ -6,6 +6,7 @@ import { getDiffDate, getFormattedDate } from "../hooks/DateFunctions";
 import ButtonCheck from "./ButtonCheck";
 import { router } from "expo-router";
 import Animated, { FadeInUp } from "react-native-reanimated";
+import { Colors } from "../constants/colors";
 
 interface FlatListXProps {
     listaNotas: Nota[];     // toda la info de cada nota
@@ -27,7 +28,8 @@ export default function FlatListX( {
     trashView = false,  // si está en pantalla 'Papelera'
 }: FlatListXProps ){
 
-    const { designBy } = useSettings();
+    const { designBy, theme } = useSettings();
+    const ColorTheme = Colors[theme.value];
     const isGridView = designBy.value === "grid";   // verif el modo selected grid | list
     const animation = FadeInUp.duration(400);
 
@@ -38,7 +40,7 @@ export default function FlatListX( {
             style={ ({pressed}) => [
                 stylesGrid.overlay,
                 { backgroundColor: pressed
-                    ? "rgba(0,0,0,0.1)" 
+                    ? ColorTheme.overlayPressed
                     : null 
                 },
             ] }
@@ -90,18 +92,24 @@ export default function FlatListX( {
                         isChecked={deletingList?.includes(item.id)}
                         />
                         
-                        <View style={stylesGrid.textContainer}>
+                        <View style={[
+                            stylesGrid.textContainer, {backgroundColor: ColorTheme.bgFlatList}
+                        ]}>
 
                             <OverlayPressable nota={item} />
 
                             <Text numberOfLines={14}
-                                style={[stylesGrid.contentText, {fontSize: getFontSize(null)}]}>
+                                style={[stylesGrid.contentText, 
+                                {fontSize: getFontSize(null), color: ColorTheme.marronText,}
+                            ]}>
                                 {item.value}
                             </Text>
                             {
                                 trashView ? 
-                                <View style={stylesGrid.date_delete}>
-                                    <Text style={stylesGrid.text_date_delete}>
+                                <View style={[stylesGrid.date_delete, {
+                                    backgroundColor: ColorTheme.deleteDate,
+                                }]}>
+                                    <Text style={[stylesGrid.text_date_delete, {color: ColorTheme.text}]}>
                                         {getDiffDate(item.delete_date)}
                                     </Text>
                                 </View>
@@ -114,7 +122,7 @@ export default function FlatListX( {
                         style={[ 
                             stylesGrid.title, { 
                                 fontSize: getFontSize(null) +2,
-                                // color: item.id === 1 ? "#57382F" : "#57382F",
+                                color: ColorTheme.marronText,
                             } 
                         ]}>
                             {item.title}
@@ -124,7 +132,7 @@ export default function FlatListX( {
                         style={[ 
                             stylesGrid.date_created, 
                             {fontSize: getFontSize(null) -3.5,
-                                // color: item.id === 1 ? "#785347" : "#785347",
+                                color: ColorTheme.marronSubText,
                             }
                         ]}>
                             {getFormattedDate(item.created_at)}
@@ -134,7 +142,7 @@ export default function FlatListX( {
                 :
                     // LIST VIEW --> FALSE
                     <Animated.View entering={ animation } 
-                    style={ stylesList.item }
+                    style={ [stylesList.item, {backgroundColor: ColorTheme.bgFlatList}] }
                     >
                         <ButtonCheck
                         color={"red"} 
@@ -149,16 +157,15 @@ export default function FlatListX( {
                             <Text style={[ 
                                 stylesList.title, { 
                                     fontSize: getFontSize(null)+2,
-                                    // color: item.id === 1 ? "tomato" : "black",
+                                    color: ColorTheme.marronText
                                 }]}
                             numberOfLines={1}
                             >
                                 {item.title}
                             </Text>
                             <Text style={{
-                                fontSize: getFontSize(null) -3.5, 
-                                // color: item.id === 1 ? "tomato" : "#4B5563", 
-                                color: "#57382F",
+                                fontSize: getFontSize(null) -3.5,
+                                color: ColorTheme.marronSubText,
                                 marginLeft: 8,
                             }}>
                                 {getFormattedDate(item.created_at)}
@@ -166,19 +173,24 @@ export default function FlatListX( {
                         </View>
                         
                         <Text numberOfLines={4} 
-                            style={[stylesList.contentText, {fontSize: getFontSize(null)}]}
-                        >
+                            style={[stylesList.contentText, {
+                                fontSize: getFontSize(null), color: ColorTheme.marronText,
+                        }]}>
                             {item.value}
                         </Text>
                         
                         {
-                            trashView ? 
-                            <View style={stylesGrid.date_delete}>
-                                <Text style={stylesGrid.text_date_delete}>
+                        trashView && (
+                            <View style={[stylesGrid.date_delete, {
+                                backgroundColor: ColorTheme.deleteDate,
+                            }]}>
+                                <Text style={[stylesGrid.text_date_delete, 
+                                    {color: ColorTheme.text}
+                                ]}>
                                     {getDiffDate(item.delete_date)}
                                 </Text>
                             </View>
-                            : null
+                        )
                         }
                     </Animated.View>
             )}
@@ -215,7 +227,7 @@ const stylesGrid = StyleSheet.create({
     },
 
     title: {
-        color: "#57382F",
+        // color: "#57382F",
         fontWeight: "bold",
         textAlign: "center",
         marginTop: 10,
@@ -224,7 +236,7 @@ const stylesGrid = StyleSheet.create({
     contentText: {
         flex: 1,
         // color: "#4B5563", 
-        color: "#57382F",
+        // color: "#57382F",
     },
 
     textContainer:{
@@ -232,12 +244,12 @@ const stylesGrid = StyleSheet.create({
         position: "relative", 
         paddingVertical: 10,
         paddingHorizontal: 13,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderRadius: 12,
     },
     date_created: {
         // color: "#4B5563",
-        color: "#785347",
+        // color: "#785347",
         textAlign: "center",
     },
     date_delete: {
@@ -251,10 +263,11 @@ const stylesGrid = StyleSheet.create({
         
         borderBottomLeftRadius: 12,
         borderBottomEndRadius: 12,
-        backgroundColor: "#ddd",
+        // backgroundColor: "#ddd",
     },
     text_date_delete: {
-        fontSize: 16, fontWeight: 600
+        fontSize: 16, 
+        fontWeight: 600
     },
 });
 
@@ -266,7 +279,7 @@ const stylesList = StyleSheet.create({
         marginVertical: 8,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderRadius: 12,
     },
     headerListItem: {
@@ -278,15 +291,15 @@ const stylesList = StyleSheet.create({
     contentText: {
         flex: 1,
         // color: "#4B5563", 
-        color: "#57382F",
+        // color: "#57382F",
     },
     title: {
-        color: "#57382F",
+        // color: "#57382F",
         flexShrink: 1, 
         fontWeight: "bold",
     },
     date: {
         paddingTop: 15,
-        color: "#4B5563",
+        // color: "#4B5563",
     },
 })

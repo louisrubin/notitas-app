@@ -1,8 +1,8 @@
-import { StyleSheet, Text, ViewStyle } from "react-native";
+import { StyleSheet, Text, TextStyle } from "react-native";
 
 interface Prop {
     text: string;
-    style?: ViewStyle;
+    style?: TextStyle;
 }
 
 export default function TitleX( {text, style}: Prop ) {
@@ -21,6 +21,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "700",
         marginVertical: 18,
-        // backgroundColor: "tomato"
     },
 })

@@ -20,14 +20,16 @@ import ModalConfirmacion from "../components/ModalConfirmacion";
 
 export default function Index(){
     const insets = useSafeAreaInsets();
-    const { orderBy } = useSettings();      // context
+    const { orderBy, theme } = useSettings();      // context
     const { notes, setNotes, cargando } = useNotes();
     const db = useSQLiteContext();
+    const ColorTheme = Colors[theme.value];
     
     const [selecting, setSelecting] = useState(false);   // state para manejar el "selecting" de notas
     const [deletingList, setDeletingList] = useState<number[]>([]);
     const [showBottomBar, setShowBottomBar] = useState(false);
-    const [puedeRenderizar, setPuedeRenderizar] = useState(false);  // 
+    const [puedeRenderizar, setPuedeRenderizar] = useState(false);
+    const [showModal, setShowModal] = useState(false);  // MODAL CONFIRMACION
 
     useEffect( () => {
         // AL MONTAR LA VISTA
@@ -115,8 +117,10 @@ export default function Index(){
     }
 
     return(
-    <View style={[{ flex: 1, paddingTop: insets.top}]}>
-        <View style={styles.container}>
+    <View style={{ flex: 1, paddingTop: insets.top, 
+            backgroundColor: ColorTheme.background,
+        }}>
+        <View style={{flex: 1}}>
             <TopAppBar 
                 selectState={selecting} 
                 handleSelectState={exitSelecting}
@@ -130,6 +134,7 @@ export default function Index(){
                     router.push("nota");
                     exitSelecting();
                 }}
+                bgColor={ColorTheme.bgCreateButton}
             />
 
             {
@@ -150,9 +155,9 @@ export default function Index(){
                     >
                         <View style={styles.messageContainer}>
                             <MaterialCommunityIcons name="file-edit" size={54} 
-                                color={Colors.light.marron} 
+                                color={ColorTheme.icon} 
                             />
-                            <Text style={[styles.messageText, {color: Colors.light.marron}]}>
+                            <Text style={[styles.messageText, {color: ColorTheme.icon}]}>
                                 No hay notitas
                             </Text>
                         </View>
@@ -171,7 +176,7 @@ export default function Index(){
                             name="Papelera" 
                             iconName="trash" 
                             cantSelected={deletingList.length}
-                            onPress={deleteFunction}
+                            onPress={() => {setShowModal(true)}}
                         />
                     </BottomBar>
                 )
@@ -179,19 +184,17 @@ export default function Index(){
         </View>
         
         <ModalConfirmacion 
-            visible={true}
+            visible={showModal}
+            setVisible={setShowModal}
             title={`¿Mover ${messg_Sing_Plur(deletingList.length)} a la Papelera?`}
-            confirmBtn="Mover a Papelera"
+            confirmText="Mover a Papelera"
+            onConfirm={deleteFunction}
         />
     </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.light.background,
-    },
     messageContainer: {
         flex: 1,
         alignItems: "center",
@@ -202,6 +205,5 @@ const styles = StyleSheet.create({
     messageText: {
         fontSize: 18,
         fontWeight: 500,
-        // color: "#57382F"
     }
 })

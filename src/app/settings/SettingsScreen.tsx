@@ -1,23 +1,43 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Colors } from "../../constants/colors";
 import AnimatedScrollViewX from "../../components/AnimatedScrollViewX";
 import HorizontalLine from "../../components/HorizontalLine";
 import SubtitleX from "../../components/SubtitleX";
 import LabelWithDropdown from "../../components/LabelWithDropdown";
 import LabelWithNavigation from "../../components/LabelWithNavigation";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
+import { useSettings } from "../../hooks/SettingsContext";
+import { Colors } from "../../constants/colors";
+import AnimatedBackgroundView from "../../components/AnimatedView";
+import HeaderNotaEditor from "../../components/HeaderNotaEditor";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function SettingsScreen() {
+    const { theme } = useSettings();
+    const ColorTheme = Colors[theme.value];
+    const insets = useSafeAreaInsets();
     
     return(
-        <View style={{ flex: 1, backgroundColor: Colors.light.background}}>
+        <>
+        <Stack.Screen 
+            options={{
+                headerTintColor: Colors[theme.value].text,
+                header: () => 
+                    <HeaderNotaEditor 
+                        style={{paddingTop: insets.top + 15}} 
+                    />
+            }} 
+        />
+        
+        <AnimatedBackgroundView style={{flex: 1, paddingTop: 10}}>
             <AnimatedScrollViewX title="Notitas">
 
                 <View style={{flex: 1}}>
                     
                     {/* HEADER */}
                     <View>
-                        <Text style={styles.headerTitle}>Notitas</Text>
+                        <Text style={[styles.headerTitle, {color: ColorTheme.text}]}>
+                            Notitas
+                        </Text>
                     </View>
 
                     {/* BODY */}
@@ -35,16 +55,22 @@ export default function SettingsScreen() {
                             title="Ordenar por" 
                             settingKey="orderBy"
                             zIndex={9} 
-                        />
+                        />     
                         <LabelWithDropdown 
                             id="3"
+                            title="Tema"
+                            settingKey="theme"
+                            zIndex={8} 
+                        />   
+                        <LabelWithDropdown 
+                            id="4"
                             title="Diseño"
                             settingKey="designBy"
-                            zIndex={8} 
-                        />                        
+                            zIndex={7} 
+                        />
                     </View>        
 
-                    <HorizontalLine />
+                    <HorizontalLine color={ColorTheme.lineColor} />
 
                     <SubtitleX text="Eliminados" style={{paddingHorizontal: 26}} />
                     <LabelWithNavigation 
@@ -52,7 +78,7 @@ export default function SettingsScreen() {
                         onPress={() => { router.replace("trash"); }}
                     />
 
-                    <HorizontalLine />
+                    <HorizontalLine color={ColorTheme.lineColor} />
 
                     <SubtitleX text="OTROS" style={{paddingHorizontal: 26}} />
                     <LabelWithNavigation 
@@ -62,7 +88,8 @@ export default function SettingsScreen() {
             
                 </View>
             </AnimatedScrollViewX>
-        </View>        
+        </AnimatedBackgroundView>    
+        </>    
     )
 }
 

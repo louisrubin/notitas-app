@@ -1,28 +1,49 @@
-import { StatusBar } from "expo-status-bar";
+import { StatusBar, StatusBarStyle } from "expo-status-bar";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
-// import { TemaProvider } from "../hooks/ThemeContext";
 import { Stack } from "expo-router";
-import { SettingsProvider } from "../hooks/SettingsContext";
+import { SettingsProvider, useSettings } from "../hooks/SettingsContext";
 import { NotesProvider } from "../hooks/NotesContext";
 import { initDB, insertNote } from "../hooks/SQLiteHooks";
 
+// FUNCT PARA PARSEAR EL 'theme' (string) --> StatusBarStyle
+const parseStatusBarStyle = (valor: string): StatusBarStyle => {
+    const statusBarMapping: Record<string, StatusBarStyle> = {
+        light: "dark",     // fondo claro → texto oscuro
+        dark: "light",     // fondo oscuro → texto claro
+    };
+    return statusBarMapping[valor] ?? "auto";
+}
+
+function InnerApp() {
+    // COMPONENTE RENDERIZA STACK Y STATUS BAR CON EL TEMA SELECCIONADO
+    const { theme } = useSettings(); // theme.value es string
+    const statusBarStyle = parseStatusBarStyle(theme.value);    // parsear tipo
+
+    return(
+        <>
+            <Stack 
+            screenOptions={{
+                headerShown: false,
+            }} />
+            
+            <StatusBar style={statusBarStyle}/>
+        </>
+    )
+}
+
 export default function RootApp(){
    return (
-      // <TemaProvider>
-      <SQLiteProvider databaseName="notes.db" onInit={onInitFunction}>
-            
+      <SQLiteProvider databaseName="notes.db" onInit={onInitFunction}>  
+
          <SettingsProvider>
             <NotesProvider>
-               <Stack 
-                  screenOptions={{
-                     headerShown: false,
-                  }} />
-               <StatusBar style="dark"/>
+
+                <InnerApp />
+
             </NotesProvider>
          </SettingsProvider>
                
       </SQLiteProvider>
-      // </TemaProvider> 
       )
 }
 

@@ -1,10 +1,11 @@
 
 // CONSTANTES DE LISTAS DE LAS OPCIONES DE LOS DROPDOWN
 
-export type KeyType = "fontSize" | "orderBy" | "designBy";
+export type KeyType = "fontSize" | "orderBy" | "designBy" | "theme";
 export type FontSizeType = "small" | "medium" | "big" | "bigger";   // valores
 export type OrderType = "created_date" | "modification_date";       // permitidos
 export type DesignType = "list" | "grid";                           // para 'value'
+export type Tema = "light" | "dark";
 
 // export type ItemsTypes = FontSizeType | OrderType | DesignType;
 
@@ -31,12 +32,18 @@ export const designByList = [
     { label: "Ver en cuadrícula", value: "grid"},
 ]
 
+export const themeList = [
+    { label: "Claro", value: "light"},
+    { label: "Oscuro", value: "dark"},
+]
+
 
 // FUNCTIONS
 const listMap: Record<KeyType, DropDownItem[]> = {
     fontSize: fontSizeList,
     orderBy: orderByList,
     designBy: designByList,
+    theme: themeList,
 };
 export const getListItem = (key : KeyType) : DropDownItem[] => listMap[key];
 
