@@ -14,6 +14,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { Colors } from "../../constants/colors";
 import ModalConfirmacion from "../../components/ModalConfirmacion";
+import { Stack } from "expo-router";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 export default function TrashView(){
     const { orderBy, theme } = useSettings();     // context del setting actual 
@@ -111,6 +113,13 @@ export default function TrashView(){
     }
 
     return(
+        <>
+        <Stack.Screen 
+            options={{
+                header: () => <HeaderNavigation title="Papelera" />
+            }}
+        />
+
         <View style={{flex: 1, backgroundColor: Colors[theme.value].background}}>
             <Text style={[styles.notification, {color: Colors[theme.value].subtitle}]}>
                 Las notas serán borradas de forma permanente pasados {diasParaDelete} días de su eliminación.
@@ -179,6 +188,8 @@ export default function TrashView(){
                 onConfirm={deletePermantente}
             />
         </View>
+
+        </>
     )
 }
 

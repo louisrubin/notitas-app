@@ -8,27 +8,21 @@ import { router, Stack } from "expo-router";
 import { useSettings } from "../../hooks/SettingsContext";
 import { Colors } from "../../constants/colors";
 import AnimatedBackgroundView from "../../components/AnimatedView";
-import HeaderNotaEditor from "../../components/HeaderNotaEditor";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 export default function SettingsScreen() {
     const { theme } = useSettings();
     const ColorTheme = Colors[theme.value];
-    const insets = useSafeAreaInsets();
     
     return(
         <>
         <Stack.Screen 
             options={{
-                headerTintColor: Colors[theme.value].text,
-                header: () => 
-                    <HeaderNotaEditor 
-                        style={{paddingTop: insets.top + 15}} 
-                    />
+                header: () => <HeaderNavigation />
             }} 
         />
         
-        <AnimatedBackgroundView style={{flex: 1, paddingTop: 10}}>
+        <AnimatedBackgroundView style={{flex: 1}}>
             <AnimatedScrollViewX title="Notitas">
 
                 <View style={{flex: 1}}>
@@ -99,5 +93,6 @@ const styles = StyleSheet.create({
         fontWeight: 400, 
         marginBottom: 14, 
         paddingHorizontal: 26, 
+        // backgroundColor: "tomato"
     },
 })

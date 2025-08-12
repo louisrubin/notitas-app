@@ -5,22 +5,33 @@ import React from "react";
 import { Colors } from "../constants/colors";
 import { useSettings } from "../hooks/SettingsContext";
 import AnimatedBackgroundView from "./AnimatedView";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Text } from "react-native";
 
 interface HeaderProp{
-    children?: React.ReactNode;
+    title?: string;
     onPressBack?: () => void | boolean;     // puede retornar void o boolean
     style?: StyleProp<ViewStyle>;
+    children?: React.ReactNode;
 }
 
-export default function HeaderNotaEditor({
+export default function HeaderNavigation({
+    title="",
     onPressBack = () => {},
     style,
 }: HeaderProp) {
     const {theme} = useSettings();
+    const insets = useSafeAreaInsets();
 
     return(
-        <AnimatedBackgroundView style={[styles.container, style]}>
-            <View>
+        <AnimatedBackgroundView 
+            style={[
+                styles.container, 
+                style,
+                { paddingTop: insets.top + 10 }
+            ]}
+        >
+            <View style={{flexDirection: "row", alignItems: "center", gap: 10}}>
                 <Pressable style={ ({pressed}) => [
                     styles.buttonBack,
                     {
@@ -38,6 +49,10 @@ export default function HeaderNotaEditor({
                         color={Colors[theme.value].text} 
                     />
                 </Pressable>
+
+                <Text style={[ styles.title, {color: Colors[theme.value].text }]}>
+                    {title}
+                </Text>
             </View>
         </AnimatedBackgroundView>
     )
@@ -45,21 +60,19 @@ export default function HeaderNotaEditor({
 
 const styles = StyleSheet.create({
     container: {
-        // marginTop: 15,
+        paddingBottom: 10,
         paddingHorizontal: 15,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        // backgroundColor: "tomato"
+        // backgroundColor: "lightgreen"
     },
     buttonBack: {
         borderRadius: 20,
         padding: 5,
     },
-    cancelButton: {
-        fontSize: 18,
-        // marginRight: 10,
-        padding: 5,
-        borderRadius: 20,
-    }
+    title: {
+        fontSize: 24,
+        fontWeight: 500,
+    },
 })

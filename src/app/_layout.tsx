@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import { SettingsProvider, useSettings } from "../hooks/SettingsContext";
 import { NotesProvider } from "../hooks/NotesContext";
 import { initDB, insertNote } from "../hooks/SQLiteHooks";
+import { PaperProvider } from "react-native-paper";
 
 // FUNCT PARA PARSEAR EL 'theme' (string) --> StatusBarStyle
 const parseStatusBarStyle = (valor: string): StatusBarStyle => {
@@ -38,7 +39,11 @@ export default function RootApp(){
          <SettingsProvider>
             <NotesProvider>
 
-                <InnerApp />
+                <PaperProvider>
+
+                    <InnerApp />
+
+                </PaperProvider>
 
             </NotesProvider>
          </SettingsProvider>

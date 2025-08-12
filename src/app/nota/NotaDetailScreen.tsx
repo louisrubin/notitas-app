@@ -6,7 +6,7 @@ import { useSettings } from "../../hooks/SettingsContext";
 import HorizontalLine from "../../components/HorizontalLine";
 import { useEffect, useState } from "react";
 import { useNotes } from "../../hooks/NotesContext";
-import HeaderNotaEditor from "../../components/HeaderNotaEditor";
+import HeaderNotaEditor from "../../components/HeaderNavigation";
 import { getTodayDateLocal } from "../../hooks/DateFunctions";
 import { useSQLiteContext } from "expo-sqlite";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

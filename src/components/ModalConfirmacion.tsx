@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, OpaqueColorValue, BackHandler } from "react-native";
+import { Portal } from "react-native-paper";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 
 interface ModalProp {
@@ -58,8 +59,8 @@ export default function ModalConfirmacion( {
 
     if (!visible) return null; // No renderiza nada si está oculto
 
-    return (
-        <View style={styles.wrapper}>
+    return (    // Portal: npx pod-install PARA (iOS)
+        <Portal>
             <View style={styles.overlay}>
 
                 <Animated.View style={styles.modal} 
@@ -102,15 +103,11 @@ export default function ModalConfirmacion( {
                 </Animated.View>
             
             </View>
-        </View>
+        </Portal>
     );
 }
 
 const styles = StyleSheet.create({
-    wrapper: { 
-        ...StyleSheet.absoluteFillObject,
-        zIndex: 9999,
-    },
     overlay: {
         flex: 1,
         justifyContent: "center",
