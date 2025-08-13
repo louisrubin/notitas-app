@@ -135,6 +135,7 @@ export default function Index(){
                     exitSelecting();
                 }}
                 bgColor={ColorTheme.bgCreateButton}
+                selectingMode={selecting}
             />
 
             {
