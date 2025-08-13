@@ -6,10 +6,9 @@ import { useSettings } from "../../hooks/SettingsContext";
 import HorizontalLine from "../../components/HorizontalLine";
 import { useEffect, useState } from "react";
 import { useNotes } from "../../hooks/NotesContext";
-import HeaderNotaEditor from "../../components/HeaderNavigation";
+import HeaderNavigation from "../../components/HeaderNavigation";
 import { getTodayDateLocal } from "../../hooks/DateFunctions";
 import { useSQLiteContext } from "expo-sqlite";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "../../constants/colors";
 
 
@@ -18,7 +17,6 @@ export default function NotaDetailScreen() {
     const { fontSize, theme } = useSettings();
     const { cargarNotas } = useNotes();
     const db = useSQLiteContext();
-    const insets = useSafeAreaInsets();
 
     const [nota, setNota] = useState<Nota | null>(null);
     const [originalNota, setOriginalNota] = useState<Nota | null>(null);
@@ -115,12 +113,7 @@ export default function NotaDetailScreen() {
         <>
         <Stack.Screen 
             options={{
-                headerTintColor: ColorTheme.text,
-                header: () => 
-                    <HeaderNotaEditor 
-                        onPressBack={volverYGuardar} 
-                        style={{paddingTop: insets.top + 15}} 
-                    />
+                header: () => <HeaderNavigation onPressBack={volverYGuardar} />
             }}
         />
 
