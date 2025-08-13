@@ -78,6 +78,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         gap: 60,
         alignItems: "center",
-        backgroundColor: "black",
+        backgroundColor: "#121212",
     },
 })
