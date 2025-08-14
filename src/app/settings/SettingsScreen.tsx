@@ -77,7 +77,7 @@ export default function SettingsScreen() {
                     <SubtitleX text="OTROS" style={{paddingHorizontal: 26}} />
                     <LabelWithNavigation 
                         title="Política de Privacidad" 
-                        onPress={() => { router.back(); }}
+                        onPress={() => { router.push("policies"); }}
                     />
             
                 </View>
