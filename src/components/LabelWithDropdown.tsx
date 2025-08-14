@@ -5,14 +5,25 @@ import { DropDownItem, getListItem, KeyType } from '../constants/DropDownLists';
 import TitleX from './TitleX';
 import { useDropDown } from '../hooks/DropDownContext';
 import { Colors } from '../constants/colors';
-import { useSettings } from '../hooks/SettingsContext';
+import { SettingsValueMap, useSettings } from '../hooks/SettingsContext';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage
 
+/* 
+    TYPE DROPDOWNKEYS:
+        es un tipo que solo incluye las claves de SettingsValueMap cuyo valor es un 
+        DropDownItem, excluyendo booleanos u otros tipos.
+
+        type DropDownKeys = "fontSize" | "orderBy" | "designBy" | "theme";
+*/
+type DropDownKeys = {
+  [K in KeyType]: SettingsValueMap[K] extends DropDownItem ? K : never
+}[KeyType];
+
 interface Prop {
     id?: string;
-    settingKey: KeyType; // indica qué setting es
+    settingKey: DropDownKeys; // indica qué setting es
     title: string;
     zIndex?: number;
     zIndexInverse?: number;
@@ -28,7 +39,7 @@ zIndex, zIndexInverse, settingKey, containerStyle }: Prop ) {
     const { openKey, setOpenKey } = useDropDown();
 
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState<string | null>(getSavedSettingValue(settingKey));
+    const [value, setValue] = useState<string>(getSavedSettingValue(settingKey));
     const [items, setItems] = useState<DropDownItem[]>(getListItem(settingKey));
     
     // identificador único para este picker

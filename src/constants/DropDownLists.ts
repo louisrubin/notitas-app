@@ -1,7 +1,7 @@
 
 // CONSTANTES DE LISTAS DE LAS OPCIONES DE LOS DROPDOWN
 
-export type KeyType = "fontSize" | "orderBy" | "designBy" | "theme";
+export type KeyType = "fontSize" | "orderBy" | "designBy" | "theme" | "saveAuto";
 export type FontSizeType = "small" | "medium" | "big" | "bigger";   // valores
 export type OrderType = "created_date" | "modification_date";       // permitidos
 export type DesignType = "list" | "grid";                           // para 'value'
@@ -44,6 +44,7 @@ const listMap: Record<KeyType, DropDownItem[]> = {
     orderBy: orderByList,
     designBy: designByList,
     theme: themeList,
+    saveAuto: null,     // guardado auto de notas
 };
 export const getListItem = (key : KeyType) : DropDownItem[] => listMap[key];
 
