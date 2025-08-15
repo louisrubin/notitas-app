@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { DropDownItem, getListItem, KeyType } from '../constants/DropDownLists';
-import TitleX from './TitleX';
-import { useDropDown } from '../hooks/DropDownContext';
-import { Colors } from '../constants/colors';
-import { SettingsValueMap, useSettings } from '../hooks/SettingsContext';
+import { DropDownItem, getListItem, KeyType } from '../../constants/DropDownLists';
+import TitleX from '../TitleX';
+import { useDropDown } from '../../hooks/DropDownContext';
+import { Colors } from '../../constants/colors';
+import { SettingsValueMap, useSettings } from '../../hooks/SettingsContext';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 // https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage

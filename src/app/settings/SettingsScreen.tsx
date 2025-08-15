@@ -2,17 +2,23 @@ import { StyleSheet, Text, View } from "react-native";
 import AnimatedScrollViewX from "../../components/AnimatedScrollViewX";
 import HorizontalLine from "../../components/HorizontalLine";
 import SubtitleX from "../../components/SubtitleX";
-import LabelWithDropdown from "../../components/LabelWithDropdown";
-import LabelWithNavigation from "../../components/LabelWithNavigation";
+import LabelWithDropdown from "../../components/Label/LabelWithDropdown";
+import LabelWithNavigation from "../../components/Label/LabelWithNavigation";
 import { router, Stack } from "expo-router";
 import { useSettings } from "../../hooks/SettingsContext";
 import { Colors } from "../../constants/colors";
 import AnimatedBackgroundView from "../../components/AnimatedView";
 import HeaderNavigation from "../../components/HeaderNavigation";
+import LabelWithSwitch from "../../components/Label/LabelWithSwitch";
 
 export default function SettingsScreen() {
-    const { theme } = useSettings();
-    const ColorTheme = Colors[theme.value];
+    const { theme, cambiarSetting, saveAuto } = useSettings();
+    const ColorTheme = Colors[theme.value];    
+
+    function handleSaveAutoSwitch(){
+        // LOGICA PARA EL SWITCH DE 'AUTO SAVE' DE NOTAS
+        cambiarSetting("saveAuto", !saveAuto);
+    }
     
     return(
         <>
@@ -63,6 +69,16 @@ export default function SettingsScreen() {
                             zIndex={7} 
                         />
                     </View>        
+                    
+                    <HorizontalLine color={ColorTheme.lineColor} />
+
+                    <SubtitleX text="Guardado" style={{paddingHorizontal: 26}} />
+                    <LabelWithSwitch 
+                        value={saveAuto} 
+                        onValueChange={handleSaveAutoSwitch}
+                        title="Guardado automático" 
+                        styleContainer={{paddingHorizontal: 26,}}
+                    />
 
                     <HorizontalLine color={ColorTheme.lineColor} />
 

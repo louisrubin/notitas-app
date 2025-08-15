@@ -1,8 +1,8 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Pressable, StyleSheet } from 'react-native';
-import TitleX from './TitleX';
-import { Colors } from '../constants/colors';
-import { useSettings } from '../hooks/SettingsContext';
+import TitleX from '../TitleX';
+import { Colors } from '../../constants/colors';
+import { useSettings } from '../../hooks/SettingsContext';
 
 interface Prop {
     title: string;

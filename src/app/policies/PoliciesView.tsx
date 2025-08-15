@@ -149,7 +149,7 @@ export default function PoliciesView() {
                 <Text style={styles.text}>
                     <Bold text="4."/> Detrás de <Bold text={app.name}/> hay un desarrollador apasionado por la 
                     programación, con el interés de crear apps amigables mientras aprende nuevas
-                    tecnologías y lenguajes.
+                    tecnologías y lenguajes de desarrollo.
                 </Text>                
             </View>
 
