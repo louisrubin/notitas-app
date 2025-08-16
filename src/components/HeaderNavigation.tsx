@@ -19,6 +19,7 @@ export default function HeaderNavigation({
     title="",
     onPressBack = () => {},
     style,
+    children,
 }: HeaderProp) {
     const {theme} = useSettings();
     const insets = useSafeAreaInsets();
@@ -54,6 +55,9 @@ export default function HeaderNavigation({
                     {title}
                 </Text>
             </View>
+            {
+                children
+            }
         </AnimatedBackgroundView>
     )
 }

@@ -1,5 +1,5 @@
 import { BackHandler, ScrollView, StyleSheet, TextInput, 
-    useWindowDimensions, View } from "react-native";
+    ToastAndroid, useWindowDimensions, View } from "react-native";
 import { getNoteByID, insertNote, Nota, updateNote } from "../../hooks/SQLiteHooks";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { getFontSize } from "../../constants/DropDownLists";
@@ -11,16 +11,21 @@ import HeaderNavigation from "../../components/HeaderNavigation";
 import { getTodayDateLocal } from "../../hooks/DateFunctions";
 import { useSQLiteContext } from "expo-sqlite";
 import { Colors } from "../../constants/colors";
-
+import ButtonTransparent from "../../components/buttons/ButtonTransparent";
+import ModalConfirmacion from "../../components/ModalConfirmacion";
 
 export default function NotaDetailScreen() {
-    const { id_P } = useLocalSearchParams();
-    const { fontSize, theme } = useSettings();
+    const params = useLocalSearchParams();
+    const [idP, setIdP] = useState(params.id_P ?? null); // estado para poder actualizar
+
+    const { fontSize, theme, saveAuto } = useSettings();
     const { cargarNotas } = useNotes();
     const db = useSQLiteContext();
 
     const [nota, setNota] = useState<Nota | null>(null);
     const [originalNota, setOriginalNota] = useState<Nota | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [huboCambios, setHuboCambios] = useState(false);
 
     const { height } = useWindowDimensions();
     const fontSizeValue = getFontSize(fontSize.value);
@@ -29,12 +34,12 @@ export default function NotaDetailScreen() {
     useEffect( () => {
         // FUNCT PARA OBTENER DATOS DE LA NOTA SELECCIONADA
         const cargarNota = async () => {
-            const nota = await getNoteByID(db, Number(id_P));
+            const nota = await getNoteByID(db, Number(idP));
             setNota(nota);  // setea en State
             setOriginalNota(nota);      // State copia para verif hubo cambios 
         }
 
-        if (id_P) {
+        if (idP) {
             //  SI HAY ID (nota existente) CARGAR SU INFO DESDE LA BD
             cargarNota();
         }
@@ -58,64 +63,103 @@ export default function NotaDetailScreen() {
         return () => volverHandler.remove();    // elimina el event listener
     }, [nota, originalNota]);
 
-
     function handleChangeText(campo: keyof Nota, value: string) {
         // MANEJADOR DE LOS INPUT's AL MODIFICAR EL CONTENIDO
         setNota(
-            (prev) => 
-            prev ? 
-                { ...prev, [campo]: value } // copia todos los campos anterior
-            :                               //  actualiza solo ese 'campo'
-                prev    // si la nota es null no hace nada
-        );        
+            prev =>
+                prev
+                    ? { ...prev, [campo]: value }   // copia todos los campos anterior 
+                                                    // y actualiza solo [campo]
+                    : prev
+        );
+
+        // VERIFICA CAMBIOS Y SETEA EL STATE
+        // Usar el valor nuevo para la comparación
+        const verifCambios =  // boolean
+            (campo === "title" ? value : nota?.title) !== originalNota?.title ||
+            (campo === "value" ? value : nota?.value) !== originalNota?.value;
+        
+        setHuboCambios(verifCambios);
     }
 
-    function volverYGuardar(): boolean{
-        // SI HUBO CAMBIOS GUARDA EN BD SINO NADA
-        const huboCambios =
-            // boolean
-            nota?.title !== originalNota?.title 
-            ||
-            nota?.value !== originalNota?.value;
+    async function Guardar_Crear_Nota() {
+        // SI HUBO CAMBIOS GUARDA EN BD SINO NADA  
+        if (!huboCambios) return;
 
-        if (!huboCambios) {
-            // router.back(); // No hace falta guardar, solo volver
-            return false;
-        }
-        if (id_P) {
-            // SI INGRESO A UNA NOTA (SU ID != NULL)
-            updateNote(db, {
-                id: nota.id,
-                title: nota.title.trim(),
-                value: nota.value.trim(), 
-                updated_at: new Date().toISOString(),
-                created_at: nota.created_at,
-            }) 
-        } 
-        else {  // NO HAY ID --> NULL
-            // CREANDO NOTA E INSERTANDO EN LA BD
-            let notaTitle = nota.title;
-            const createDate = new Date();
+        try {
+            if (idP) {
+                // SI INGRESO A UNA NOTA (SU ID != NULL)
+                updateNote(db, {
+                    id: nota.id,
+                    title: nota.title.trim(),
+                    value: nota.value.trim(), 
+                    updated_at: new Date().toISOString(),
+                    created_at: nota.created_at,
+                })
+            } 
+            else {  // NO HAY ID --> NULL
+                // CREANDO NOTA E INSERTANDO EN LA BD
+                let notaTitle = nota.title;
+                const createDate = new Date();
 
-            if (notaTitle.length === 0 && nota.value.length > 0) {
-                // ESCRIBIÓ CONTENIDO PERO NO EL TÍTULO 
-                notaTitle = getTodayDateLocal(createDate);  // titulo en formato 'es'
+                if (notaTitle.length === 0 && nota.value.length > 0) {
+                    // ESCRIBIÓ CONTENIDO PERO NO EL TÍTULO 
+                    notaTitle = getTodayDateLocal(createDate);  // titulo en formato 'es'
+                }
+
+                const nuevoID = await insertNote(db, {
+                    title: notaTitle.trim(),
+                    value: nota.value.trim(),
+                    created_at: createDate.toISOString(),   // to ISO String
+                })
+
+                // AL PASAR DE CREAR A EDITAR SIN SALIR DE LA VIEW PARA LUEGO 'updateNote'
+                if (nuevoID) {
+                    setIdP(String(nuevoID)); // a string
+                    setNota( (prev) => ({
+                        ...prev, id: nuevoID,   // ahora la nota también tiene el id correcto
+                    }))
+                }
             }
-            insertNote(db, {
-                title: notaTitle.trim(),
-                value: nota.value.trim(),
-                created_at: createDate.toISOString(),   // to ISO String
-            })
-        }        
-        cargarNotas();  // NotesContext --> actualizar Flat List
+        } catch (error) {
+            console.log("error en Guardar_Crear_Nota", error);
+        } finally{
+            cargarNotas();  // NotesContext --> actualizar Flat List
+        }
+    }
+
+    // Handler específico para hardwareBackPress
+    function volverYGuardar(): boolean {
+        Guardar_Crear_Nota();
         return false;
+    }
+
+    function handleSaveButton(){
+        // LOGICA AL PRESIONAR BOTON DE 'GUARDAR'
+        try {
+            Guardar_Crear_Nota();
+            setOriginalNota(nota);
+            setHuboCambios(false);   // resetea el state como 'sin cambios nuevos'
+            ToastAndroid.show("Nota guardada.", ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show("Hubo un error al guardar.", ToastAndroid.SHORT);
+        }
     }
 
     return(
         <>
         <Stack.Screen 
             options={{
-                header: () => <HeaderNavigation onPressBack={volverYGuardar} />
+                header: () => <HeaderNavigation onPressBack={volverYGuardar} >
+                    {
+                        !saveAuto && (
+                            <ButtonTransparent text="Guardar" 
+                            onPress={handleSaveButton} 
+                            disabled={!huboCambios}
+                        />
+                        )
+                    }
+                </HeaderNavigation>
             }}
         />
 
@@ -160,6 +204,15 @@ export default function NotaDetailScreen() {
             </ScrollView>
             
         </View>
+
+        {/* MODAL CONFIRMAR GUARDADO O DESCARTAR */}
+        <ModalConfirmacion 
+            title="Hay cambios sin guardar. ¿Desea guardar?"
+            confirmText="Guardar"
+
+            visible={showModal}
+            setVisible={setShowModal} 
+        />
 
         </>
     )

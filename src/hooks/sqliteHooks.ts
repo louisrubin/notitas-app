@@ -34,10 +34,11 @@ export const initDB = async (db: SQLiteDatabase) => {
 
 export const insertNote = async (db: SQLiteDatabase, nota: Nota) => {
     try{
-        await db.runAsync(`
+        const result = await db.runAsync(`
             INSERT INTO ${dbTableName} (title, value, created_at, updated_at)
             VALUES (?, ?, ?, ?);
         `, [nota.title, nota.value, nota.created_at, nota.created_at]);
+        return result.lastInsertRowId;  // retorna el ID
         // (await preparedInsertStatement(title, value, date)).executeAsync(title, value, date);
 
     }catch(e){
