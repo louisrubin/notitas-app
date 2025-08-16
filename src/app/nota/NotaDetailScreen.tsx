@@ -1,7 +1,7 @@
-import { BackHandler, ScrollView, StyleSheet, TextInput, 
+import { BackHandler, Keyboard, ScrollView, StyleSheet, TextInput, 
     ToastAndroid, useWindowDimensions, View } from "react-native";
 import { getNoteByID, insertNote, Nota, updateNote } from "../../hooks/SQLiteHooks";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { getFontSize } from "../../constants/DropDownLists";
 import { useSettings } from "../../hooks/SettingsContext";
 import HorizontalLine from "../../components/HorizontalLine";
@@ -82,7 +82,7 @@ export default function NotaDetailScreen() {
         setHuboCambios(verifCambios);
     }
 
-    async function Guardar_Crear_Nota() {
+    async function GuardarCrearNota() {
         // SI HUBO CAMBIOS GUARDA EN BD SINO NADA  
         if (!huboCambios) return;
 
@@ -122,7 +122,7 @@ export default function NotaDetailScreen() {
                 }
             }
         } catch (error) {
-            console.log("error en Guardar_Crear_Nota", error);
+            console.log("error en GuardarCrearNota", error);
         } finally{
             cargarNotas();  // NotesContext --> actualizar Flat List
         }
@@ -130,14 +130,21 @@ export default function NotaDetailScreen() {
 
     // Handler específico para hardwareBackPress
     function volverYGuardar(): boolean {
-        Guardar_Crear_Nota();
-        return false;
+        // GUARDADO NO AUTO Y HUBO CAMBIOS --> MOSTRAR MODAL CONFIRMACION
+        Keyboard.dismiss(); // CERRAR TECLADO
+        if (!saveAuto && huboCambios) {
+            setShowModal(true);
+            return true;
+        }
+        GuardarCrearNota();
+        router.back();
+        return true;
     }
 
     function handleSaveButton(){
         // LOGICA AL PRESIONAR BOTON DE 'GUARDAR'
         try {
-            Guardar_Crear_Nota();
+            GuardarCrearNota();
             setOriginalNota(nota);
             setHuboCambios(false);   // resetea el state como 'sin cambios nuevos'
             ToastAndroid.show("Nota guardada.", ToastAndroid.SHORT);
@@ -146,19 +153,28 @@ export default function NotaDetailScreen() {
         }
     }
 
+    function handleModalConfirmAutoSave(){
+        GuardarCrearNota();
+        router.back();
+    }
+
     return(
         <>
         <Stack.Screen 
             options={{
-                header: () => <HeaderNavigation onPressBack={volverYGuardar} >
-                    {
-                        !saveAuto && (
-                            <ButtonTransparent text="Guardar" 
-                            onPress={handleSaveButton} 
-                            disabled={!huboCambios}
-                        />
-                        )
-                    }
+                header: () => 
+                    <HeaderNavigation 
+                        onPressBack={volverYGuardar} 
+                        routerBack={false} // hace back en 'volverYGuardar'
+                    >
+                        {
+                            !saveAuto && (
+                                <ButtonTransparent text="Guardar" 
+                                onPress={handleSaveButton} 
+                                disabled={!huboCambios}
+                            />
+                            )
+                        }
                 </HeaderNavigation>
             }}
         />
@@ -209,9 +225,14 @@ export default function NotaDetailScreen() {
         <ModalConfirmacion 
             title="Hay cambios sin guardar. ¿Desea guardar?"
             confirmText="Guardar"
+            cancelText="No guardar"
+            colorCancelText={"tomato"}
 
             visible={showModal}
             setVisible={setShowModal} 
+
+            onConfirm={handleModalConfirmAutoSave}
+            onCancel={ () => {router.back() } }
         />
 
         </>

@@ -13,6 +13,7 @@ interface HeaderProp{
     onPressBack?: () => void | boolean;     // puede retornar void o boolean
     style?: StyleProp<ViewStyle>;
     children?: React.ReactNode;
+    routerBack?: boolean;       // puede hacer push atrás
 }
 
 export default function HeaderNavigation({
@@ -20,6 +21,7 @@ export default function HeaderNavigation({
     onPressBack = () => {},
     style,
     children,
+    routerBack = true,
 }: HeaderProp) {
     const {theme} = useSettings();
     const insets = useSafeAreaInsets();
@@ -43,7 +45,7 @@ export default function HeaderNavigation({
                 ]}
                 onPress={ () => {
                     onPressBack();
-                    router.back();
+                    routerBack ? router.back() : null;
                 }}
                 >                    
                     <AntDesign name="arrowleft" size={24} 

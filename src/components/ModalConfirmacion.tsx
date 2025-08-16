@@ -11,6 +11,7 @@ interface ModalProp {
     confirmText?: string;
     cancelText?: string;
     colorConfirmText?: string | OpaqueColorValue;
+    colorCancelText?: string | OpaqueColorValue;
     onConfirm?: () => void;
     onCancel?: () => void;
 }
@@ -20,6 +21,7 @@ export default function ModalConfirmacion( {
     confirmText = "Confirmar", 
     cancelText = "Cancelar", 
     colorConfirmText = "white",
+    colorCancelText = "white",
 
     visible = false,
     setVisible,
@@ -79,7 +81,9 @@ export default function ModalConfirmacion( {
                             ]}
                             onPress={handleOnCancel}
                         >
-                            <Text style={styles.btn_Text}>{cancelText}</Text>
+                            <Text style={[styles.btn_Text, {color: colorCancelText}]}>
+                                {cancelText}
+                            </Text>
                         </Pressable>
 
                         <Text style={[styles.btn_Text, {opacity: 0.3}]}>|</Text>
