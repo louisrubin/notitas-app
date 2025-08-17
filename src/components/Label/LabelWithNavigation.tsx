@@ -1,5 +1,5 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import TitleX from '../TitleX';
 import { Colors } from '../../constants/colors';
 import { useSettings } from '../../hooks/SettingsContext';
@@ -7,15 +7,17 @@ import { useSettings } from '../../hooks/SettingsContext';
 interface Prop {
     title: string;
     onPress: () => void;
+    styleContainer?: ViewStyle;
 }
 
-export default function LabelWithNavigation( {title, onPress} : Prop ) {
+export default function LabelWithNavigation( {title, onPress, styleContainer} : Prop ) {
     const { theme } = useSettings();
 
     return(
         <Pressable 
         style={ ({pressed}) => [
             styles.container,
+            styleContainer,
             {
                 backgroundColor: pressed ? Colors[theme.value].bgOnPressed : null,
             }
@@ -33,10 +35,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
-        paddingHorizontal: 26,
         justifyContent: "space-between",
         alignItems: "center",
-
-        // backgroundColor: "tomato"
+        borderRadius: 12,
     },
 })

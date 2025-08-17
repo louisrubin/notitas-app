@@ -68,33 +68,40 @@ export default function SettingsScreen() {
                             settingKey="designBy"
                             zIndex={7} 
                         />
-                    </View>        
-                    
-                    <HorizontalLine color={ColorTheme.lineColor} />
 
-                    <SubtitleX text="Guardado" style={{paddingHorizontal: 26}} />
-                    <LabelWithSwitch 
-                        value={saveAuto} 
-                        onValueChange={handleSaveAutoSwitch}
-                        title="Guardado automático" 
-                        styleContainer={{paddingHorizontal: 26,}}
-                    />
+                        <HorizontalLine />
 
-                    <HorizontalLine color={ColorTheme.lineColor} />
+                        <SubtitleX text="Guardado" />
+                        <LabelWithSwitch 
+                            value={saveAuto} 
+                            onValueChange={handleSaveAutoSwitch}
+                            title="Guardado automático"
+                        />
 
-                    <SubtitleX text="Eliminados" style={{paddingHorizontal: 26}} />
-                    <LabelWithNavigation 
-                        title="Papelera" 
-                        onPress={() => { router.replace("trash"); }}
-                    />
+                        <HorizontalLine />
 
-                    <HorizontalLine color={ColorTheme.lineColor} />
+                        <SubtitleX text="Eliminados" />
+                        <LabelWithNavigation 
+                            title="Papelera" 
+                            onPress={() => { router.replace("trash"); }}
+                            styleContainer={{
+                                marginHorizontal: -15, 
+                                paddingHorizontal: 15
+                            }}
+                        />
 
-                    <SubtitleX text="OTROS" style={{paddingHorizontal: 26}} />
-                    <LabelWithNavigation 
-                        title="Política de Privacidad" 
-                        onPress={() => { router.push("policies"); }}
-                    />
+                        <HorizontalLine />
+
+                        <SubtitleX text="OTROS" />
+                        <LabelWithNavigation 
+                            title="Política de Privacidad" 
+                            onPress={() => { router.push("policies"); }}
+                            styleContainer={{
+                                marginHorizontal: -15, 
+                                paddingHorizontal: 15
+                            }}
+                        />
+                    </View>
             
                 </View>
             </AnimatedScrollViewX>
