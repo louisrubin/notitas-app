@@ -23,22 +23,24 @@ export default function TopAppBar( {
 }: Prop){
     const allSelected = cantNotas > 0 && deletingCount === cantNotas;
     const {theme} = useSettings();
+    const ThemeValue = Colors[theme.value];
 
     const SelectAllIcon = ( {style}: Prop & { style?: ViewStyle} ) => {
         return(
             <View style={style}>
                 <ButtonSettings 
                 onPress={onToggleAll}
-                bgColorPressed={Colors[theme.value].bgOnPressed}
+                bgColorPressed={ThemeValue.bgOnPressed}
+                style={{backgroundColor: allSelected ? ThemeValue.lineColor : null}}
                 >
                     <View style={{flexDirection: "row", alignItems: "center",}}>
                         <Ionicons 
                         name={ allSelected ? "radio-button-on" : "radio-button-off"} 
-                        size={24} color={ allSelected ? "red" : Colors[theme.value].text}
+                        size={24} color={ allSelected ? "red" : ThemeValue.text}
                         />
                         <Text style={{
                             paddingHorizontal: 5, fontSize: 20, 
-                            color: Colors[theme.value].text,
+                            color: ThemeValue.text,
                         }}>
                             Todas
                         </Text>
@@ -51,7 +53,7 @@ export default function TopAppBar( {
     return(
         <View style={styles.container}>
             { selectState && (
-                <Text style={[ styles.selectedText, {color: Colors[theme.value].text}
+                <Text style={[ styles.selectedText, {color: ThemeValue.text}
                 ]}>
                     <Text style={{fontWeight: "600"}}>({deletingCount}) </Text>
                     seleccionados
@@ -68,9 +70,9 @@ export default function TopAppBar( {
                 router.push("/settings"); 
                 handleSelectState();
             }} 
-            bgColorPressed={Colors[theme.value].bgOnPressed}
+            bgColorPressed={ThemeValue.bgOnPressed}
             >
-                <AntDesign name="setting" size={24} color={Colors[theme.value].text} />
+                <AntDesign name="setting" size={24} color={ThemeValue.text} />
             </ButtonSettings>
         </View>
     )
