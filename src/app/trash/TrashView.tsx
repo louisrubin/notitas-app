@@ -16,6 +16,8 @@ import { Colors } from "../../constants/colors";
 import ModalConfirmacion from "../../components/ModalConfirmacion";
 import { Stack } from "expo-router";
 import HeaderNavigation from "../../components/HeaderNavigation";
+import ButtonSettings from "../../components/ButtonSettings";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TrashView(){
     const { orderBy, theme } = useSettings();     // context del setting actual 
@@ -27,6 +29,10 @@ export default function TrashView(){
     const [deletingList, setDeletingList] = useState<number[]>([]);
     const [showBottomBar, setShowBottomBar] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
+
+    const ThemeValue = Colors[theme.value];
+    // verif si se selecciono todas las notas o no
+    const allSelected = notesTrash.length > 0 && deletingList.length === notesTrash.length;
 
     useEffect( () => {
         // AL MONTAR LA VISTA
@@ -112,16 +118,51 @@ export default function TrashView(){
         }
     }
 
+    function handleToggleAllNotes(){
+        if (deletingList.length === notesTrash.length) {
+        // Si ya están todos seleccionados, deselecciona todos
+            setDeletingList([]);
+        } else {
+            // Si no, selecciona todos
+            const allIds = notesTrash.map(note => note.id);  // agarra todos los id
+            setDeletingList(allIds);    // los agrega a la lista
+        }
+    }
+
     return(
         <>
         <Stack.Screen 
             options={{
-                header: () => <HeaderNavigation title="Papelera" />
+                header: () => 
+                <HeaderNavigation title="Papelera" >
+                    {
+                        selecting && (
+                            <ButtonSettings
+                            onPress={handleToggleAllNotes}
+                            style={{ backgroundColor: allSelected ? ThemeValue.lineColor : null}}
+                            >
+                                <View style={{flexDirection: "row", alignItems: "center",}}>
+                                    <Text style={{
+                                        paddingHorizontal: 5, fontSize: 20, fontWeight: 600,
+                                        color: ThemeValue.text,
+                                    }}>
+                                        Todas
+                                    </Text>
+
+                                    <Ionicons 
+                                        name={ allSelected ? "radio-button-on" : "radio-button-off"} 
+                                        size={22} color={ allSelected ? "red" : ThemeValue.text}
+                                    />
+                                </View>
+                            </ButtonSettings>
+                        )
+                    }
+                </HeaderNavigation>
             }}
         />
 
-        <View style={{flex: 1, backgroundColor: Colors[theme.value].background}}>
-            <Text style={[styles.notification, {color: Colors[theme.value].subtitle}]}>
+        <View style={{flex: 1, backgroundColor: ThemeValue.background}}>
+            <Text style={[styles.notification, {color: ThemeValue.subtitle}]}>
                 Las notas serán borradas de forma permanente pasados {diasParaDelete} días de su eliminación.
             </Text>
 
@@ -134,9 +175,9 @@ export default function TrashView(){
                     >
                         <View style={styles.messageContainer}>
                             <MaterialCommunityIcons name="delete-empty" size={54} 
-                                color={Colors[theme.value].icon} 
+                                color={ThemeValue.icon} 
                             />
-                            <Text style={[styles.messageText, {color: Colors[theme.value].icon}]}>
+                            <Text style={[styles.messageText, {color: ThemeValue.icon}]}>
                                 Papelera vacía
                             </Text>
                         </View>

@@ -11,11 +11,11 @@ export default function ButtonSettings( { children, onPress, style, bgColorPress
     return(
         <Pressable style={ ({pressed}) => [
             styles.container, 
-            style,
             { 
                 backgroundColor: pressed ? bgColorPressed : null,  // background al presionar
                 opacity: pressed ? 1 : 0.6,     // opacidad mayor al presionar
-            } 
+            },
+            style,
             ]}
         onPress={onPress}
         hitSlop={20}    // extiende el área presionable hacia afuera
