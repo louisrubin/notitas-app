@@ -32,11 +32,6 @@ export default function Index(){
     const [showModal, setShowModal] = useState(false);  // MODAL CONFIRMACION
 
     useEffect( () => {
-        // AL MONTAR LA VISTA
-        deleteNoteVencidas(db);   // elimina las notas vencidas en la papelera
-    }, []);
-
-    useEffect( () => {
         // PARA SALIR DEL MODO SELECCION A TRAVES DEL BOTON O GESTO VOLVER ATRAS
         if (selecting) {
             setShowBottomBar(true); // Monta <BottomBar> al activar selecting

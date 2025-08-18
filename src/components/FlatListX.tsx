@@ -118,7 +118,13 @@ export default function FlatListX( {
                                 style={[stylesGrid.contentText, 
                                 {fontSize: getFontSize(null), color: ColorTheme.marronText,}
                             ]}>
-                                {item.value}
+                                { item.value?.length > 0 
+                                    ? item.value
+                                    : 
+                                    <Text style={{fontStyle: "italic", color: ColorTheme.placeholder}}>
+                                        Vacía
+                                    </Text>
+                                }
                             </Text>
                             {
                                 trashView ? 
@@ -141,7 +147,10 @@ export default function FlatListX( {
                                 color: ColorTheme.marronText,
                             } 
                         ]}>
-                            {item.title}
+                            { item.title?.length > 0 
+                                ? item.title
+                                : `Notita ${item.id}`
+                            }
                         </Text>
 
                         <Text 
@@ -182,7 +191,10 @@ export default function FlatListX( {
                                 }]}
                             numberOfLines={1}
                             >
-                                {item.title}
+                                { item.title?.length > 0 
+                                    ? item.title
+                                    : `Notita ${item.id}`
+                                }
                             </Animated.Text>
 
                             <Text style={{
@@ -198,7 +210,13 @@ export default function FlatListX( {
                             style={{ flex: 1, fontSize: getFontSize(null), 
                                 color: ColorTheme.marronText,
                         }}>
-                            {item.value}
+                            { item.value?.length > 0 
+                                ? item.value
+                                : 
+                                <Text style={{fontStyle: "italic", color: ColorTheme.placeholder}}>
+                                    Vacía
+                                </Text>
+                            }
                         </Text>
                         
                         {

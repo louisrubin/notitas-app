@@ -1,6 +1,6 @@
 import { BackHandler, Keyboard, ScrollView, StyleSheet, TextInput, 
     ToastAndroid, useWindowDimensions, View } from "react-native";
-import { getNoteByID, insertNote, Nota, updateNote } from "../../hooks/SQLiteHooks";
+import { getNextID, getNoteByID, insertNote, Nota, updateNote } from "../../hooks/SQLiteHooks";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { getFontSize } from "../../constants/DropDownLists";
 import { useSettings } from "../../hooks/SettingsContext";
@@ -8,7 +8,6 @@ import HorizontalLine from "../../components/HorizontalLine";
 import { useEffect, useState } from "react";
 import { useNotes } from "../../hooks/NotesContext";
 import HeaderNavigation from "../../components/HeaderNavigation";
-import { getTodayDateLocal } from "../../hooks/DateFunctions";
 import { useSQLiteContext } from "expo-sqlite";
 import { Colors } from "../../constants/colors";
 import ButtonTransparent from "../../components/buttons/ButtonTransparent";
@@ -22,8 +21,13 @@ export default function NotaDetailScreen() {
     const { cargarNotas } = useNotes();
     const db = useSQLiteContext();
 
-    const [nota, setNota] = useState<Nota | null>(null);
-    const [originalNota, setOriginalNota] = useState<Nota | null>(null);
+    const [nota, setNota] = useState<Nota>({
+            title: "",    // INICIALIZANDO NOTA VACIA
+            value: "",
+            created_at: new Date().toISOString(),
+    });
+    const [originalNota, setOriginalNota] = useState<Nota>(nota);
+
     const [showModal, setShowModal] = useState(false);
     const [huboCambios, setHuboCambios] = useState(false);
 
@@ -34,23 +38,23 @@ export default function NotaDetailScreen() {
     useEffect( () => {
         // FUNCT PARA OBTENER DATOS DE LA NOTA SELECCIONADA
         const cargarNota = async () => {
-            const nota = await getNoteByID(db, Number(idP));
-            setNota(nota);  // setea en State
-            setOriginalNota(nota);      // State copia para verif hubo cambios 
+
+            //  SI HAY ID (nota existente) CARGAR SU INFO DESDE LA BD
+            if (idP) {
+                const nota = await getNoteByID(db, Number(idP));
+                setNota(nota);  // setea en State
+                setOriginalNota(nota);      // State copia para verif hubo cambios 
+            }
+            //  CREANDO NOTA NUEVA (NO HAY id_P)
+            else{
+                const siguienteID = await getNextID(db);
+                setNota( (prev) => ({
+                    ...prev, id: siguienteID,   // setea el State con el sig ID en bd
+                }))
+            }
         }
 
-        if (idP) {
-            //  SI HAY ID (nota existente) CARGAR SU INFO DESDE LA BD
-            cargarNota();
-        }
-        else{
-            //  CREO UN OBJETO NOTA VACIO PARA SETEAR EN EL STATE
-            const nuevaNota: Nota = {
-                title: "", value: "", created_at: new Date().toISOString(),
-            };
-            setNota(nuevaNota);
-            setOriginalNota(nuevaNota);
-        }
+        cargarNota();
     }, []);
 
     useEffect( () => {
@@ -68,7 +72,7 @@ export default function NotaDetailScreen() {
         setNota(
             prev =>
                 prev
-                    ? { ...prev, [campo]: value }   // copia todos los campos anterior 
+                    ? { ...prev, [campo]: value }   // copia todos los campos anterior
                                                     // y actualiza solo [campo]
                     : prev
         );
@@ -91,34 +95,23 @@ export default function NotaDetailScreen() {
                 // SI INGRESO A UNA NOTA (SU ID != NULL)
                 updateNote(db, {
                     id: nota.id,
-                    title: nota.title.trim(),
-                    value: nota.value.trim(), 
+                    title: nota.title?.trim(),
+                    value: nota.value?.trim(), 
                     updated_at: new Date().toISOString(),
                     created_at: nota.created_at,
                 })
             } 
             else {  // NO HAY ID --> NULL
                 // CREANDO NOTA E INSERTANDO EN LA BD
-                let notaTitle = nota.title;
-                const createDate = new Date();
-
-                if (notaTitle.length === 0 && nota.value.length > 0) {
-                    // ESCRIBIÓ CONTENIDO PERO NO EL TÍTULO 
-                    notaTitle = getTodayDateLocal(createDate);  // titulo en formato 'es'
-                }
-
-                const nuevoID = await insertNote(db, {
-                    title: notaTitle.trim(),
-                    value: nota.value.trim(),
-                    created_at: createDate.toISOString(),   // to ISO String
+                const addedRowID = await insertNote(db, {
+                    title: nota.title?.trim(),
+                    value: nota.value?.trim(),
+                    created_at: nota.created_at,
                 })
 
                 // AL PASAR DE CREAR A EDITAR SIN SALIR DE LA VIEW PARA LUEGO 'updateNote'
-                if (nuevoID) {
-                    setIdP(String(nuevoID)); // a string
-                    setNota( (prev) => ({
-                        ...prev, id: nuevoID,   // ahora la nota también tiene el id correcto
-                    }))
+                if (addedRowID) {
+                    setIdP(String(addedRowID)); // guarad el state el nuevo ID
                 }
             }
         } catch (error) {
@@ -184,14 +177,17 @@ export default function NotaDetailScreen() {
             {/* TITULO */}
             <TextInput 
                 numberOfLines={1}
-                placeholder="Título"
+                placeholder={ nota.title?.length > 0
+                    ? nota.title
+                    : `Notita ${nota.id}`
+                }
                 placeholderTextColor={ColorTheme.placeholder}
                 maxLength={40}
                 style={{ fontSize: fontSizeValue, color: ColorTheme.text, }}
                 onChangeText={ (input) => { handleChangeText("title", input) }}
-            >
-                { nota?.title }
-            </TextInput>
+
+                value={ nota?.title }
+            />
 
             <HorizontalLine color={ColorTheme.lineColor} />
 

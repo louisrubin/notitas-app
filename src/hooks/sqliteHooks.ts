@@ -14,6 +14,34 @@ export interface Nota {
     delete_date?: string;
 };
 
+export async function addColumnBD(
+    // AGREGAR COLUMNA A LA TABLA YA CREADA
+    {db, name, type} : {db: SQLiteDatabase, name: string, type: string}
+) {
+    try {
+        await db.execAsync(`
+            ALTER TABLE ${dbTableName}
+            ADD COLUMN ${name} ${type};
+        `)
+    } catch (error) {
+        console.log("Error agregando columna:", error);
+    }
+}
+
+export const getNextID = async (db: SQLiteDatabase): Promise<number | null> => {
+    // OBTENER EL PROXIMO VALOR DE ID EN LA TABLA
+    try {
+        const result = await db.getFirstAsync<{ nextId: number | null }>(
+            `SELECT COALESCE(MAX(id), 0) + 1 as nextId 
+            FROM ${dbTableName};`
+        );
+        return result?.nextId ?? 1; // devuelve null si no hay registros
+    } catch (e) {
+        console.error("Error obteniendo el siguiente ID:", e);
+        return 1;
+    }
+};
+
 export const initDB = async (db: SQLiteDatabase) => {
     try{     
         await db.execAsync(`

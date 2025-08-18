@@ -3,7 +3,7 @@ import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { Stack } from "expo-router";
 import { SettingsProvider, useSettings } from "../hooks/SettingsContext";
 import { NotesProvider } from "../hooks/NotesContext";
-import { initDB, insertNote } from "../hooks/SQLiteHooks";
+import { addColumnBD, deleteNoteVencidas, initDB, insertNote } from "../hooks/SQLiteHooks";
 import { PaperProvider } from "react-native-paper";
 
 // FUNCT PARA PARSEAR EL 'theme' (string) --> StatusBarStyle
@@ -56,11 +56,15 @@ export default function RootApp(){
 
 async function onInitFunction(db: SQLiteDatabase) {
     // VERIF SI LA BD YA FUE CREADA Y/O ACTUALIZADA y SETEA METADATOS
+    const DATABASE_VERSION = 2;
+    
 
     let { user_version: currentDbVersion } = await db.getFirstAsync<{ user_version: number }>(
         'PRAGMA user_version'
     );
-    if (currentDbVersion >= 1) {
+    
+    if (currentDbVersion >= DATABASE_VERSION) {
+        deleteNoteVencidas(db);     // eliminar al iniciar la BD
         return;
     }
     if (currentDbVersion === 0) {
@@ -73,7 +77,12 @@ async function onInitFunction(db: SQLiteDatabase) {
         });
         currentDbVersion = 1;
     }
-    await db.execAsync(`PRAGMA user_version = 1`);
+
+    // if(currentDbVersion === 1) {
+    //     // ...
+    // }
+
+    await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }
 
 
