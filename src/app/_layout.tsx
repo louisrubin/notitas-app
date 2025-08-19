@@ -3,7 +3,7 @@ import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { Stack } from "expo-router";
 import { SettingsProvider, useSettings } from "../hooks/SettingsContext";
 import { NotesProvider } from "../hooks/NotesContext";
-import { addColumnBD, deleteNoteVencidas, initDB, insertNote } from "../hooks/SQLiteHooks";
+import { initDB, insertNote } from "../hooks/SQLiteHooks";
 import { PaperProvider } from "react-native-paper";
 
 // FUNCT PARA PARSEAR EL 'theme' (string) --> StatusBarStyle
@@ -56,42 +56,50 @@ export default function RootApp(){
 
 async function onInitFunction(db: SQLiteDatabase) {
     // VERIF SI LA BD YA FUE CREADA Y/O ACTUALIZADA y SETEA METADATOS
-    const DATABASE_VERSION = 2;
-    
+    const DATABASE_VERSION = 1;
 
     let { user_version: currentDbVersion } = await db.getFirstAsync<{ user_version: number }>(
         'PRAGMA user_version'
-    );
+    );    
     
     if (currentDbVersion >= DATABASE_VERSION) {
-        deleteNoteVencidas(db);     // eliminar al iniciar la BD
+        // SALTEAR EL 'execAsync' DEL FINAL
         return;
     }
+
     if (currentDbVersion === 0) {
+        // crear estructura de BD inicial
         initDB(db);
+
+        // insertamos una notita de presentacion
         insertNote(db, {
-            title: firstNotitaInfo[0],
-            value: firstNotitaInfo[1],
-            created_at: new Date("2025-07-07T09:04:52").toISOString(),
-            // fecha de cuando se me ocurrió crear la app -3 hr por UTC-3 (real: 12:04:52)
+            title: notaInit.title,
+            value: notaInit.value,
+            created_at: notaInit.created_at,            
         });
+
         currentDbVersion = 1;
     }
-
-    // if(currentDbVersion === 1) {
-    //     // ...
-    // }
 
     await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }
 
+const notaInit = {
+    title: "Bienvenido/a a Notitas",
+    value: `
+¡Esta es la bienvenida a la app! 🎉
 
-const firstNotitaInfo = [
-    "Bienvenido/a a Notitas",
-`¡Esta es la bienvenida a la app! 🎉\n
-Acá podés guardar tus ideas, tareas, pensamientos o lo que se te ocurra.\n
-Cada nota se guarda automáticamente y podés editarla cuando quieras.\n
-🌱 Todo comienza con una primera notita...\n
+Acá podés guardar tus ideas, tareas, pensamientos o lo que se te ocurra. 📝
+
+¡En el apartado de configuración ⚙ podrás modificar las opciones de accesibilidad de la app!
+
+🌱 Todo comienza con una primera notita...
+
 ¡Gracias por usar la app! Esta primera nota es solo una muestra. Podés editarla o borrarla si querés 😊
-`
-];
+`.trim(),
+
+    created_at: new Date("2025-07-07T09:04:52").toISOString(),  
+    // fecha de cuando se me ocurrió crear la app -3 hr por UTC-3 (real: 12:04:52)
+
+    // blocked: true
+}

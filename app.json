@@ -2,7 +2,7 @@
   "expo": {
     "name": "Notitas",
     "slug": "tus-notitas",
-    "version": "1.0.0",
+    "version": "2.4.19.8.25",
     "scheme": "notitas",
     "orientation": "portrait",
     "icon": "./src/assets/notitas-icon.png",
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./src/assets/notitas-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#f0f0f0"
+      "backgroundColor": "#CDCDCD"
     },
     "ios": {
       "supportsTablet": true
@@ -19,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/notitas-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#f0f0f0"
       },
       "package": "com.louisrubin.tusnotitas"
     },

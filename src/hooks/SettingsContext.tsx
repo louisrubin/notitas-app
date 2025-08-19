@@ -48,7 +48,7 @@ export const useSettings = () => {
 
 export function SettingsProvider( {children}: Props ) {
     const [fontSize, setFontSize] = useState<DropDownItem>(fontSizeList[1]); // Mediana --> [1]
-    const [orderBy, setOrder] = useState<DropDownItem>(orderByList[0]);// fecha de creación --> [0]
+    const [orderBy, setOrder] = useState<DropDownItem>(orderByList[1]);// fecha de creación --> [0]
     const [designBy, setDesign] = useState<DropDownItem>(designByList[1]);// Ver en cuadrícula --> [1]
     const [theme, setTheme] = useState<DropDownItem>(themeList[0]);     // tema Claro --> [0]
     const [saveAuto, setSaveAuto] = useState(true); // guardado automatico de notas
@@ -56,27 +56,33 @@ export function SettingsProvider( {children}: Props ) {
     useEffect( () => {
         const cargarSettingsLocal = async () =>{
 
-            // await storage.remove("designBy");
-            // await storage.remove("fontSize");
-            // await storage.remove("orderBy");
-            // await storage.remove("theme");
-            // await storage.remove("saveAuto");
+            // await Promise.all([
+            //     await storage.remove("designBy"),
+            //     await storage.remove("fontSize"),
+            //     await storage.remove("orderBy"),
+            //     await storage.remove("theme"),
+            //     await storage.remove("saveAuto"),
+            // ])
 
-            // obtener datos desde el AsyncStorage
-            const savedFontSize = await storage.get("fontSize");
-            const savedOrder = await storage.get("orderBy");
-            const savedDesign = await storage.get("designBy");
-            const savedTheme = await storage.get("theme");
-            const savedSaveAuto = await storage.get("saveAuto");
+            // obtener datos desde el AsyncStorage --> 1 sola llamada en paralelo
+            const [ savedFontSize, savedOrder, savedDesign, savedTheme, savedSaveAuto ] = 
+                await Promise.all([
+                    storage.get("fontSize"),
+                    storage.get("orderBy"),
+                    storage.get("designBy"),
+                    storage.get("theme"),
+                    storage.get("saveAuto"),
+                ]
+            );
              
             // verif si hay valores guardados y setear
-            savedFontSize !== null ? setFontSize(savedFontSize) : null;
-            savedOrder !== null ? setOrder(savedOrder) : null;
-            savedDesign !== null ? setDesign(savedDesign) : null;
-            savedTheme !== null ? setTheme(savedTheme) : null;
-            savedSaveAuto !== null ? setSaveAuto(savedSaveAuto) : null;
-            
-        }
+            if (savedFontSize !== null) setFontSize(savedFontSize);
+            if (savedOrder !== null) setOrder(savedOrder);
+            if (savedDesign !== null) setDesign(savedDesign);
+            if (savedTheme !== null) setTheme(savedTheme);
+            if (savedSaveAuto !== null) setSaveAuto(savedSaveAuto);
+        };
+        
         cargarSettingsLocal();
     }, [] );
 

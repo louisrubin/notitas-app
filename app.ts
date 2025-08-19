@@ -1,5 +1,5 @@
 
 export const app = {
     name: "Notitas",
-    version: "2.14.8.25",
+    version: "2.4.19.8.25",
 }

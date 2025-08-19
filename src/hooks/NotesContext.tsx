@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getAllRows, Nota } from "./SQLiteHooks";
+import { deleteNoteVencidas, getAllRows, Nota } from "./SQLiteHooks";
 import { useSettings } from "./SettingsContext";
 import { useSQLiteContext } from "expo-sqlite";
 
@@ -29,11 +29,19 @@ export function NotesProvider( {children}: {children: React.ReactNode} ){
     const cargarNotas = async () => {
         // SETEA TODAS LAS NOTAS DESDE LA BD AL STATE
         setCargando(true);    // set
+
+        // deferir housekeeping
+        setTimeout(() => {
+            deleteNoteVencidas(db);
+        }, 0);
+        
+        // consulta notas en paralelo
         const allNotas = await getAllRows(db, orderBy.value);
         setNotes(allNotas);
-        setCargando(false);    // set
-    };
 
+        setCargando(false);    // set Cargando
+    };
+    
     useEffect( () => {
         cargarNotas();
     }, [orderBy.value]); // recargar cuando cambia el orden
