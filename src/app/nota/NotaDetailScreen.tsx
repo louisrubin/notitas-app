@@ -4,14 +4,14 @@ import { getNextID, getNoteByID, insertNote, Nota, updateNote } from "../../hook
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { getFontSize } from "../../constants/DropDownLists";
 import { useSettings } from "../../hooks/SettingsContext";
-import HorizontalLine from "../../components/HorizontalLine";
 import { useEffect, useState } from "react";
 import { useNotes } from "../../hooks/NotesContext";
 import HeaderNavigation from "../../components/HeaderNavigation";
 import { useSQLiteContext } from "expo-sqlite";
 import { Colors } from "../../constants/colors";
 import ButtonTransparent from "../../components/buttons/ButtonTransparent";
-import ModalConfirmacion from "../../components/ModalConfirmacion";
+import ModalConfirmacion from "../../components/modal/ModalConfirmacion";
+import HorizontalLine from "../../components/otros/HorizontalLine";
 
 export default function NotaDetailScreen() {
     const params = useLocalSearchParams();
@@ -189,7 +189,7 @@ export default function NotaDetailScreen() {
                 value={ nota?.title }
             />
 
-            <HorizontalLine color={ColorTheme.lineColor} />
+            <HorizontalLine />
 
             {/* EDITOR DE NOTA */}
             <ScrollView 

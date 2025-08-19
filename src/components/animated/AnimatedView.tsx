@@ -1,10 +1,10 @@
 import Animated, { interpolateColor, useAnimatedStyle, 
     useSharedValue, withTiming 
 } from "react-native-reanimated";
-import { useSettings } from "../hooks/SettingsContext";
-import { Colors } from "../constants/colors";
 import { useEffect } from "react";
 import { StyleProp, ViewStyle } from "react-native";
+import { useSettings } from "../../hooks/SettingsContext";
+import { Colors } from "../../constants/colors";
 
 const AnimatedViewContainer = Animated.View;    // creando Animated de tipo View
 

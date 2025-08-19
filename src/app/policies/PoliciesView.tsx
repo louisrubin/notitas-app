@@ -5,7 +5,7 @@ import { Colors } from "../../constants/colors"
 import { useSettings } from "../../hooks/SettingsContext"
 import { app } from "../../../app"
 import AntDesign from '@expo/vector-icons/AntDesign';
-import HorizontalLine from "../../components/HorizontalLine"
+import HorizontalLine from "../../components/otros/HorizontalLine"
 
 type IconName = 'linkedin-square' | 'heart' | 'github';
 
@@ -96,7 +96,7 @@ export default function PoliciesView() {
                 </Text>
             </View>
 
-            <HorizontalLine color={ThemeValue.lineColor} />
+            <HorizontalLine />
 
             <View style={{flex: 1, gap: 15, marginTop: 10}}>
                 <Subtitle_X>

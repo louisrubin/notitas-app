@@ -4,17 +4,17 @@ import { useCallback, useEffect, useState } from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlatListX from "../components/FlatListX";
 import { useSettings } from "../hooks/SettingsContext";
-import TopAppBar from "../components/TopAppBar";
-import BottomBar from "../components/BottomBar";
-import BottomBarButton from "../components/BottomBarButton";
+import BottomBar from "../components/bar/BottomBar";
+import BottomBarButton from "../components/buttons/BottomBarButton";
 import { useNotes } from "../hooks/NotesContext";
 import ButtonCreateNote from "../components/buttons/ButtonCreateNote";
 import { router, useFocusEffect } from "expo-router";
-import { deleteNoteVencidas, getAllRows, setDeleteNote } from "../hooks/SQLiteHooks";
+import { getAllRows, setDeleteNote } from "../hooks/SQLiteHooks";
 import { useSQLiteContext } from "expo-sqlite";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeInUp } from "react-native-reanimated";
-import ModalConfirmacion from "../components/ModalConfirmacion";
+import ModalConfirmacion from "../components/modal/ModalConfirmacion";
+import TopAppBar from "../components/bar/TopAppBar";
 
 // https://docs.expo.dev/versions/latest/sdk/sqlite/
 

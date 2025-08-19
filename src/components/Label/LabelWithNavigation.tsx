@@ -1,6 +1,6 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Pressable, StyleSheet, ViewStyle } from 'react-native';
-import TitleX from '../TitleX';
+import TitleX from '../otros/TitleX';
 import { Colors } from '../../constants/colors';
 import { useSettings } from '../../hooks/SettingsContext';
 

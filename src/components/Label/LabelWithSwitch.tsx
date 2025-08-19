@@ -1,5 +1,5 @@
 import { StyleSheet, Switch, View, ViewStyle } from "react-native";
-import TitleX from "../TitleX";
+import TitleX from "../otros/TitleX";
 import { useSettings } from "../../hooks/SettingsContext";
 import { Colors } from "../../constants/colors";
 

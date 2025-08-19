@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import ButtonSettings from "./ButtonSettings";
 import { router } from "expo-router";
-import { useSettings } from "../hooks/SettingsContext";
-import { Colors } from "../constants/colors";
+import { useSettings } from "../../hooks/SettingsContext";
+import { Colors } from "../../constants/colors";
+import ButtonSettings from "../buttons/ButtonSettings";
 
 interface Prop {
     selectState?: boolean;

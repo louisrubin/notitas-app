@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DropDownItem, getListItem, KeyType } from '../../constants/DropDownLists';
-import TitleX from '../TitleX';
+import TitleX from '../otros/TitleX';
 import { useDropDown } from '../../hooks/DropDownContext';
 import { Colors } from '../../constants/colors';
 import { SettingsValueMap, useSettings } from '../../hooks/SettingsContext';

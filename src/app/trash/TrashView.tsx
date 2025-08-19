@@ -6,17 +6,17 @@ import { deleteNotesManual, deleteNoteVencidas,
 } from "../../hooks/SQLiteHooks";
 import { useSettings } from "../../hooks/SettingsContext";
 import FlatListX from "../../components/FlatListX";
-import BottomBar from "../../components/BottomBar";
-import BottomBarButton from "../../components/BottomBarButton";
+import BottomBar from "../../components/bar/BottomBar";
+import BottomBarButton from "../../components/buttons/BottomBarButton";
 import { useNotes } from "../../hooks/NotesContext";
 import { useSQLiteContext } from "expo-sqlite";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { Colors } from "../../constants/colors";
-import ModalConfirmacion from "../../components/ModalConfirmacion";
+import ModalConfirmacion from "../../components/modal/ModalConfirmacion";
 import { Stack } from "expo-router";
 import HeaderNavigation from "../../components/HeaderNavigation";
-import ButtonSettings from "../../components/ButtonSettings";
+import ButtonSettings from "../../components/buttons/ButtonSettings";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TrashView(){

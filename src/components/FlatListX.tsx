@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSettings } from "../hooks/SettingsContext";
 import { getFontSize } from "../constants/DropDownLists";
 import { getDiffDate, getFormattedDate } from "../hooks/DateFunctions";
-import ButtonCheck from "./ButtonCheck";
+import ButtonCheck from "./buttons/ButtonCheck";
 import { router } from "expo-router";
 import Animated, { FadeInUp, useSharedValue, withSpring } from "react-native-reanimated";
 import { Colors } from "../constants/colors";

@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import AnimatedScrollViewX from "../../components/AnimatedScrollViewX";
-import HorizontalLine from "../../components/HorizontalLine";
-import SubtitleX from "../../components/SubtitleX";
+import AnimatedScrollViewX from "../../components/animated/AnimatedScrollViewX";
+import SubtitleX from "../../components/otros/SubtitleX";
 import LabelWithDropdown from "../../components/Label/LabelWithDropdown";
 import LabelWithNavigation from "../../components/Label/LabelWithNavigation";
 import { router, Stack } from "expo-router";
 import { useSettings } from "../../hooks/SettingsContext";
 import { Colors } from "../../constants/colors";
-import AnimatedBackgroundView from "../../components/AnimatedView";
 import HeaderNavigation from "../../components/HeaderNavigation";
 import LabelWithSwitch from "../../components/Label/LabelWithSwitch";
+import AnimatedBackgroundView from "../../components/animated/AnimatedView";
+import HorizontalLine from "../../components/otros/HorizontalLine";
 
 export default function SettingsScreen() {
     const { theme, cambiarSetting, saveAuto } = useSettings();

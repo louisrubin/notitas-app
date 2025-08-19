@@ -1,7 +1,7 @@
 
 import { View, StyleSheet } from "react-native";
-import { useSettings } from "../hooks/SettingsContext";
-import { Colors } from "../constants/colors";
+import { useSettings } from "../../hooks/SettingsContext";
+import { Colors } from "../../constants/colors";
 
 // COMPONENTE PARA GENERAR UNA LINEA HORIZONTAL
 

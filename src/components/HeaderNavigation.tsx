@@ -4,9 +4,9 @@ import { router } from "expo-router";
 import React from "react";
 import { Colors } from "../constants/colors";
 import { useSettings } from "../hooks/SettingsContext";
-import AnimatedBackgroundView from "./AnimatedView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text } from "react-native";
+import AnimatedBackgroundView from "./animated/AnimatedView";
 
 interface HeaderProp{
     title?: string;
