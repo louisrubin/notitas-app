@@ -1,4 +1,5 @@
 # 📝Notitas 
+###### 🚀 Nueva versión `2.4`
 
 **Una app de notas desarrollado en React Native con Expo, implementando SQLite.**
 
@@ -6,6 +7,11 @@
 |:---------------:|
 | <img src="https://github.com/user-attachments/assets/b566fccd-1304-4b9e-ac29-ae982b9ee9fa" alt="Notitas-preview.gif" width="400"/> |
 
+## 🚀 Nueva versión `2.4`
+###### 19/8/25
+| Modo Claro/Oscuro 🌓 | Autoguardado 💾 | Modal de confirmación 📋 |
+|:---------------:| :---------------:| :---------------:|
+| ![Modo Claro/Oscuro](https://github.com/user-attachments/assets/7ab8c8f9-6b54-4404-adbc-896856dca3b3) | ![Autoguardado](https://github.com/user-attachments/assets/f9639772-0a78-47d1-924b-af96bb9edcd3) | ![Modal de confirmación](https://github.com/user-attachments/assets/1454a0ab-9ad1-4035-8812-e68ed8a63050) |
 
 La idea de hacer este proyecto nació por el interés de querer crear algo simple en vacaciones y en el proceso me daba 
 cuenta que hasta lo que se ve simple puede ser complejo en llevar a cabo.
@@ -14,14 +20,17 @@ Sin embargo estoy orgulloso de haberlo realizado, aunque me gustaría poder agre
 como renderizar Markdown `(.md)` en tiempo real al escribir, como también enlazar notas dentro de otras notas... 
 aún así estoy muy contento con el resultado, la experiencia y los conocimientos obtenidos. 😄
 
-## ⏳Características pendientes:
+## ⏳En desarrollo:
 
+* [x] Mejora de rendimiento
+* [x] Modo claro/oscuro
+* [x] Nuevas animaciones agregadas
+* [x] Modal de confirmación al eliminar notas
+* [x] Mensaje intuitivo al no haber ningúna nota
+* [x] Botón "seleccionar todos" en papelera
+* [ ] Paleta de colores personalizable para las fuentes
 * [ ] Renderizar Markdown en el editor
 * [ ] Enlazar notas dentro de otras notas
-* [ ] Paleta de colores personalizable para las fuentes
-* [ ] Modal de confirmación al eliminar/restaurar notas
-* [ ] Mensaje intuitivo al no haber ningúna nota
-* [ ] Botón "seleccionar todos" en papelera
 
 # Estructura de la App (resumen)
 
@@ -115,14 +124,18 @@ Listado de los componentes de vistas
 - `Settings` (pantalla de configuraciones)
 - `NotaDetail` (editor de texto)
 - `Trash` (papelera)
+- `Policies` (info relevante sobre la app)
 
 *Pequeño diagrama al diseñar la app, en principio también quería que se pueda agrupar las notas por carpetas*
 
 <img width="721" height="467" alt="Captura" src="https://github.com/user-attachments/assets/c00aa95f-99c0-4a12-bef4-f17a5136d566" />
 
 
-*Desarrollado: 7/7 - 28/7/2025*
+* Versión 1 desarrollada: 7/7 - 28/7/2025*
 
 # ⬇️Descargas 
 
-*[Instalar APK v1.0 (Expo.dev)](https://expo.dev/accounts/louisrubin/projects/tus-notitas/builds/9495b469-a216-48d6-bba1-96ba96d291c9)*
+| Android 🤖 | iOS 🍎 |
+|:---------------:| :---------------:|
+| *[APK v1.0](https://drive.google.com/file/d/1md6GI2eRv2aZkqcwHP4_xUU4ETkWrut4/view?usp=drive_link)* | - |
+| *[APK v2.4](https://drive.google.com/file/d/1qd3pxJ_3L733AdB1SEZzgzHvaMWSUAy3/view?usp=sharing)* | - |
