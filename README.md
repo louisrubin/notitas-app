@@ -1,17 +1,11 @@
-# 📝Notitas 
+# Notitas 
 ###### 🚀 Nueva versión `2.4`
 
-**Una app de notas desarrollado en React Native con Expo, implementando SQLite.**
+**Aplicación de notas desarrollado en React Native con Expo, implementando SQLite.**
 
 |  |
 |:---------------:|
 | <img src="https://github.com/user-attachments/assets/b566fccd-1304-4b9e-ac29-ae982b9ee9fa" alt="Notitas-preview.gif" width="400"/> |
-
-## 🚀 Nueva versión `2.4`
-###### 19/8/25
-| Modo Claro/Oscuro 🌓 | Autoguardado 💾 | Modal de confirmación 📋 |
-|:---------------:| :---------------:| :---------------:|
-| ![Modo Claro/Oscuro](https://github.com/user-attachments/assets/7ab8c8f9-6b54-4404-adbc-896856dca3b3) | ![Autoguardado](https://github.com/user-attachments/assets/f9639772-0a78-47d1-924b-af96bb9edcd3) | ![Modal de confirmación](https://github.com/user-attachments/assets/1454a0ab-9ad1-4035-8812-e68ed8a63050) |
 
 La idea de hacer este proyecto nació por el interés de querer crear algo simple en vacaciones y en el proceso me daba 
 cuenta que hasta lo que se ve simple puede ser complejo en llevar a cabo.
@@ -19,6 +13,20 @@ cuenta que hasta lo que se ve simple puede ser complejo en llevar a cabo.
 Sin embargo estoy orgulloso de haberlo realizado, aunque me gustaría poder agregar más características en un futuro, 
 como renderizar Markdown `(.md)` en tiempo real al escribir, como también enlazar notas dentro de otras notas... 
 aún así estoy muy contento con el resultado, la experiencia y los conocimientos obtenidos. 😄
+
+## 🚀 Nueva versión `2.4`
+###### Lanzamiento: 19 ago 2025
+| Modo Claro/Oscuro 🌓 | Autoguardado 💾 | Modal de confirmación 📋 |
+|:---------------:| :---------------:| :---------------:|
+| ![Modo Claro/Oscuro](https://github.com/user-attachments/assets/7ab8c8f9-6b54-4404-adbc-896856dca3b3) | ![Autoguardado](https://github.com/user-attachments/assets/f9639772-0a78-47d1-924b-af96bb9edcd3) | ![Modal de confirmación](https://github.com/user-attachments/assets/1454a0ab-9ad1-4035-8812-e68ed8a63050) |
+
+## Librerías 📚
+
+- [expo-sqlite](https://docs.expo.dev/versions/latest/sdk/sqlite/): Base de datos para el almacenamiento de las notas.
+- [@react-native-async-storage/async-storage](https://docs.expo.dev/versions/latest/sdk/async-storage/): Almacenamiento de clave-valor para persistir las preferencias y leerlas al momento de iniciar la app.
+- [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started): Componentes animables como animación en acciones y transición suave entre los temas claro/oscuro.
+- [react-native-paper](https://reactnativepaper.com/): Necesario para sobreponer el Modal en la pantalla.
+- [react-native-dropdown-picker](https://www.npmjs.com/package/react-native-dropdown-picker): Menú desplegable para las opciones en la pantalla de configuración.
 
 ## ⏳En desarrollo:
 
@@ -107,13 +115,22 @@ Una vez obtenido los datos desde ***AsyncStorage*** se asigna esos valores al **
 por los demás componentes.
 ```js
 // obtener datos desde el AsyncStorage
-const savedFontSize = await storage.get("fontSize");  // 'storage' objeto que retorna las funciones 
-const savedOrder = await storage.get("orderBy");      // 'get', 'remove', 'set' desde el AsyncStorage
-const savedDesign = await storage.get("designBy");
+const [ savedFontSize, savedOrder, savedDesign, savedTheme, savedSaveAuto ] = 
+    await Promise.all([
+        storage.get("fontSize"),
+        storage.get("orderBy"),
+        storage.get("designBy"),
+        storage.get("theme"),
+        storage.get("saveAuto"),
+    ]
+);
 
-// verif si hay valores guardados
-savedFontSize !== null ? setFontSize(savedFontSize) // asigna el valor obtenido
-            : cambiarSetting("fontSize", fontSize); // la primera vez que abre la app asigna un valor
+// verif si hay valores guardados y los asigna al context global
+if (savedFontSize !== null) setFontSize(savedFontSize);
+if (savedOrder !== null) setOrder(savedOrder);
+if (savedDesign !== null) setDesign(savedDesign);
+if (savedTheme !== null) setTheme(savedTheme);
+if (savedSaveAuto !== null) setSaveAuto(savedSaveAuto);
 // ...
 ```
 
@@ -137,5 +154,5 @@ Listado de los componentes de vistas
 
 | Android 🤖 | iOS 🍎 |
 |:---------------:| :---------------:|
-| *[APK v1.0](https://drive.google.com/file/d/1md6GI2eRv2aZkqcwHP4_xUU4ETkWrut4/view?usp=drive_link)* | - |
-| *[APK v2.4](https://drive.google.com/file/d/1qd3pxJ_3L733AdB1SEZzgzHvaMWSUAy3/view?usp=sharing)* | - |
+| 🆕 *[APK v2.4](https://drive.google.com/file/d/1qd3pxJ_3L733AdB1SEZzgzHvaMWSUAy3/view?usp=sharing)*| - |
+|*[APK v1.0](https://drive.google.com/file/d/1md6GI2eRv2aZkqcwHP4_xUU4ETkWrut4/view?usp=drive_link)*| - |
